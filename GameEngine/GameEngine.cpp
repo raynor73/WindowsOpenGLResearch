@@ -4,14 +4,20 @@
 #include "framework.h"
 #include "GameEngine.h"
 #include <platform_dependent/windows/utils.h>
+#include <game_engine/scene_manager.h>
 
 #define MAX_LOADSTRING 100
 #define CONSOLE_BUFFER_SIZE 1024
+
+using namespace GameEngine;
+using namespace std;
 
 // Global Variables:
 HINSTANCE hInst;                                // current instance
 WCHAR szTitle[MAX_LOADSTRING];                  // The title bar text
 WCHAR szWindowClass[MAX_LOADSTRING];            // the main window class name
+
+static SceneManager* g_sceneManager;
 
 // Forward declarations of functions included in this code module:
 ATOM                MyRegisterClass(HINSTANCE hInstance);
@@ -44,6 +50,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         return EXIT_FAILURE;
     }
 
+    g_sceneManager = new SceneManager();
+    g_sceneManager->requestHelloWorldSceneStart();
+
     // Initialize global strings
     LoadStringW(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
     LoadStringW(hInstance, IDC_GAMEENGINE, szWindowClass, MAX_LOADSTRING);
@@ -59,6 +68,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
     MSG msg;
 
+    static int debugCounter = 0;
     // Main message loop:
     while (GetMessage(&msg, nullptr, 0, 0))
     {
