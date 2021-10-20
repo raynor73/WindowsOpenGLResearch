@@ -5,14 +5,18 @@
 
 namespace GameEngine
 {
+class ServiceLocator;
+
 class SceneManager
 {
 public:
-    void requestHelloWorldSceneStart();
+    explicit SceneManager(std::shared_ptr<ServiceLocator> serviceLocator) : m_serviceLocator(std::move(serviceLocator)) {}
+    virtual ~SceneManager() = default;
 
     Scene* activeScene() { return m_activeScene.get(); };
 
-private:
+protected:
     std::shared_ptr<Scene> m_activeScene;
+    std::shared_ptr<ServiceLocator> m_serviceLocator;
 };
 }

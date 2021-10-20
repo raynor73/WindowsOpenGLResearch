@@ -120,11 +120,11 @@ bool GameEngine::Windows::Utils::attachParentConsole(int16_t minLength)
 
 std::shared_ptr<WCHAR[]> GameEngine::Windows::Utils::getString(HINSTANCE hInstance, uint32_t resId)
 {
-    auto string = shared_ptr<WCHAR[]>(new WCHAR[MAX_LOADSTRING]);
+    auto wcString = shared_ptr<WCHAR[]>(new WCHAR[MAX_LOADSTRING]);
 
-    LoadStringW(hInstance, resId, string.get(), MAX_LOADSTRING);
+    LoadStringW(hInstance, resId, wcString.get(), MAX_LOADSTRING);
 
-    return string;
+    return wcString;
 }
 
 void GameEngine::Windows::Utils::showDialog(HWND hWnd, WCHAR* title, WCHAR* message)

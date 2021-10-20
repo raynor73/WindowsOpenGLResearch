@@ -42,15 +42,24 @@
     <ClInclude Include="game\hello_world_scene.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="game_engine\game_object_component.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="game\dev_scene_manager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="game_engine\time_provider.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="game_engine\time_manager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameEngine.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="platform_dependent\windows\utils.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="game_engine\scene_manager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="game_engine\service_locator.cpp">
@@ -60,6 +69,18 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="game\hello_world_scene.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="game_engine\game_object_component.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="game\dev_scene_manager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="game_engine\time_provider.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="game_engine\time_manager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -5,9 +5,10 @@
 #include "framework.h"
 #include "GameEngine.h"
 #include <platform_dependent/windows/utils.h>
-#include <game_engine/scene_manager.h>
+#include <game/dev_scene_manager.h>
 #include <GLFW/glfw3.h>
 #include <memory>
+#include <game_engine/service_locator.h>
 
 #define CONSOLE_BUFFER_SIZE 1024
 
@@ -15,7 +16,7 @@ using namespace GameEngine;
 using namespace Windows::Utils;
 using namespace std;
 
-static SceneManager* g_sceneManager;
+static shared_ptr<DevSceneManager> g_sceneManager;
 
 static bool setupConsolse(HINSTANCE hInstance) {
     if (!createNewConsole(CONSOLE_BUFFER_SIZE)) {
@@ -32,6 +33,12 @@ static bool setupConsolse(HINSTANCE hInstance) {
 static void mainLoop(GLFWwindow* window) {
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window)) {
+        /* Game logic */
+        auto activeScene = g_sceneManager->activeScene();
+        if (activeScene != nullptr) {
+            activeScene->update();
+        }
+
         /* Render here */
         glClear(GL_COLOR_BUFFER_BIT);
 
@@ -88,7 +95,13 @@ static GLFWwindow* initOpenGL(HINSTANCE hInstance) {
 }
 
 static void initGame() {
-    g_sceneManager = new SceneManager();
+    auto serviceLocator = make_shared<ServiceLocator>();
+
+    serviceLocator->provide(make_shared<TimeManager>(make_shared<TimeProvider>()));
+
+    g_sceneManager = make_shared<DevSceneManager>(serviceLocator);
+    serviceLocator->provide(g_sceneManager);
+
     g_sceneManager->requestHelloWorldSceneStart();
 }
 
