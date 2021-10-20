@@ -1,5 +1,7 @@
 #include "utils.h"
 
+using namespace std;
+
 bool GameEngine::Windows::Utils::redirectConsoleIO()
 {
     bool result = true;
@@ -114,4 +116,23 @@ bool GameEngine::Windows::Utils::attachParentConsole(int16_t minLength)
     }
 
     return result;
+}
+
+std::shared_ptr<WCHAR[]> GameEngine::Windows::Utils::getString(HINSTANCE hInstance, uint32_t resId)
+{
+    auto string = shared_ptr<WCHAR[]>(new WCHAR[MAX_LOADSTRING]);
+
+    LoadStringW(hInstance, resId, string.get(), MAX_LOADSTRING);
+
+    return string;
+}
+
+void GameEngine::Windows::Utils::showDialog(HWND hWnd, WCHAR* title, WCHAR* message)
+{
+    MessageBox(hWnd, message, title, MB_OK);
+}
+
+void GameEngine::Windows::Utils::showDialog(WCHAR* title, WCHAR* message)
+{
+    showDialog(NULL, title, message);
 }

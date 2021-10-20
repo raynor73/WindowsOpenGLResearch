@@ -10,8 +10,11 @@
 #define IDS_GENERIC_ERROR_TITLE         104
 #define IDM_EXIT                        105
 #define IDS_ERROR_OPENING_CONSOLE       105
+#define IDS_ERROR_INITIALIZING_GLEW     106
 #define IDI_GAMEENGINE                  107
+#define IDS_ERROR_INITIALIZING_GLFW     107
 #define IDI_SMALL                       108
+#define IDS_ERROR_CREATING_MAIN_WINDOW  108
 #define IDC_GAMEENGINE                  109
 #define IDR_MAINFRAME                   128
 #define IDC_STATIC                      -1
