@@ -9,8 +9,13 @@
 #include <GLFW/glfw3.h>
 #include <memory>
 #include <game_engine/service_locator.h>
+#include <platform_dependent/windows/windows_rendering_window_info_provider.h>
 
 #define CONSOLE_BUFFER_SIZE 1024
+
+#define WINDOW_WIDTH 640
+#define WINDOW_HEIGHT 480
+#define WINDOW_DENSITY_FACTOR 1
 
 using namespace GameEngine;
 using namespace Windows::Utils;
@@ -69,7 +74,7 @@ static GLFWwindow* initOpenGL(HINSTANCE hInstance) {
     }
 
     /* Create a windowed mode window and its OpenGL context */
-    window = glfwCreateWindow(640, 480, "Hello World", NULL, NULL);
+    window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Hello World", NULL, NULL);
     if (!window) {
         showDialog(
             getString(hInstance, IDS_GENERIC_ERROR_TITLE).get(),
@@ -98,6 +103,7 @@ static void initGame() {
     auto serviceLocator = make_shared<ServiceLocator>();
 
     serviceLocator->provide(make_shared<TimeManager>(make_shared<TimeProvider>()));
+    serviceLocator->provide(make_shared<WindowsRenderingWindowInfoProvider>(float(WINDOW_WIDTH), float(WINDOW_HEIGHT), float(WINDOW_DENSITY_FACTOR)));
 
     g_sceneManager = make_shared<DevSceneManager>(serviceLocator);
     serviceLocator->provide(g_sceneManager);

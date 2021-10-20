@@ -146,13 +146,16 @@
     <ClInclude Include="GameEngine.h" />
     <ClInclude Include="game\dev_scene_manager.h" />
     <ClInclude Include="game\hello_world_scene.h" />
+    <ClInclude Include="game_engine\rendering_window_info_provider.h" />
     <ClInclude Include="game_engine\game_object_component.h" />
     <ClInclude Include="game_engine\scene.h" />
     <ClInclude Include="game_engine\scene_manager.h" />
     <ClInclude Include="game_engine\service_locator.h" />
     <ClInclude Include="game_engine\time_manager.h" />
     <ClInclude Include="game_engine\time_provider.h" />
+    <ClInclude Include="game_engine\units_converter.h" />
     <ClInclude Include="platform_dependent\windows\utils.h" />
+    <ClInclude Include="platform_dependent\windows\windows_rendering_window_info_provider.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
@@ -165,6 +168,7 @@
     <ClCompile Include="game_engine\service_locator.cpp" />
     <ClCompile Include="game_engine\time_manager.cpp" />
     <ClCompile Include="game_engine\time_provider.cpp" />
+    <ClCompile Include="game_engine\units_converter.cpp" />
     <ClCompile Include="platform_dependent\windows\utils.cpp" />
   </ItemGroup>
   <ItemGroup>

@@ -22,6 +22,15 @@ void ServiceLocator::provide(shared_ptr<TimeManager> timeManager)
     m_timeManager = timeManager;
 }
 
+void ServiceLocator::provide(shared_ptr<RenderingWindowInfoProvider> renderingWindowInfoProvider)
+{
+    if (m_renderingWindowInfoProvider.use_count() > 0) {
+        throw domain_error("Rendering Window Info Provider already provided");
+    }
+
+    m_renderingWindowInfoProvider = renderingWindowInfoProvider;
+}
+
 SceneManager* ServiceLocator::sceneManager()
 {
     if (m_sceneManager.use_count() == 0) {
@@ -38,4 +47,13 @@ TimeManager* GameEngine::ServiceLocator::timeManager()
     }
 
     return m_timeManager.get();
+}
+
+RenderingWindowInfoProvider* GameEngine::ServiceLocator::renderingWindowInfoProvider()
+{
+    if (m_renderingWindowInfoProvider.use_count() == 0) {
+        throw domain_error("Rendering Window Info Provider is not provided");
+    }
+
+    return m_renderingWindowInfoProvider.get();
 }
