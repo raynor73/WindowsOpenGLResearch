@@ -1,11 +1,12 @@
 #include "time_manager.h"
+#include <game_engine/service_locator.h>
 
 using namespace GameEngine;
 using namespace std;
 
 void TimeManager::update()
 {
-    auto currentTimestamp = m_timeProvider->getTimestamp();
+    auto currentTimestamp = m_serviceLocator->timeProvider()->getTimestamp();
 
     if (m_hasPrevTimestamp) {
         m_unscaledDeltaTime = (currentTimestamp - m_prevTimestamp) / TimeProvider::NANOS_IN_SECOND;

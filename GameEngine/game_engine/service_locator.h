@@ -9,6 +9,7 @@
 #include <game_engine/mesh_renderer_factory.h>
 #include <game_engine/mesh_storage.h>
 #include <game_engine/units_converter.h>
+#include <game_engine/time_provider.h>
 #include <memory>
 
 namespace GameEngine
@@ -17,6 +18,7 @@ class ServiceLocator
 {
 public:
     void provide(std::shared_ptr<SceneManager> sceneManager);
+    void provide(std::shared_ptr<TimeProvider> timeProvider);
     void provide(std::shared_ptr<TimeManager> timeManager);
     void provide(std::shared_ptr<RenderingWindowInfoProvider> renderingWindowInfoProvider);
     void provide(std::shared_ptr<FsAbstraction> fsAbstraction);
@@ -27,6 +29,7 @@ public:
     void provide(std::shared_ptr<UnitsConverter> unitsConverter);
 
     SceneManager* sceneManager();
+    TimeProvider* timeProvider();
     TimeManager* timeManager();
     RenderingWindowInfoProvider* renderingWindowInfoProvider();
     FsAbstraction* fsAbstraction();
@@ -38,6 +41,7 @@ public:
 
 private:
     std::shared_ptr<SceneManager> m_sceneManager;
+    std::shared_ptr<TimeProvider> m_timeProvider;
     std::shared_ptr<TimeManager> m_timeManager;
     std::shared_ptr<RenderingWindowInfoProvider> m_renderingWindowInfoProvider;
     std::shared_ptr<FsAbstraction> m_fsAbstraction;

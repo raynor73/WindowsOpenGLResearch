@@ -13,6 +13,15 @@ void ServiceLocator::provide(shared_ptr<SceneManager> sceneManager)
     m_sceneManager = sceneManager;
 }
 
+void ServiceLocator::provide(shared_ptr<TimeProvider> timeProvider)
+{
+    if (m_timeProvider.use_count() > 0) {
+        throw domain_error("Time Provider already provided");
+    }
+
+    m_timeProvider = timeProvider;
+}
+
 void ServiceLocator::provide(shared_ptr<TimeManager> timeManager)
 {
     if (m_timeManager.use_count() > 0) {
@@ -92,6 +101,15 @@ SceneManager* ServiceLocator::sceneManager()
     }
 
     return m_sceneManager.get();
+}
+
+TimeProvider* ServiceLocator::timeProvider()
+{
+    if (m_timeProvider.use_count() == 0) {
+        throw domain_error("Time Provider is not provided");
+    }
+
+    return m_timeProvider.get();
 }
 
 TimeManager* GameEngine::ServiceLocator::timeManager()

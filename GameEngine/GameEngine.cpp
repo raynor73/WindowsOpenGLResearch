@@ -10,6 +10,8 @@
 #include <memory>
 #include <game_engine/service_locator.h>
 #include <platform_dependent/windows/windows_rendering_window_info_provider.h>
+#include <platform_dependent/windows/windows_read_only_fs_abstraction.h>
+#include <platform_dependent/windows/windows_mesh_loader.h>
 
 #define CONSOLE_BUFFER_SIZE 1024
 
@@ -102,8 +104,13 @@ static GLFWwindow* initOpenGL(HINSTANCE hInstance) {
 static void initGame() {
     auto serviceLocator = make_shared<ServiceLocator>();
 
-    serviceLocator->provide(make_shared<TimeManager>(make_shared<TimeProvider>()));
+    serviceLocator->provide(make_shared<TimeProvider>());
+    serviceLocator->provide(make_shared<TimeManager>(serviceLocator));
     serviceLocator->provide(make_shared<WindowsRenderingWindowInfoProvider>(float(WINDOW_WIDTH), float(WINDOW_HEIGHT), float(WINDOW_DENSITY_FACTOR)));
+    serviceLocator->provide(make_shared<WindowsReadOnlyFsAbstraction>());
+    serviceLocator->provide(make_shared<WindowsMeshLoader>(serviceLocator));
+    serviceLocator->provide(make_shared<MeshStorage>());
+    //serviceLocator->provide(make_shared<UnitsConverter>());
 
     g_sceneManager = make_shared<DevSceneManager>(serviceLocator);
     serviceLocator->provide(g_sceneManager);

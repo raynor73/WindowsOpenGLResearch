@@ -1,13 +1,14 @@
 #pragma once
 
 #include <memory>
-#include <game_engine/time_provider.h>
 
 namespace GameEngine 
 {
+class ServiceLocator;
+
 class TimeManager
 {
-    std::shared_ptr<TimeProvider> m_timeProvider;
+    std::shared_ptr<ServiceLocator> m_serviceLocator;
 
     float m_timeScale = 1;
 
@@ -18,7 +19,7 @@ class TimeManager
     bool m_hasPrevTimestamp = false;
 
 public:
-    explicit TimeManager(std::shared_ptr<TimeProvider> timeProvider) : m_timeProvider(std::move(timeProvider)) {}
+    explicit TimeManager(std::shared_ptr<ServiceLocator> serviceLocator) : m_serviceLocator(std::move(serviceLocator)) {}
 
     void update();
 
