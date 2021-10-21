@@ -105,6 +105,12 @@
     <ClInclude Include="game_engine\fs_abstraction.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="platform_dependent\windows\windows_read_only_fs_abstraction.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="platform_dependent\windows\windows_mesh_loader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameEngine.cpp">
@@ -144,6 +150,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="game_engine\mesh_storage.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="platform_dependent\windows\windows_read_only_fs_abstraction.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="platform_dependent\windows\windows_mesh_loader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
