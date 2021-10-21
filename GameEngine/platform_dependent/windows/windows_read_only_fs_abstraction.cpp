@@ -19,6 +19,7 @@ vector<uint8_t> WindowsReadOnlyFsAbstraction::readBinaryFileContent(const string
     
     ifstream f(path.c_str(), ios::in | ios::binary);
     f.read(reinterpret_cast<char *>(buffer.data()), filesystem::file_size(path));
+    f.close();
 
     return buffer;
 }
@@ -29,6 +30,7 @@ string WindowsReadOnlyFsAbstraction::readTextFileContent(const string& path)
 
     ifstream f(path.c_str(), ios::in);
     ss << f.rdbuf();
+    f.close();
 
     return ss.str();
 }

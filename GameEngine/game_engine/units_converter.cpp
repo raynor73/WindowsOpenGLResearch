@@ -1,4 +1,6 @@
 #include "units_converter.h"
+#include <glm/gtx/compatibility.hpp>
+#include <game_engine/service_locator.h>
 
 using namespace GameEngine;
 using namespace std;
@@ -43,4 +45,39 @@ ostream& operator<<(ostream& os, const ComplexValue& complexValue) {
         auto plainValue = get<PlainValue>(complexValue);
         return os << plainValue << "px";
     }
+}
+
+float GameEngine::UnitsConverter::complexValueToPixels(const ComplexValue& value)
+{
+    if (std::holds_alternative<PercentValue>(value)) {
+        auto& percentValue = std::get<PercentValue>(value);
+        auto renderingWindowInfoProvider = m_serviceLocator->renderingWindowInfoProvider();
+        if (percentValue.dimensionType == DimensionType::WIDTH) {
+            return glm::lerp(0.0f, renderingWindowInfoProvider->width(), percentValue.value / 100);
+        } else {
+            return glm::lerp(0.0f, renderingWindowInfoProvider->height(), percentValue.value / 100);
+        }
+    } else if (std::holds_alternative<DpValue>(value)) {
+        auto& dpValue = std::get<DpValue>(value);
+        auto renderingWindowInfoProvider = m_serviceLocator->renderingWindowInfoProvider();
+        return dpValue.value * renderingWindowInfoProvider->densityFactor();
+    } else {
+        auto& plainValue = std::get<PlainValue>(value);
+        return plainValue.value;
+    }
+}
+
+ComplexValue GameEngine::UnitsConverter::widthPixelsToPercentValue(float pixels)
+{
+    return PercentValue{ DimensionType::WIDTH, pixels / m_serviceLocator->renderingWindowInfoProvider()->width() * 100 };
+}
+
+ComplexValue GameEngine::UnitsConverter::heightPixelsToPercentValue(float pixels)
+{
+    return PercentValue{ DimensionType::HEIGHT, pixels / m_serviceLocator->renderingWindowInfoProvider()->height() * 100 };
+}
+
+ComplexValue GameEngine::UnitsConverter::pixelsToDpValue(float pixels)
+{
+    return PlainValue{ pixels / m_serviceLocator->renderingWindowInfoProvider()->densityFactor() };
 }

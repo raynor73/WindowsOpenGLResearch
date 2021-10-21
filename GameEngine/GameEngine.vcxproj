@@ -169,6 +169,7 @@
     <ClInclude Include="game_engine\vertex.h" />
     <ClInclude Include="game_engine\without_generated_methods.h" />
     <ClInclude Include="platform_dependent\windows\utils.h" />
+    <ClInclude Include="platform_dependent\windows\windows_fs_abstraction.h" />
     <ClInclude Include="platform_dependent\windows\windows_mesh_loader.h" />
     <ClInclude Include="platform_dependent\windows\windows_read_only_fs_abstraction.h" />
     <ClInclude Include="platform_dependent\windows\windows_rendering_window_info_provider.h" />
@@ -189,6 +190,7 @@
     <ClCompile Include="game_engine\transformation_component.cpp" />
     <ClCompile Include="game_engine\units_converter.cpp" />
     <ClCompile Include="platform_dependent\windows\utils.cpp" />
+    <ClCompile Include="platform_dependent\windows\windows_fs_abstraction.cpp" />
     <ClCompile Include="platform_dependent\windows\windows_mesh_loader.cpp" />
     <ClCompile Include="platform_dependent\windows\windows_read_only_fs_abstraction.cpp" />
   </ItemGroup>

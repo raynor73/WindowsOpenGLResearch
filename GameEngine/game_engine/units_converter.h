@@ -1,9 +1,14 @@
 #pragma once
+
 #include <variant>
 #include <ostream>
+#include <memory>
+#include <game_engine/without_generated_methods.h>
 
 namespace GameEngine
 {
+class ServiceLocator;
+
 enum class DimensionType {
     WIDTH, HEIGHT
 };
@@ -23,15 +28,18 @@ struct PlainValue {
 
 typedef std::variant<PercentValue, DpValue, PlainValue> ComplexValue;
 
-class UnitsConverter {
+class UnitsConverter 
+{
+    std::shared_ptr<ServiceLocator> m_serviceLocator;
 
 public:
+    explicit UnitsConverter(std::shared_ptr<ServiceLocator> serviceLocator) : m_serviceLocator(serviceLocator) {}
     virtual ~UnitsConverter() = default;
 
-    virtual float complexValueToPixels(const ComplexValue& value) = 0;
-    virtual ComplexValue widthPixelsToPercentValue(float pixels) = 0;
-    virtual ComplexValue heightPixelsToPercentValue(float pixels) = 0;
-    virtual ComplexValue pixelsToDpValue(float pixels) = 0;
+    virtual float complexValueToPixels(const ComplexValue& value);
+    virtual ComplexValue widthPixelsToPercentValue(float pixels);
+    virtual ComplexValue heightPixelsToPercentValue(float pixels);
+    virtual ComplexValue pixelsToDpValue(float pixels);
 };
 }
 
