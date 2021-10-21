@@ -146,13 +146,16 @@
     <ClInclude Include="GameEngine.h" />
     <ClInclude Include="game\dev_scene_manager.h" />
     <ClInclude Include="game\hello_world_scene.h" />
+    <ClInclude Include="game_engine\fs_abstraction.h" />
     <ClInclude Include="game_engine\game_object.h" />
     <ClInclude Include="game_engine\material.h" />
     <ClInclude Include="game_engine\material_component.h" />
     <ClInclude Include="game_engine\mesh.h" />
+    <ClInclude Include="game_engine\mesh_loader.h" />
     <ClInclude Include="game_engine\mesh_renderer_factory.h" />
     <ClInclude Include="game_engine\mesh_storage.h" />
     <ClInclude Include="game_engine\object_pool.h" />
+    <ClInclude Include="game_engine\read_only_fs_abstraction.h" />
     <ClInclude Include="game_engine\rendering_window_info_provider.h" />
     <ClInclude Include="game_engine\game_object_component.h" />
     <ClInclude Include="game_engine\scene.h" />
