@@ -63,9 +63,8 @@ void TransformationComponent::setDirty() {
 void TransformationComponent::calculateFinalTransformation() {
     if (m_isDirty) {
         throwErrorIfNoGameObject();
-        auto parentGameObjectPointer = m_gameObject.lock()->parent();
-        if (parentGameObjectPointer.use_count() > 0) {
-            auto parentGameObject = parentGameObjectPointer.lock();
+        auto parentGameObject = m_gameObject.lock()->parent().lock();
+        if (parentGameObject.use_count() > 0) {
             auto parentTransform = std::static_pointer_cast<TransformationComponent>(
                 parentGameObject->findComponent(TYPE_NAME)
                 );
