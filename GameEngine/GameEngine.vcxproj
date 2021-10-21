@@ -150,6 +150,9 @@
     <ClInclude Include="game_engine\material.h" />
     <ClInclude Include="game_engine\material_component.h" />
     <ClInclude Include="game_engine\mesh.h" />
+    <ClInclude Include="game_engine\mesh_renderer_factory.h" />
+    <ClInclude Include="game_engine\mesh_storage.h" />
+    <ClInclude Include="game_engine\object_pool.h" />
     <ClInclude Include="game_engine\rendering_window_info_provider.h" />
     <ClInclude Include="game_engine\game_object_component.h" />
     <ClInclude Include="game_engine\scene.h" />
@@ -173,6 +176,7 @@
     <ClCompile Include="game\hello_world_scene.cpp" />
     <ClCompile Include="game_engine\game_object.cpp" />
     <ClCompile Include="game_engine\material_component.cpp" />
+    <ClCompile Include="game_engine\mesh_storage.cpp" />
     <ClCompile Include="game_engine\scene.cpp" />
     <ClCompile Include="game_engine\service_locator.cpp" />
     <ClCompile Include="game_engine\time_manager.cpp" />
