@@ -69,6 +69,15 @@
     <ClInclude Include="game_engine\game_object.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="game_engine\vertex.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="game_engine\mesh.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="game_engine\transformation_component.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameEngine.cpp">
@@ -99,6 +108,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="game_engine\game_object.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="game_engine\transformation_component.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
