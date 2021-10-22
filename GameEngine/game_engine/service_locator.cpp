@@ -85,6 +85,15 @@ void ServiceLocator::provide(shared_ptr<UnitsConverter> unitsConverter)
     m_unitsConverter = unitsConverter;
 }
 
+void ServiceLocator::provide(shared_ptr<SceneHierarchyLoader> sceneHierarchyLoader)
+{
+    if (m_sceneHierarchyLoader != nullptr) {
+        throw domain_error("Scene Hierarchy Loader already provided");
+    }
+
+    m_sceneHierarchyLoader = sceneHierarchyLoader;
+}
+
 SceneManager* ServiceLocator::sceneManager()
 {
     if (m_sceneManager.use_count() == 0) {
@@ -164,4 +173,13 @@ UnitsConverter* ServiceLocator::unitsConverter()
     }
 
     return m_unitsConverter.get();
+}
+
+SceneHierarchyLoader* GameEngine::ServiceLocator::sceneHierarchyLoader()
+{
+    if (m_sceneHierarchyLoader == nullptr) {
+        throw domain_error("Scene Hierarchy Loader is not provided");
+    }
+
+    return m_sceneHierarchyLoader.get();
 }

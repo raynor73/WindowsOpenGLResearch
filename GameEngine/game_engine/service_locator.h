@@ -9,6 +9,7 @@
 #include <game_engine/mesh_renderer_factory.h>
 #include <game_engine/units_converter.h>
 #include <game_engine/time_provider.h>
+#include <game_engine/scene_hierarchy_loader.h>
 #include <memory>
 
 namespace GameEngine
@@ -25,6 +26,7 @@ public:
     void provide(std::shared_ptr<MeshLoader> meshLoader);
     void provide(std::shared_ptr<MeshRendererFactory> meshRendererFactory);
     void provide(std::shared_ptr<UnitsConverter> unitsConverter);
+    void provide(std::shared_ptr<SceneHierarchyLoader> sceneHierarchyLoader);
 
     SceneManager* sceneManager();
     TimeProvider* timeProvider();
@@ -35,6 +37,7 @@ public:
     MeshLoader* meshLoader();
     MeshRendererFactory* meshRendererFactory();
     UnitsConverter* unitsConverter();
+    SceneHierarchyLoader* sceneHierarchyLoader();
 
 private:
     std::shared_ptr<SceneManager> m_sceneManager;
@@ -46,5 +49,6 @@ private:
     std::shared_ptr<MeshLoader> m_meshLoader;
     std::shared_ptr<MeshRendererFactory> m_meshRendererFactory;
     std::shared_ptr<UnitsConverter> m_unitsConverter;
+    std::shared_ptr<SceneHierarchyLoader> m_sceneHierarchyLoader;
 };
 }

@@ -116,6 +116,7 @@ static void initGame() {
     serviceLocator->provide(make_shared<WindowsMeshLoader>(serviceLocator));
     //serviceLocator->provide(make_shared<MeshRendererFactory>());
     serviceLocator->provide(make_shared<UnitsConverter>(serviceLocator));
+    serviceLocator->provide(make_shared<SceneHierarchyLoader>(serviceLocator));
 
     g_sceneManager = make_shared<DevSceneManager>(serviceLocator);
     serviceLocator->provide(g_sceneManager);

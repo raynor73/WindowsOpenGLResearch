@@ -3,6 +3,7 @@
 #include <assimp/postprocess.h>
 #include <vector>
 #include "windows_mesh_loader.h"
+#include <game_engine/logger.h>
 
 using namespace GameEngine;
 using namespace std;
@@ -19,7 +20,7 @@ Mesh GameEngine::WindowsMeshLoader::loadMesh(const std::string& path)
         meshBytes.data(),
         meshBytes.size(),
         aiProcess_Triangulate,
-        nullptr
+        "obj"
     );
 
     if (scene != nullptr) {
@@ -65,14 +66,12 @@ Mesh GameEngine::WindowsMeshLoader::loadMesh(const std::string& path)
                     indices.push_back(index);
                 }
             }
-        }
-        else {
+        } else {
             std::stringstream ss;
             ss << "No meshes found in " << path;
             throw std::domain_error(ss.str());
         }
-    }
-    else {
+    } else {
         std::stringstream ss;
         ss << "Error importing mesh " << path;
         throw std::domain_error(ss.str());

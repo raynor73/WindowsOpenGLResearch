@@ -1,3 +1,5 @@
+#pragma once
+
 #include <game_engine/scene.h>
 #include <game_engine/without_generated_methods.h>
 #include <string>
