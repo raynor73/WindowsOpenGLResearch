@@ -6,6 +6,7 @@
 #include <glm/gtx/quaternion.hpp>
 #include <game_engine/mesh_component.h>
 #include <game_engine/material_component.h>
+#include <game_engine/ortho_camera_component.h>
 
 using namespace GameEngine;
 using namespace std;
@@ -181,8 +182,7 @@ shared_ptr<GameObjectComponent> SceneHierarchyLoader::parseComponent(
     }
     else if (type == "OrthoCamera") {
         auto camera = make_shared<OrthoCameraComponent>(
-            m_displayInfo,
-            m_unitsConverter,
+            m_serviceLocator,
             parseColor4f(componentJson["clearColor"]),
             parseLayerNames(componentJson["layerNames"]),
             parseComplexValue(componentJson["left"], DimensionType::WIDTH),

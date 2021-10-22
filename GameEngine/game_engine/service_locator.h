@@ -9,7 +9,6 @@
 #include <game_engine/mesh_renderer_factory.h>
 #include <game_engine/units_converter.h>
 #include <game_engine/time_provider.h>
-#include <game_engine/rendering_window_info_update_detector.h>
 #include <memory>
 
 namespace GameEngine
@@ -21,7 +20,6 @@ public:
     void provide(std::shared_ptr<TimeProvider> timeProvider);
     void provide(std::shared_ptr<TimeManager> timeManager);
     void provide(std::shared_ptr<RenderingWindowInfoProvider> renderingWindowInfoProvider);
-    void provide(std::shared_ptr<RenderingWindowInfoUpdateDetector> renderingWindowInfoUpdateDetector);
     void provide(std::shared_ptr<FsAbstraction> fsAbstraction);
     void provide(std::shared_ptr<ReadOnlyFsAbstraction> readOnlyFsAbstraction);
     void provide(std::shared_ptr<MeshLoader> meshLoader);
@@ -32,7 +30,6 @@ public:
     TimeProvider* timeProvider();
     TimeManager* timeManager();
     RenderingWindowInfoProvider* renderingWindowInfoProvider();
-    RenderingWindowInfoUpdateDetector* renderingWindowInfoUpdateDetector();
     FsAbstraction* fsAbstraction();
     ReadOnlyFsAbstraction* readOnlyFsAbstraction();
     MeshLoader* meshLoader();
@@ -44,7 +41,6 @@ private:
     std::shared_ptr<TimeProvider> m_timeProvider;
     std::shared_ptr<TimeManager> m_timeManager;
     std::shared_ptr<RenderingWindowInfoProvider> m_renderingWindowInfoProvider;
-    std::shared_ptr<RenderingWindowInfoUpdateDetector> m_renderingWindowInfoUpdateDetector;
     std::shared_ptr<FsAbstraction> m_fsAbstraction;
     std::shared_ptr<ReadOnlyFsAbstraction> m_readOnlyFsAbstraction;
     std::shared_ptr<MeshLoader> m_meshLoader;

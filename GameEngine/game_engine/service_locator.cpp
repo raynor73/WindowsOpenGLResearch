@@ -40,15 +40,6 @@ void ServiceLocator::provide(shared_ptr<RenderingWindowInfoProvider> renderingWi
     m_renderingWindowInfoProvider = renderingWindowInfoProvider;
 }
 
-void ServiceLocator::provide(shared_ptr<RenderingWindowInfoUpdateDetector> renderingWindowInfoUpdateDetector)
-{
-    if (m_renderingWindowInfoUpdateDetector.use_count() > 0) {
-        throw domain_error("Rendering Window Info Update Detector already provided");
-    }
-
-    m_renderingWindowInfoUpdateDetector = renderingWindowInfoUpdateDetector;
-}
-
 void ServiceLocator::provide(shared_ptr<FsAbstraction> fsAbstraction)
 {
     if (m_fsAbstraction.use_count() > 0) {
@@ -128,15 +119,6 @@ RenderingWindowInfoProvider* GameEngine::ServiceLocator::renderingWindowInfoProv
     }
 
     return m_renderingWindowInfoProvider.get();
-}
-
-RenderingWindowInfoUpdateDetector* ServiceLocator::renderingWindowInfoUpdateDetector()
-{
-    if (m_renderingWindowInfoUpdateDetector.use_count() == 0) {
-        throw domain_error("Rendering Window Info Update Detector is not provided");
-    }
-
-    return m_renderingWindowInfoUpdateDetector.get();
 }
 
 FsAbstraction* ServiceLocator::fsAbstraction()
