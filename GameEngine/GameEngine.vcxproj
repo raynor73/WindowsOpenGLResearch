@@ -146,10 +146,15 @@
     <ClInclude Include="GameEngine.h" />
     <ClInclude Include="game\dev_scene_manager.h" />
     <ClInclude Include="game\hello_world_scene.h" />
+    <ClInclude Include="game_engine\bitmap_loader.h" />
+    <ClInclude Include="game_engine\bitmap_info.h" />
     <ClInclude Include="game_engine\camera_component.h" />
     <ClInclude Include="game_engine\constants.h" />
     <ClInclude Include="game_engine\fs_abstraction.h" />
     <ClInclude Include="game_engine\game_object.h" />
+    <ClInclude Include="game_engine\textures_repository .h" />
+    <ClInclude Include="platform_dependent\windows\windows_bitmap_loader.h" />
+    <ClInclude Include="rendering_engine\ibo_info.h" />
     <ClInclude Include="game_engine\logger.h" />
     <ClInclude Include="game_engine\material.h" />
     <ClInclude Include="game_engine\material_component.h" />
@@ -183,6 +188,10 @@
     <ClInclude Include="platform_dependent\windows\windows_mesh_loader.h" />
     <ClInclude Include="platform_dependent\windows\windows_read_only_fs_abstraction.h" />
     <ClInclude Include="platform_dependent\windows\windows_rendering_window_info_provider.h" />
+    <ClInclude Include="rendering_engine\opengl_error_detector.h" />
+    <ClInclude Include="rendering_engine\opengl_geometry_buffers_storage.h" />
+    <ClInclude Include="rendering_engine\opengl_mesh_renderer_component.h" />
+    <ClInclude Include="rendering_engine\opengl_mesh_renderer_factory.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
@@ -208,10 +217,15 @@
     <ClCompile Include="game_engine\transformation_component.cpp" />
     <ClCompile Include="game_engine\units_converter.cpp" />
     <ClCompile Include="platform_dependent\windows\utils.cpp" />
+    <ClCompile Include="platform_dependent\windows\windows_bitmap_loader.cpp" />
     <ClCompile Include="platform_dependent\windows\windows_fs_abstraction.cpp" />
     <ClCompile Include="platform_dependent\windows\windows_logger.cpp" />
     <ClCompile Include="platform_dependent\windows\windows_mesh_loader.cpp" />
     <ClCompile Include="platform_dependent\windows\windows_read_only_fs_abstraction.cpp" />
+    <ClCompile Include="rendering_engine\opengl_error_detector.cpp" />
+    <ClCompile Include="rendering_engine\opengl_geometry_buffers_storage.cpp" />
+    <ClCompile Include="rendering_engine\opengl_mesh_renderer_component.cpp" />
+    <ClCompile Include="rendering_engine\opengl_mesh_renderer_factory.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="GameEngine.rc" />
