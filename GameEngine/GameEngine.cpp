@@ -111,7 +111,6 @@ static void initGame() {
     serviceLocator->provide(make_shared<WindowsReadOnlyFsAbstraction>());
     serviceLocator->provide(make_shared<WindowsFsAbstraction>(serviceLocator));
     serviceLocator->provide(make_shared<WindowsMeshLoader>(serviceLocator));
-    serviceLocator->provide(make_shared<MeshStorage>());
     //serviceLocator->provide(make_shared<MeshRendererFactory>());
     serviceLocator->provide(make_shared<UnitsConverter>(serviceLocator));
 
