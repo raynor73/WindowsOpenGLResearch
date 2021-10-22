@@ -67,15 +67,6 @@ void ServiceLocator::provide(shared_ptr<MeshLoader> meshLoader)
     m_meshLoader = meshLoader;
 }
 
-void ServiceLocator::provide(shared_ptr<MeshStorage> meshStorage)
-{
-    if (m_meshStorage.use_count() > 0) {
-        throw domain_error("Mesh Storage already provided");
-    }
-
-    m_meshStorage = meshStorage;
-}
-
 void ServiceLocator::provide(shared_ptr<MeshRendererFactory> meshRendererFactory)
 {
     if (m_meshRendererFactory.use_count() > 0) {
@@ -155,15 +146,6 @@ MeshLoader* ServiceLocator::meshLoader()
     }
 
     return m_meshLoader.get();
-}
-
-MeshStorage* ServiceLocator::meshStorage()
-{
-    if (m_meshStorage.use_count() == 0) {
-        throw domain_error("Mesh Storage is not provided");
-    }
-
-    return m_meshStorage.get();
 }
 
 MeshRendererFactory* ServiceLocator::meshRendererFactory()

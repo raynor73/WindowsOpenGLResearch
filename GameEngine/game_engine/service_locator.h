@@ -7,7 +7,6 @@
 #include <game_engine/fs_abstraction.h>
 #include <game_engine/mesh_loader.h>
 #include <game_engine/mesh_renderer_factory.h>
-#include <game_engine/mesh_storage.h>
 #include <game_engine/units_converter.h>
 #include <game_engine/time_provider.h>
 #include <memory>
@@ -24,7 +23,6 @@ public:
     void provide(std::shared_ptr<FsAbstraction> fsAbstraction);
     void provide(std::shared_ptr<ReadOnlyFsAbstraction> readOnlyFsAbstraction);
     void provide(std::shared_ptr<MeshLoader> meshLoader);
-    void provide(std::shared_ptr<MeshStorage> meshStorage);
     void provide(std::shared_ptr<MeshRendererFactory> meshRendererFactory);
     void provide(std::shared_ptr<UnitsConverter> unitsConverter);
 
@@ -35,7 +33,6 @@ public:
     FsAbstraction* fsAbstraction();
     ReadOnlyFsAbstraction* readOnlyFsAbstraction();
     MeshLoader* meshLoader();
-    MeshStorage* meshStorage();
     MeshRendererFactory* meshRendererFactory();
     UnitsConverter* unitsConverter();
 
@@ -47,7 +44,6 @@ private:
     std::shared_ptr<FsAbstraction> m_fsAbstraction;
     std::shared_ptr<ReadOnlyFsAbstraction> m_readOnlyFsAbstraction;
     std::shared_ptr<MeshLoader> m_meshLoader;
-    std::shared_ptr<MeshStorage> m_meshStorage;
     std::shared_ptr<MeshRendererFactory> m_meshRendererFactory;
     std::shared_ptr<UnitsConverter> m_unitsConverter;
 };

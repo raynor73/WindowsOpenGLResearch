@@ -16,14 +16,14 @@ void MeshStorage::putMesh(const string& name, Mesh mesh) {
     m_storage[name] = move(mesh);
 }
 
-Mesh MeshStorage::getMesh(const string& name) {
+Mesh MeshStorage::getMesh(const string& name) const {
     if (m_storage.count(name) == 0) {
         stringstream ss;
         ss << "Mesh " << name << " not found";
         throw domain_error(ss.str());
     }
 
-    return m_storage[name];
+    return m_storage.at(name);
 }
 
 void MeshStorage::removeMesh(const string& name) {

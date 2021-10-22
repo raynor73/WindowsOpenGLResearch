@@ -15,7 +15,7 @@ public:
     MeshStorage() = default;
 
     void putMesh(const std::string& name, Mesh mesh);
-    Mesh getMesh(const std::string& name);
+    Mesh getMesh(const std::string& name) const;
     void removeMesh(const std::string& name);
     void removeAllMeshes();
 };

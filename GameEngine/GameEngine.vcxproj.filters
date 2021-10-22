@@ -114,6 +114,15 @@
     <ClInclude Include="platform_dependent\windows\windows_fs_abstraction.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="game_engine\scene_hierarchy_loader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="game_engine\text_appearance.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="game_engine\mesh_component.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameEngine.cpp">
@@ -162,6 +171,15 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="platform_dependent\windows\windows_fs_abstraction.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="game_engine\scene_hierarchy_loader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="game_engine\text_appearance.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="game_engine\mesh_component.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

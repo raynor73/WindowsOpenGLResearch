@@ -17,6 +17,8 @@ void Scene::update()
 {
     m_serviceLocator->timeManager()->update();
 
+    m_rootGameObject->update();
+
     /*if (m_appStateRepository->isAppInForeground()) {
         m_soundScene->setSoundListenerGain(1);
     }
