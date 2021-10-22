@@ -150,6 +150,7 @@
     <ClInclude Include="game_engine\constants.h" />
     <ClInclude Include="game_engine\fs_abstraction.h" />
     <ClInclude Include="game_engine\game_object.h" />
+    <ClInclude Include="game_engine\logger.h" />
     <ClInclude Include="game_engine\material.h" />
     <ClInclude Include="game_engine\material_component.h" />
     <ClInclude Include="game_engine\mesh.h" />
@@ -159,6 +160,7 @@
     <ClInclude Include="game_engine\mesh_storage.h" />
     <ClInclude Include="game_engine\object_pool.h" />
     <ClInclude Include="game_engine\ortho_camera_component.h" />
+    <ClInclude Include="game_engine\perspective_camera_component.h" />
     <ClInclude Include="game_engine\read_only_fs_abstraction.h" />
     <ClInclude Include="game_engine\rendering_window_info_provider.h" />
     <ClInclude Include="game_engine\game_object_component.h" />
@@ -177,6 +179,7 @@
     <ClInclude Include="game_engine\without_generated_methods.h" />
     <ClInclude Include="platform_dependent\windows\utils.h" />
     <ClInclude Include="platform_dependent\windows\windows_fs_abstraction.h" />
+    <ClInclude Include="platform_dependent\windows\windows_logger.h" />
     <ClInclude Include="platform_dependent\windows\windows_mesh_loader.h" />
     <ClInclude Include="platform_dependent\windows\windows_read_only_fs_abstraction.h" />
     <ClInclude Include="platform_dependent\windows\windows_rendering_window_info_provider.h" />
@@ -189,10 +192,12 @@
     <ClCompile Include="game\hello_world_scene.cpp" />
     <ClCompile Include="game_engine\camera_component.cpp" />
     <ClCompile Include="game_engine\game_object.cpp" />
+    <ClCompile Include="game_engine\logger.cpp" />
     <ClCompile Include="game_engine\material_component.cpp" />
     <ClCompile Include="game_engine\mesh_component.cpp" />
     <ClCompile Include="game_engine\mesh_storage.cpp" />
     <ClCompile Include="game_engine\ortho_camera_component.cpp" />
+    <ClCompile Include="game_engine\perspective_camera_component.cpp" />
     <ClCompile Include="game_engine\rendering_window_info_update_detector.cpp" />
     <ClCompile Include="game_engine\scene.cpp" />
     <ClCompile Include="game_engine\scene_hierarchy_loader.cpp" />
@@ -204,6 +209,7 @@
     <ClCompile Include="game_engine\units_converter.cpp" />
     <ClCompile Include="platform_dependent\windows\utils.cpp" />
     <ClCompile Include="platform_dependent\windows\windows_fs_abstraction.cpp" />
+    <ClCompile Include="platform_dependent\windows\windows_logger.cpp" />
     <ClCompile Include="platform_dependent\windows\windows_mesh_loader.cpp" />
     <ClCompile Include="platform_dependent\windows\windows_read_only_fs_abstraction.cpp" />
   </ItemGroup>

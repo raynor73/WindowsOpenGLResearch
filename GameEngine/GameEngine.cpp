@@ -13,6 +13,7 @@
 #include <platform_dependent/windows/windows_read_only_fs_abstraction.h>
 #include <platform_dependent/windows/windows_mesh_loader.h>
 #include <platform_dependent/windows/windows_fs_abstraction.h>
+#include <platform_dependent/windows/windows_logger.h>
 
 #define CONSOLE_BUFFER_SIZE 1024
 
@@ -103,6 +104,8 @@ static GLFWwindow* initOpenGL(HINSTANCE hInstance) {
 }
 
 static void initGame() {
+    L::setLogger(make_shared<WindowsLogger>());
+
     auto serviceLocator = make_shared<ServiceLocator>();
 
     serviceLocator->provide(make_shared<TimeProvider>());

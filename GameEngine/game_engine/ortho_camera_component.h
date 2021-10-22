@@ -2,6 +2,7 @@
 
 #include <utility>
 #include <memory>
+#include <glm/gtc/matrix_transform.hpp>
 #include <game_engine/camera_component.h>
 #include <game_engine/rendering_window_info_update_detector.h>
 
@@ -18,7 +19,7 @@ class OrthoCameraComponent : public CameraComponent, RenderingWindowInfoUpdateDe
     ComplexValue m_right;
     ComplexValue m_bottom;
 
-    glm::mat4 m_projectionMatrix;
+    glm::mat4 m_projectionMatrix = glm::identity<glm::mat4>();
 
 public:
     static const std::string TYPE_NAME;
@@ -34,9 +35,9 @@ public:
         float zNear,
         float zFar,
         int order
-    ) : CameraComponent(clearColor, layerNames,  zNear,  zFar,  order), 
+    ) : CameraComponent(clearColor, layerNames, zNear, zFar, order),
         RenderingWindowInfoUpdateDetector(serviceLocator),
-        m_serviceLocator(serviceLocator) 
+        m_serviceLocator(serviceLocator)
     {}
 
     glm::mat4 calculateViewMatrix() override;

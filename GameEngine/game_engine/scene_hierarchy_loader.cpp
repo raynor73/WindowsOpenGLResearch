@@ -7,6 +7,11 @@
 #include <game_engine/mesh_component.h>
 #include <game_engine/material_component.h>
 #include <game_engine/ortho_camera_component.h>
+#include <game_engine/perspective_camera_component.h>
+#include <game_engine/logger.h>
+#include <game_engine/constants.h>
+#include <game_engine/transformation_component.h>
+#include <game_engine/game_object.h>
 
 using namespace GameEngine;
 using namespace std;
@@ -18,7 +23,271 @@ void SceneHierarchyLoader::loadHierarchyIntoScene(const string& path, Scene& sce
 
 void SceneHierarchyLoader::buildHierarchyFromJson(const string& jsonString, Scene& scene)
 {
+    unordered_map<string, Material> materialsMap;
+    unordered_map<string, TextAppearance> textAppearancesMap;
 
+    nlohmann::json sceneJson;
+    try {
+        sceneJson = nlohmann::json::parse(jsonString);
+    } catch (nlohmann::json::parse_error& e) {
+        L::e(Constants::LOG_TAG, "Error restoring scene", e);
+    }
+
+    /*auto physicsParamsJson = sceneJson["physicsParams"];
+    auto gravityJson = physicsParamsJson["gravity"];
+    m_physicsEngine->setGravity(glm::vec3(
+        parseFloatNumber(gravityJson[0]),
+        parseFloatNumber(gravityJson[1]),
+        parseFloatNumber(gravityJson[2])
+    ));*/
+
+    auto meshesJsonArray = sceneJson["meshes"];
+    if (meshesJsonArray.is_array()) {
+        for (auto& meshJson : meshesJsonArray) {
+            string name;
+            string path;
+
+            if (!meshJson["name"].is_null()) {
+                name = meshJson["name"].get<string>();
+            } else {
+                continue;
+            }
+
+            if (!meshJson["path"].is_null()) {
+                path = meshJson["path"].get<string>();
+            } else {
+                continue;
+            }
+
+            scene.meshStorage().putMesh(name, m_serviceLocator->meshLoader()->loadMesh(path));
+        }
+    }
+
+    /*auto texturesJsonArray = sceneJson["textures"];
+    if (texturesJsonArray.is_array()) {
+        for (auto& textureJson : texturesJsonArray) {
+            auto nameJson = textureJson["name"];
+            if (!nameJson.is_string()) {
+                continue;
+            }
+            auto pathJson = textureJson["path"];
+            if (!pathJson.is_string()) {
+                continue;
+            }
+            auto displayDensityFactorAwareJson = textureJson["displayDensityFactorAware"];
+            bool displayDensityFactorAware =
+                displayDensityFactorAwareJson.is_boolean() &&
+                displayDensityFactorAwareJson.get<bool>();
+            auto name = nameJson.get<string>();
+            if (displayDensityFactorAware) {
+                m_texturesRepository->createDisplayDensityFactorAwareTexture(
+                    name, pathJson.get<string>()
+                );
+            }
+            else {
+                m_texturesRepository->createTexture(name, pathJson.get<string>());
+            }
+        }
+    }*/
+
+    auto materialsJsonArray = sceneJson["materials"];
+    if (materialsJsonArray.is_array()) {
+        for (auto& materialJson : materialsJsonArray) {
+            auto nameJson = materialJson["name"];
+            if (nameJson.is_null()) {
+                continue;
+            }
+            auto isTranslucent =
+                materialJson.contains("isTranslucent") &&
+                materialJson["isTranslucent"].is_boolean() &&
+                materialJson["isTranslucent"].get<bool>();
+            auto isWireframe =
+                materialJson.contains("isWireframe") &&
+                materialJson["isWireframe"].is_boolean() &&
+                materialJson["isWireframe"].get<bool>();
+            auto isUnlit =
+                materialJson.contains("isUnlit") &&
+                materialJson["isUnlit"].is_boolean() &&
+                materialJson["isUnlit"].get<bool>();
+            auto diffuseColorJson = materialJson["diffuseColor"];
+            if (diffuseColorJson.is_array()) {
+                Material material{
+                    parseColor4f(materialJson["diffuseColor"]),
+                    materialJson.contains("topColor") ? parseColor4f(materialJson["topColor"]) : glm::vec4(0),
+                    materialJson.contains("bottomColor") ? parseColor4f(materialJson["bottomColor"]) : glm::vec4(0),
+                    "",
+                    true,
+                    isTranslucent,
+                    isWireframe,
+                    isUnlit,
+                    materialJson.contains("isGradient") ? materialJson["isGradient"].get<bool>() : false,
+                    materialJson.contains("isDoubleSided") ? materialJson["isDoubleSided"].get<bool>() : false
+                };
+                materialsMap[nameJson.get<string>()] = material;
+            } else {
+                auto textureNameJson = materialJson["textureName"];
+                if (!textureNameJson.is_string()) {
+                    continue;
+                }
+                Material material{
+                    glm::vec4(0),
+                    materialJson.contains("topColor") ? parseColor4f(materialJson["topColor"]) : glm::vec4(0),
+                    materialJson.contains("bottomColor") ? parseColor4f(materialJson["bottomColor"]) : glm::vec4(0),
+                    textureNameJson.get<string>(),
+                    false,
+                    isTranslucent,
+                    isWireframe,
+                    isUnlit,
+                    materialJson.contains("isGradient") ? materialJson["isGradient"].get<bool>() : false,
+                    materialJson.contains("isDoubleSided") ? materialJson["isDoubleSided"].get<bool>() : false
+                };
+                materialsMap[nameJson.get<string>()] = material;
+            }
+        }
+    }
+
+    auto textAppearancesJsonArray = sceneJson["textAppearances"];
+    if (textAppearancesJsonArray.is_array()) {
+        for (auto& textAppearanceJson : textAppearancesJsonArray) {
+            auto nameJson = textAppearanceJson["name"];
+            if (!nameJson.is_string()) {
+                continue;
+            }
+            auto textSize = parseComplexValue(textAppearanceJson["textSize"]);
+            auto fontPathJson = textAppearanceJson["fontPath"];
+            if (!fontPathJson.is_string()) {
+                continue;
+            }
+            TextAppearance textAppearance{ textSize, fontPathJson.get<string>() };
+            textAppearancesMap.insert({ nameJson.get<string>(), textAppearance });
+        }
+    }
+
+    /*if (sceneJson.contains("skeletalAnimations")) {
+        auto skeletalAnimationsJsonArray = sceneJson["skeletalAnimations"];
+        if (skeletalAnimationsJsonArray.is_array()) {
+            for (auto& skeletalAnimationJson : skeletalAnimationsJsonArray) {
+                auto meshName = skeletalAnimationJson["meshName"].get<string>();
+                auto animatedMesh = m_meshStorage.getMesh(meshName);
+                auto skeletalAnimation = m_skeletalAnimationLoadingRepository->loadAnimation(
+                    animatedMesh,
+                    skeletalAnimationJson["path"].get<string>()
+                );
+                m_meshStorage.removeMesh(meshName);
+                m_meshStorage.putMesh(meshName, animatedMesh);
+                m_skeletalAnimationStorage.putAnimation(
+                    skeletalAnimationJson["name"].get<string>(),
+                    skeletalAnimation
+                );
+            }
+        }
+    }*/
+
+    /*if (sceneJson.contains("sounds")) {
+        auto soundsJsonArray = sceneJson["sounds"];
+        if (soundsJsonArray.is_array()) {
+            for (auto& soundJson : soundsJsonArray) {
+                m_soundStorage->putSound(
+                    soundJson["name"].get<string>(),
+                    m_soundLoadingRepository->loadSound(soundJson["path"])
+                );
+            }
+        }
+    }*/
+
+    auto gameObjectsJsonArray = sceneJson["gameObjects"];
+    if (gameObjectsJsonArray.is_array()) {
+        for (auto& gameObjectJson : gameObjectsJsonArray) {
+            string name;
+            string parentName;
+            glm::vec3 position;
+            glm::quat rotation;
+            glm::vec3 scale;
+
+            if (gameObjectJson["name"].is_string()) {
+                name = gameObjectJson["name"].get<string>();
+            } else {
+                continue;
+            }
+
+            if (gameObjectJson["parent"].is_string()) {
+                parentName = gameObjectJson["parent"].get<string>();
+            }
+
+            if (gameObjectJson["position"].is_array() && gameObjectJson["position"].size() == 3) {
+                try {
+                    position.x = parseFloatNumber(gameObjectJson["position"][0]);
+                    position.y = parseFloatNumber(gameObjectJson["position"][1]);
+                    position.z = parseFloatNumber(gameObjectJson["position"][2]);
+                } catch (exception& e) {
+                    L::e(Constants::LOG_TAG, "Error parsing position values", e);
+                    continue;
+                }
+            } else {
+                continue;
+            }
+
+            if (gameObjectJson["rotation"].is_array() && gameObjectJson["rotation"].size() == 3) {
+                try {
+                    rotation.x = parseFloatNumber(gameObjectJson["rotation"][0]);
+                    rotation.y = parseFloatNumber(gameObjectJson["rotation"][1]);
+                    rotation.z = parseFloatNumber(gameObjectJson["rotation"][2]);
+                } catch (exception& e) {
+                    L::e(Constants::LOG_TAG, "Error parsing rotation values", e);
+                    continue;
+                }
+            } else {
+                continue;
+            }
+
+            if (gameObjectJson["scale"].is_array() && gameObjectJson["scale"].size() == 3) {
+                try {
+                    scale.x = parseFloatNumber(gameObjectJson["scale"][0]);
+                    scale.y = parseFloatNumber(gameObjectJson["scale"][1]);
+                    scale.z = parseFloatNumber(gameObjectJson["scale"][2]);
+                } catch (exception& e) {
+                    L::e(Constants::LOG_TAG, "Error parsing scale values", e);
+                    continue;
+                }
+            } else {
+                continue;
+            }
+
+            auto rotationMatrix = glm::identity<glm::mat4>();
+            rotationMatrix = glm::rotate(rotationMatrix, glm::radians(rotation.z), glm::vec3(0, 0, 1));
+            rotationMatrix = glm::rotate(rotationMatrix, glm::radians(rotation.x), glm::vec3(1, 0, 0));
+            rotationMatrix = glm::rotate(rotationMatrix, glm::radians(rotation.y), glm::vec3(0, 1, 0));
+            auto rotationQuaternion = glm::quat_cast(rotationMatrix);
+
+            shared_ptr<GameObject> gameObject;
+            if (name != "root") {
+                gameObject = GameObject::create(name);
+                scene.addGameObject(parentName, gameObject);
+            } else {
+                gameObject = scene.rootGameObject();
+            }
+            auto transform = make_shared<TransformationComponent>(
+                position,
+                rotationQuaternion,
+                scale
+                );
+            gameObject->addComponent(transform);
+
+            auto componentsJsonArray = gameObjectJson["components"];
+            if (componentsJsonArray.is_array()) {
+                for (auto& componentJson : componentsJsonArray) {
+                    auto component = parseComponent(
+                        gameObject,
+                        componentJson,
+                        materialsMap,
+                        textAppearancesMap,
+                        scene.meshStorage()
+                    );
+                    gameObject->addComponent(component);
+                }
+            }
+        }
+    }
 }
 
 float SceneHierarchyLoader::parseFloatNumber(const nlohmann::json& jsonValue)
@@ -472,14 +741,14 @@ shared_ptr<GameObjectComponent> SceneHierarchyLoader::parseComponent(
     }*/
     else if (type == "PerspectiveCamera") {
         auto camera = make_shared<PerspectiveCameraComponent>(
-            m_unitsConverter,
+            m_serviceLocator,
             parseColor4f(componentJson["clearColor"]),
             parseLayerNames(componentJson["layerNames"]),
             parseFloatNumber(componentJson["fov"]),
             parseFloatNumber(componentJson["zNear"]),
             parseFloatNumber(componentJson["zFar"]),
             componentJson["order"].get<int>()
-            );
+        );
         camera->setShouldClearColor(
             componentJson.contains("shouldClearColor") &&
             componentJson["shouldClearColor"].is_boolean() &&
@@ -645,283 +914,3 @@ shared_ptr<GameObjectComponent> SceneHierarchyLoader::parseComponent(
         throw domain_error(ss.str());
     }
 }
-
-/*void Scene::buildHierarchyFromRepresentation(const string& hierarchyRepresentation) {
-    unordered_map<string, Material> materialsMap;
-    unordered_map<string, TextAppearance> textAppearancesMap;
-
-    nlohmann::json sceneJson;
-    try {
-        sceneJson = nlohmann::json::parse(hierarchyRepresentation);
-    }
-    catch (nlohmann::json::parse_error& e) {
-        L::e(App::Constants::LOG_TAG, "Error restoring scene", e);
-    }
-
-    auto physicsParamsJson = sceneJson["physicsParams"];
-    auto gravityJson = physicsParamsJson["gravity"];
-    m_physicsEngine->setGravity(glm::vec3(
-        parseFloatNumber(gravityJson[0]),
-        parseFloatNumber(gravityJson[1]),
-        parseFloatNumber(gravityJson[2])
-    ));
-
-    auto meshesJsonArray = sceneJson["meshes"];
-    if (meshesJsonArray.is_array()) {
-        for (auto& meshJson : meshesJsonArray) {
-            string name;
-            string path;
-
-            if (!meshJson["name"].is_null()) {
-                name = meshJson["name"].get<string>();
-            }
-            else {
-                continue;
-            }
-
-            if (!meshJson["path"].is_null()) {
-                path = meshJson["path"].get<string>();
-            }
-            else {
-                continue;
-            }
-
-            m_meshStorage.putMesh(name, m_meshLoadingRepository->loadMesh(path));
-        }
-    }
-
-    auto texturesJsonArray = sceneJson["textures"];
-    if (texturesJsonArray.is_array()) {
-        for (auto& textureJson : texturesJsonArray) {
-            auto nameJson = textureJson["name"];
-            if (!nameJson.is_string()) {
-                continue;
-            }
-            auto pathJson = textureJson["path"];
-            if (!pathJson.is_string()) {
-                continue;
-            }
-            auto displayDensityFactorAwareJson = textureJson["displayDensityFactorAware"];
-            bool displayDensityFactorAware =
-                displayDensityFactorAwareJson.is_boolean() &&
-                displayDensityFactorAwareJson.get<bool>();
-            auto name = nameJson.get<string>();
-            if (displayDensityFactorAware) {
-                m_texturesRepository->createDisplayDensityFactorAwareTexture(
-                    name, pathJson.get<string>()
-                );
-            }
-            else {
-                m_texturesRepository->createTexture(name, pathJson.get<string>());
-            }
-        }
-    }
-
-    auto materialsJsonArray = sceneJson["materials"];
-    if (materialsJsonArray.is_array()) {
-        for (auto& materialJson : materialsJsonArray) {
-            auto nameJson = materialJson["name"];
-            if (nameJson.is_null()) {
-                continue;
-            }
-            auto isTranslucent =
-                materialJson.contains("isTranslucent") &&
-                materialJson["isTranslucent"].is_boolean() &&
-                materialJson["isTranslucent"].get<bool>();
-            auto isWireframe =
-                materialJson.contains("isWireframe") &&
-                materialJson["isWireframe"].is_boolean() &&
-                materialJson["isWireframe"].get<bool>();
-            auto isUnlit =
-                materialJson.contains("isUnlit") &&
-                materialJson["isUnlit"].is_boolean() &&
-                materialJson["isUnlit"].get<bool>();
-            auto diffuseColorJson = materialJson["diffuseColor"];
-            if (diffuseColorJson.is_array()) {
-                Material material{
-                    parseColor4f(materialJson["diffuseColor"]),
-                    materialJson.contains("topColor") ? parseColor4f(materialJson["topColor"]) : glm::vec4(0),
-                    materialJson.contains("bottomColor") ? parseColor4f(materialJson["bottomColor"]) : glm::vec4(0),
-                    "",
-                    true,
-                    isTranslucent,
-                    isWireframe,
-                    isUnlit,
-                    materialJson.contains("isGradient") ? materialJson["isGradient"].get<bool>() : false,
-                    materialJson.contains("isDoubleSided") ? materialJson["isDoubleSided"].get<bool>() : false
-                };
-                materialsMap[nameJson.get<string>()] = material;
-            }
-            else {
-                auto textureNameJson = materialJson["textureName"];
-                if (!textureNameJson.is_string()) {
-                    continue;
-                }
-                Material material{
-                    glm::vec4(0),
-                    materialJson.contains("topColor") ? parseColor4f(materialJson["topColor"]) : glm::vec4(0),
-                    materialJson.contains("bottomColor") ? parseColor4f(materialJson["bottomColor"]) : glm::vec4(0),
-                    textureNameJson.get<string>(),
-                    false,
-                    isTranslucent,
-                    isWireframe,
-                    isUnlit,
-                    materialJson.contains("isGradient") ? materialJson["isGradient"].get<bool>() : false,
-                    materialJson.contains("isDoubleSided") ? materialJson["isDoubleSided"].get<bool>() : false
-                };
-                materialsMap[nameJson.get<string>()] = material;
-            }
-        }
-    }
-
-    auto textAppearancesJsonArray = sceneJson["textAppearances"];
-    if (textAppearancesJsonArray.is_array()) {
-        for (auto& textAppearanceJson : textAppearancesJsonArray) {
-            auto nameJson = textAppearanceJson["name"];
-            if (!nameJson.is_string()) {
-                continue;
-            }
-            auto textSize = parseComplexValue(textAppearanceJson["textSize"]);
-            auto fontPathJson = textAppearanceJson["fontPath"];
-            if (!fontPathJson.is_string()) {
-                continue;
-            }
-            TextAppearance textAppearance{ textSize, fontPathJson.get<string>() };
-            textAppearancesMap.insert({ nameJson.get<string>(), textAppearance });
-        }
-    }
-
-    if (sceneJson.contains("skeletalAnimations")) {
-        auto skeletalAnimationsJsonArray = sceneJson["skeletalAnimations"];
-        if (skeletalAnimationsJsonArray.is_array()) {
-            for (auto& skeletalAnimationJson : skeletalAnimationsJsonArray) {
-                auto meshName = skeletalAnimationJson["meshName"].get<string>();
-                auto animatedMesh = m_meshStorage.getMesh(meshName);
-                auto skeletalAnimation = m_skeletalAnimationLoadingRepository->loadAnimation(
-                    animatedMesh,
-                    skeletalAnimationJson["path"].get<string>()
-                );
-                m_meshStorage.removeMesh(meshName);
-                m_meshStorage.putMesh(meshName, animatedMesh);
-                m_skeletalAnimationStorage.putAnimation(
-                    skeletalAnimationJson["name"].get<string>(),
-                    skeletalAnimation
-                );
-            }
-        }
-    }
-
-    if (sceneJson.contains("sounds")) {
-        auto soundsJsonArray = sceneJson["sounds"];
-        if (soundsJsonArray.is_array()) {
-            for (auto& soundJson : soundsJsonArray) {
-                m_soundStorage->putSound(
-                    soundJson["name"].get<string>(),
-                    m_soundLoadingRepository->loadSound(soundJson["path"])
-                );
-            }
-        }
-    }
-
-    auto gameObjectsJsonArray = sceneJson["gameObjects"];
-    if (gameObjectsJsonArray.is_array()) {
-        for (auto& gameObjectJson : gameObjectsJsonArray) {
-            string name;
-            string parentName;
-            glm::vec3 position;
-            glm::quat rotation;
-            glm::vec3 scale;
-
-            if (gameObjectJson["name"].is_string()) {
-                name = gameObjectJson["name"].get<string>();
-            }
-            else {
-                continue;
-            }
-
-            if (gameObjectJson["parent"].is_string()) {
-                parentName = gameObjectJson["parent"].get<string>();
-            }
-
-            if (gameObjectJson["position"].is_array() && gameObjectJson["position"].size() == 3) {
-                try {
-                    position.x = parseFloatNumber(gameObjectJson["position"][0]);
-                    position.y = parseFloatNumber(gameObjectJson["position"][1]);
-                    position.z = parseFloatNumber(gameObjectJson["position"][2]);
-                }
-                catch (exception& e) {
-                    L::e(App::Constants::LOG_TAG, "Error parsing position values", e);
-                    continue;
-                }
-            }
-            else {
-                continue;
-            }
-
-            if (gameObjectJson["rotation"].is_array() && gameObjectJson["rotation"].size() == 3) {
-                try {
-                    rotation.x = parseFloatNumber(gameObjectJson["rotation"][0]);
-                    rotation.y = parseFloatNumber(gameObjectJson["rotation"][1]);
-                    rotation.z = parseFloatNumber(gameObjectJson["rotation"][2]);
-                }
-                catch (exception& e) {
-                    L::e(App::Constants::LOG_TAG, "Error parsing rotation values", e);
-                    continue;
-                }
-            }
-            else {
-                continue;
-            }
-
-            if (gameObjectJson["scale"].is_array() && gameObjectJson["scale"].size() == 3) {
-                try {
-                    scale.x = parseFloatNumber(gameObjectJson["scale"][0]);
-                    scale.y = parseFloatNumber(gameObjectJson["scale"][1]);
-                    scale.z = parseFloatNumber(gameObjectJson["scale"][2]);
-                }
-                catch (exception& e) {
-                    L::e(App::Constants::LOG_TAG, "Error parsing scale values", e);
-                    continue;
-                }
-            }
-            else {
-                continue;
-            }
-
-            auto rotationMatrix = glm::identity<glm::mat4>();
-            rotationMatrix = glm::rotate(rotationMatrix, glm::radians(rotation.z), glm::vec3(0, 0, 1));
-            rotationMatrix = glm::rotate(rotationMatrix, glm::radians(rotation.x), glm::vec3(1, 0, 0));
-            rotationMatrix = glm::rotate(rotationMatrix, glm::radians(rotation.y), glm::vec3(0, 1, 0));
-            auto rotationQuaternion = glm::quat_cast(rotationMatrix);
-
-            shared_ptr<GameObject> gameObject;
-            if (name != "root") {
-                gameObject = make_shared<GameObject>(name);
-                addGameObject(parentName, gameObject);
-            }
-            else {
-                gameObject = m_rootGameObject;
-            }
-            auto transform = make_shared<TransformationComponent>(
-                position,
-                rotationQuaternion,
-                scale
-                );
-            gameObject->addComponent(transform);
-
-            auto componentsJsonArray = gameObjectJson["components"];
-            if (componentsJsonArray.is_array()) {
-                for (auto& componentJson : componentsJsonArray) {
-                    auto component = parseComponent(
-                        gameObject,
-                        componentJson,
-                        materialsMap,
-                        textAppearancesMap
-                    );
-                    gameObject->addComponent(component);
-                }
-            }
-        }
-    }
-}
-*/
