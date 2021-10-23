@@ -152,7 +152,7 @@
     <ClInclude Include="game_engine\constants.h" />
     <ClInclude Include="game_engine\fs_abstraction.h" />
     <ClInclude Include="game_engine\game_object.h" />
-    <ClInclude Include="game_engine\textures_repository .h" />
+    <ClInclude Include="game_engine\textures_repository.h" />
     <ClInclude Include="platform_dependent\windows\windows_bitmap_loader.h" />
     <ClInclude Include="rendering_engine\ibo_info.h" />
     <ClInclude Include="game_engine\logger.h" />
@@ -192,6 +192,9 @@
     <ClInclude Include="rendering_engine\opengl_geometry_buffers_storage.h" />
     <ClInclude Include="rendering_engine\opengl_mesh_renderer_component.h" />
     <ClInclude Include="rendering_engine\opengl_mesh_renderer_factory.h" />
+    <ClInclude Include="rendering_engine\opengl_shader_program_container.h" />
+    <ClInclude Include="rendering_engine\opengl_textures_repository.h" />
+    <ClInclude Include="rendering_engine\texture_info.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
@@ -226,6 +229,8 @@
     <ClCompile Include="rendering_engine\opengl_geometry_buffers_storage.cpp" />
     <ClCompile Include="rendering_engine\opengl_mesh_renderer_component.cpp" />
     <ClCompile Include="rendering_engine\opengl_mesh_renderer_factory.cpp" />
+    <ClCompile Include="rendering_engine\opengl_shader_program_container.cpp" />
+    <ClCompile Include="rendering_engine\opengl_textures_repository.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="GameEngine.rc" />

@@ -15,6 +15,7 @@
 #include <platform_dependent/windows/windows_fs_abstraction.h>
 #include <platform_dependent/windows/windows_logger.h>
 #include <platform_dependent/windows/windows_bitmap_loader.h>
+#include <rendering_engine/opengl_mesh_renderer_factory.h>
 
 #define CONSOLE_BUFFER_SIZE 1024
 
@@ -23,6 +24,7 @@
 #define WINDOW_DENSITY_FACTOR 1
 
 using namespace GameEngine;
+using namespace GameEngine::RenderingEngine;
 using namespace Windows::Utils;
 using namespace std;
 
@@ -115,10 +117,22 @@ static void initGame() {
     serviceLocator->provide(make_shared<WindowsReadOnlyFsAbstraction>());
     serviceLocator->provide(make_shared<WindowsFsAbstraction>(serviceLocator));
     serviceLocator->provide(make_shared<WindowsMeshLoader>(serviceLocator));
-    //serviceLocator->provide(make_shared<MeshRendererFactory>());
     serviceLocator->provide(make_shared<UnitsConverter>(serviceLocator));
     serviceLocator->provide(make_shared<SceneHierarchyLoader>(serviceLocator));
     serviceLocator->provide(make_shared<WindowsBitmapLoader>(serviceLocator));
+
+    auto openGLErrorDetector = make_shared<OpenGLErrorDetector>();
+    auto openGLGeometryBuffersStorage = make_shared<OpenGLGeometryBuffersStorage>(openGLErrorDetector);
+    auto openGLTexturesRepository = make_shared<OpenGLTexturesRepository>(
+        serviceLocator->renderingWindowInfoProvider(), // FFFFFFFFFFFFFFFUUUUUUUUUUUUUUUUUUUUUUUUUUUCK it is bad idea to create shared_ptr from plaint pointer received from Service Locator
+        serviceLocator->bitmapLoader(),
+        openGLErrorDetector
+    );
+    serviceLocator->provide(make_shared<OpenGLMeshRendererFactory>(
+        openGLGeometryBuffersStorage,
+        openGLTexturesRepository,
+        openGLErrorDetector
+    ));
 
     g_sceneManager = make_shared<DevSceneManager>(serviceLocator);
     serviceLocator->provide(g_sceneManager);

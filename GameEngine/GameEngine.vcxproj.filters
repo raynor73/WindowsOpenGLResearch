@@ -159,7 +159,7 @@
     <ClInclude Include="rendering_engine\ibo_info.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="game_engine\textures_repository .h">
+    <ClInclude Include="game_engine\textures_repository.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="game_engine\bitmap_loader.h">
@@ -169,6 +169,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="platform_dependent\windows\windows_bitmap_loader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="rendering_engine\texture_info.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="rendering_engine\opengl_textures_repository.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="rendering_engine\opengl_shader_program_container.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -261,6 +270,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="platform_dependent\windows\windows_bitmap_loader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="rendering_engine\opengl_textures_repository.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="rendering_engine\opengl_shader_program_container.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
