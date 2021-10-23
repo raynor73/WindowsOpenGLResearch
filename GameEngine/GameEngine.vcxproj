@@ -194,7 +194,7 @@
     <ClInclude Include="rendering_engine\opengl_mesh_renderer_factory.h" />
     <ClInclude Include="rendering_engine\opengl_shaders_repository.h" />
     <ClInclude Include="rendering_engine\opengl_shader_program_container.h" />
-    <ClInclude Include="rendering_engine\opengl_state .h" />
+    <ClInclude Include="rendering_engine\opengl_state.h" />
     <ClInclude Include="rendering_engine\opengl_textures_repository.h" />
     <ClInclude Include="rendering_engine\opengl_shader_source_preprocessor.h" />
     <ClInclude Include="rendering_engine\rendering_engine.h" />

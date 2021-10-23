@@ -189,7 +189,7 @@
     <ClInclude Include="platform_dependent\windows\windows_opengl_shader_source_loader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="rendering_engine\opengl_state .h">
+    <ClInclude Include="rendering_engine\opengl_state.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="rendering_engine\opengl_shaders_repository.h">
