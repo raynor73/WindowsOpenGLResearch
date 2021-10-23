@@ -278,10 +278,10 @@ void GameEngine::RenderingEngine::RenderingEngine::renderMeshWithAllRequiredShad
                 GL_EQUAL
             });
 
-        shaderProgramContainer = m_shadersRepository->getShaderProgramContainer("directionalLight");
+        /*shaderProgramContainer = m_shadersRepository->getShaderProgramContainer("directionalLight");
         glUseProgram(shaderProgramContainer.shaderProgram());
 
-        /*auto layerDirectionalLightsRange = layerNameToDirectionalLightsMap.equal_range(layerName);
+        auto layerDirectionalLightsRange = layerNameToDirectionalLightsMap.equal_range(layerName);
         for (auto it = layerDirectionalLightsRange.first; it != layerDirectionalLightsRange.second; it++) {
             if (auto colorUniform = shaderProgramContainer.directionalLightColorUniform(); colorUniform >= 0) {
                 auto color = it->second->color();
