@@ -122,15 +122,16 @@ static void initGame() {
     serviceLocator->provide(make_shared<WindowsBitmapLoader>(serviceLocator));
 
     auto openGLErrorDetector = make_shared<OpenGLErrorDetector>();
-    auto openGLGeometryBuffersStorage = make_shared<OpenGLGeometryBuffersStorage>(openGLErrorDetector);
-    auto openGLTexturesRepository = make_shared<OpenGLTexturesRepository>(
-        serviceLocator->renderingWindowInfoProvider(), // FFFFFFFFFFFFFFFUUUUUUUUUUUUUUUUUUUUUUUUUUUCK it is bad idea to create shared_ptr from plaint pointer received from Service Locator
+    serviceLocator->provide(make_shared<OpenGLTexturesRepository>(
+        serviceLocator->renderingWindowInfoProvider(),
         serviceLocator->bitmapLoader(),
         openGLErrorDetector
-    );
+    ));
+
+    auto openGLGeometryBuffersStorage = make_shared<OpenGLGeometryBuffersStorage>(openGLErrorDetector);
     serviceLocator->provide(make_shared<OpenGLMeshRendererFactory>(
         openGLGeometryBuffersStorage,
-        openGLTexturesRepository,
+        reinterpret_cast<OpenGLTexturesRepository*>(serviceLocator->texturesRepository()),
         openGLErrorDetector
     ));
 

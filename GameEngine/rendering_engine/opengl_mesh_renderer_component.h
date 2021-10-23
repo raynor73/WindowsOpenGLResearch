@@ -20,7 +20,7 @@ class OpenGLMeshRendererComponent : public GameObjectComponent
     std::vector<std::string> m_layerNames;
     std::shared_ptr<OpenGLErrorDetector> m_openGLErrorDetector;
     std::shared_ptr<OpenGLGeometryBuffersStorage> m_geometryBuffersStorage;
-    std::shared_ptr<OpenGLTexturesRepository> m_texturesRepository;
+    OpenGLTexturesRepository* m_texturesRepository;
 
     glm::vec3 m_topPoint;
     glm::vec3 m_bottomPoint;
@@ -32,7 +32,7 @@ public:
     OpenGLMeshRendererComponent(
         std::vector<std::string> layerNames,
         std::shared_ptr<OpenGLGeometryBuffersStorage> geometryBuffersStorage,
-        std::shared_ptr<OpenGLTexturesRepository> texturesRepository,
+        OpenGLTexturesRepository* texturesRepository,
         std::shared_ptr<OpenGLErrorDetector> openGLErrorDetector
     ) : m_layerNames(std::move(layerNames)),
         m_geometryBuffersStorage(std::move(geometryBuffersStorage)),

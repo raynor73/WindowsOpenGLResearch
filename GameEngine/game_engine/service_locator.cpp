@@ -103,6 +103,15 @@ void ServiceLocator::provide(shared_ptr<BitmapLoader> bitmapLoader)
     m_bitmapLoader = bitmapLoader;
 }
 
+void ServiceLocator::provide(shared_ptr<TexturesRepository> texturesRepository)
+{
+    if (m_texturesRepository != nullptr) {
+        throw domain_error("Textures Repository already provided");
+    }
+
+    m_texturesRepository = texturesRepository;
+}
+
 SceneManager* ServiceLocator::sceneManager()
 {
     if (m_sceneManager.use_count() == 0) {
@@ -200,4 +209,13 @@ BitmapLoader* ServiceLocator::bitmapLoader()
     }
 
     return m_bitmapLoader.get();
+}
+
+TexturesRepository* ServiceLocator::texturesRepository()
+{
+    if (m_texturesRepository == nullptr) {
+        throw domain_error("Textures Repository is not provided");
+    }
+
+    return m_texturesRepository.get();
 }

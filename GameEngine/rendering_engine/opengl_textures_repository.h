@@ -20,14 +20,14 @@ class OpenGLTexturesRepository : public TexturesRepository, public WithoutGenera
 {
     std::unordered_map<std::string, TextureInfo> m_textures;
 
-    std::shared_ptr<RenderingWindowInfoProvider> m_renderingWindowInfoProvider;
-    std::shared_ptr<BitmapLoader> m_bitmapLoader;
+    RenderingWindowInfoProvider* m_renderingWindowInfoProvider;
+    BitmapLoader* m_bitmapLoader;
     std::shared_ptr<OpenGLErrorDetector> m_openGLErrorDetector;
 
 public:
     OpenGLTexturesRepository(
-        std::shared_ptr<RenderingWindowInfoProvider> renderingWindowInfoProvider,
-        std::shared_ptr<BitmapLoader> bitmapLoader,
+        RenderingWindowInfoProvider* renderingWindowInfoProvider,
+        BitmapLoader* bitmapLoader,
         std::shared_ptr<OpenGLErrorDetector> openGLErrorDetector
     ) : m_renderingWindowInfoProvider(renderingWindowInfoProvider),
         m_bitmapLoader(bitmapLoader),

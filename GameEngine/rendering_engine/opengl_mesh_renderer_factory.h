@@ -15,12 +15,12 @@ class OpenGLMeshRendererFactory : public MeshRendererFactory, public WithoutGene
 {
     std::shared_ptr<OpenGLErrorDetector> m_openGLErrorDetector;
     std::shared_ptr<OpenGLGeometryBuffersStorage> m_geometryBuffersStorage;
-    std::shared_ptr<OpenGLTexturesRepository> m_texturesRepository;
+    OpenGLTexturesRepository* m_texturesRepository;
 
 public:
     OpenGLMeshRendererFactory(
         std::shared_ptr<OpenGLGeometryBuffersStorage> geometryBuffersStorage,
-        std::shared_ptr<OpenGLTexturesRepository> texturesRepository,
+        OpenGLTexturesRepository* texturesRepository,
         std::shared_ptr<OpenGLErrorDetector> openGlErrorDetector
     ) : m_geometryBuffersStorage(geometryBuffersStorage),
         m_texturesRepository(texturesRepository),

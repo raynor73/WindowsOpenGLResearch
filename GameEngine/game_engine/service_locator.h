@@ -11,6 +11,7 @@
 #include <game_engine/time_provider.h>
 #include <game_engine/scene_hierarchy_loader.h>
 #include <game_engine/bitmap_loader.h>
+#include <game_engine/textures_repository.h>
 #include <memory>
 
 namespace GameEngine
@@ -29,6 +30,7 @@ public:
     void provide(std::shared_ptr<UnitsConverter> unitsConverter);
     void provide(std::shared_ptr<SceneHierarchyLoader> sceneHierarchyLoader);
     void provide(std::shared_ptr<BitmapLoader> bitmapLoader);
+    void provide(std::shared_ptr<TexturesRepository> texturesRepository);
 
     SceneManager* sceneManager();
     TimeProvider* timeProvider();
@@ -41,6 +43,7 @@ public:
     UnitsConverter* unitsConverter();
     SceneHierarchyLoader* sceneHierarchyLoader();
     BitmapLoader* bitmapLoader();
+    TexturesRepository* texturesRepository();
 
 private:
     std::shared_ptr<SceneManager> m_sceneManager;
@@ -54,5 +57,6 @@ private:
     std::shared_ptr<UnitsConverter> m_unitsConverter;
     std::shared_ptr<SceneHierarchyLoader> m_sceneHierarchyLoader;
     std::shared_ptr<BitmapLoader> m_bitmapLoader;
+    std::shared_ptr<TexturesRepository> m_texturesRepository;
 };
 }
