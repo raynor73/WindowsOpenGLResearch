@@ -192,11 +192,17 @@
     <ClInclude Include="rendering_engine\opengl_geometry_buffers_storage.h" />
     <ClInclude Include="rendering_engine\opengl_mesh_renderer_component.h" />
     <ClInclude Include="rendering_engine\opengl_mesh_renderer_factory.h" />
+    <ClInclude Include="rendering_engine\opengl_shaders_repository.h" />
     <ClInclude Include="rendering_engine\opengl_shader_program_container.h" />
+    <ClInclude Include="rendering_engine\opengl_state .h" />
     <ClInclude Include="rendering_engine\opengl_textures_repository.h" />
+    <ClInclude Include="rendering_engine\opengl_shader_source_preprocessor.h" />
+    <ClInclude Include="rendering_engine\rendering_engine.h" />
     <ClInclude Include="rendering_engine\texture_info.h" />
     <ClInclude Include="Resource.h" />
+    <ClInclude Include="rendering_engine\opengl_shader_source_loader.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="platform_dependent\windows\windows_opengl_shader_source_loader.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameEngine.cpp" />
@@ -224,13 +230,17 @@
     <ClCompile Include="platform_dependent\windows\windows_fs_abstraction.cpp" />
     <ClCompile Include="platform_dependent\windows\windows_logger.cpp" />
     <ClCompile Include="platform_dependent\windows\windows_mesh_loader.cpp" />
+    <ClCompile Include="platform_dependent\windows\windows_opengl_shader_source_loader.cpp" />
     <ClCompile Include="platform_dependent\windows\windows_read_only_fs_abstraction.cpp" />
     <ClCompile Include="rendering_engine\opengl_error_detector.cpp" />
     <ClCompile Include="rendering_engine\opengl_geometry_buffers_storage.cpp" />
     <ClCompile Include="rendering_engine\opengl_mesh_renderer_component.cpp" />
     <ClCompile Include="rendering_engine\opengl_mesh_renderer_factory.cpp" />
+    <ClCompile Include="rendering_engine\opengl_shaders_repository.cpp" />
     <ClCompile Include="rendering_engine\opengl_shader_program_container.cpp" />
     <ClCompile Include="rendering_engine\opengl_textures_repository.cpp" />
+    <ClCompile Include="rendering_engine\opengl_shader_source_preprocessor.cpp" />
+    <ClCompile Include="rendering_engine\rendering_engine.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="GameEngine.rc" />
