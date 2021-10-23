@@ -198,6 +198,9 @@
     <ClInclude Include="rendering_engine\rendering_engine.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="game_engine\ambient_light_component.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameEngine.cpp">
@@ -308,6 +311,9 @@
     <ClCompile Include="rendering_engine\rendering_engine.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="game_engine\ambient_light_component.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="GameEngine.rc">
@@ -321,5 +327,9 @@
     <Image Include="GameEngine.ico">
       <Filter>Header Files\Resource Files</Filter>
     </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="shaders\light\ambientFragmentShader.glsl" />
+    <None Include="shaders\light\ambientVertexShader.glsl" />
   </ItemGroup>
 </Project>

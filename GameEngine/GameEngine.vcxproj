@@ -142,6 +142,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="game_engine\ambient_light_component.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="GameEngine.h" />
     <ClInclude Include="game\dev_scene_manager.h" />
@@ -208,6 +209,7 @@
     <ClCompile Include="GameEngine.cpp" />
     <ClCompile Include="game\dev_scene_manager.cpp" />
     <ClCompile Include="game\hello_world_scene.cpp" />
+    <ClCompile Include="game_engine\ambient_light_component.cpp" />
     <ClCompile Include="game_engine\camera_component.cpp" />
     <ClCompile Include="game_engine\game_object.cpp" />
     <ClCompile Include="game_engine\logger.cpp" />
@@ -248,6 +250,10 @@
   <ItemGroup>
     <Image Include="GameEngine.ico" />
     <Image Include="small.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="shaders\light\ambientFragmentShader.glsl" />
+    <None Include="shaders\light\ambientVertexShader.glsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

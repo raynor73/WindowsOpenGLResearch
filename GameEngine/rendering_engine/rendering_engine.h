@@ -13,6 +13,10 @@
 #include <game_engine/scene.h>
 #include <functional>
 #include <game_engine/game_object.h>
+#include <game_engine/camera_component.h>
+#include <rendering_engine/opengl_mesh_renderer_component.h>
+#include <rendering_engine/opengl_shader_program_container.h>
+#include <game_engine/ambient_light_component.h>
 
 namespace GameEngine
 {
@@ -37,8 +41,6 @@ public:
         std::shared_ptr<OpenGLGeometryBuffersStorage> geometryBuffersStorage,
         OpenGLTexturesRepository* texturesRepository
     );
-    RenderingEngine(const RenderingEngine&) = delete;
-    RenderingEngine(RenderingEngine&&) = delete;
 
     void render(Scene& scene);
 
@@ -52,20 +54,20 @@ private:
     void renderMeshWithAllRequiredShaders(
         const std::shared_ptr<CameraComponent>& camera,
         const Viewport& viewport, const Scissor& scissor,
-        const std::shared_ptr<OpenGlMeshRendererComponent>& meshRenderer,
+        const std::shared_ptr<OpenGLMeshRendererComponent>& meshRenderer,
         const std::unordered_map<std::string, std::shared_ptr<AmbientLightComponent>>& layerNameToAmbientLightMap,
-        const std::unordered_multimap<std::string, std::shared_ptr<DirectionalLightComponent>>& layerNameToDirectionalLightsMap,
+        //const std::unordered_multimap<std::string, std::shared_ptr<DirectionalLightComponent>>& layerNameToDirectionalLightsMap,
         const std::string& layerName
     );
     static void renderMesh(
         const std::shared_ptr<CameraComponent>& camera,
-        const std::shared_ptr<OpenGlMeshRendererComponent>& meshRenderer,
-        const OpenGlShaderProgramContainer& shaderProgramContainer
+        const std::shared_ptr<OpenGLMeshRendererComponent>& meshRenderer,
+        const OpenGLShaderProgramContainer& shaderProgramContainer
     );
-    void renderText(
+    /*void renderText(
         const std::shared_ptr<CameraComponent>& camera,
         const std::shared_ptr<OpenGLFreeTypeTextRendererComponent>& textRenderer
-    );
+    );*/
 
     void pushOpenGLState(const OpenGLState& state);
     void popOpenGLState();

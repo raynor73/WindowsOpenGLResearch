@@ -12,6 +12,7 @@
 #include <game_engine/constants.h>
 #include <game_engine/transformation_component.h>
 #include <game_engine/game_object.h>
+#include <game_engine/ambient_light_component.h>
 
 using namespace GameEngine;
 using namespace std;
@@ -474,13 +475,13 @@ shared_ptr<GameObjectComponent> SceneHierarchyLoader::parseComponent(
         );
         return camera;
     }
-    /*else if (type == "AmbientLight") {
+    else if (type == "AmbientLight") {
         return make_shared<AmbientLightComponent>(
             parseColor3f(componentJson["color"]),
             parseLayerNames(componentJson["layerNames"])
-            );
+        );
     }
-    else if (type == "Text") {
+    /*else if (type == "Text") {
         auto textAppearanceNameJson = componentJson["textAppearanceName"];
         if (!textAppearanceNameJson.is_string()) {
             throw domain_error("No Text Appearance Name provided for Text Component");

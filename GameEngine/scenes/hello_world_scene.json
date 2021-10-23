@@ -46,15 +46,20 @@
       "scale": [1.0, 1.0, 1.0],
       "components": [
         {
-          "type": "PerspectiveCamera",
-          "clearColor": [0, 0, 0, 0],
-          "fov": 70,
-          "zNear": 0.1,
-          "zFar": 1000,
-          "layerNames": ["scene"],
-          "shouldClearDepth": true,
-          "shouldClearColor": true,
-          "order": 10
+            "type": "PerspectiveCamera",
+            "clearColor": [ 0, 0, 0, 0 ],
+            "fov": 70,
+            "zNear": 0.1,
+            "zFar": 1000,
+            "layerNames": [ "scene" ],
+            "shouldClearDepth": true,
+            "shouldClearColor": true,
+            "order": 10
+        },
+        {
+            "type": "AmbientLight",
+            "color": [ 0.1, 0.1, 0.1 ],
+            "layerNames": [ "scene" ]
         }
       ]
     }

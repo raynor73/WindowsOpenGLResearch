@@ -40,6 +40,8 @@ class OpenGLShaderProgramContainer
     GLint m_jointTransformsUniform;
 
 public:
+    // TODO Investigate how to get rid of default constructor as objects of this class are useless without initialization done in non-default constructor.
+    OpenGLShaderProgramContainer() = default;
     OpenGLShaderProgramContainer(std::shared_ptr<OpenGLErrorDetector> openGLErrorDetector, GLuint shaderProgram);
 
     GLuint shaderProgram() const { return m_shaderProgram; }

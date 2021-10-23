@@ -15,7 +15,9 @@
 #include <platform_dependent/windows/windows_fs_abstraction.h>
 #include <platform_dependent/windows/windows_logger.h>
 #include <platform_dependent/windows/windows_bitmap_loader.h>
+#include <platform_dependent/windows/windows_opengl_shader_source_loader.h>
 #include <rendering_engine/opengl_mesh_renderer_factory.h>
+#include <rendering_engine/rendering_engine.h>
 
 #define CONSOLE_BUFFER_SIZE 1024
 
@@ -29,6 +31,7 @@ using namespace Windows::Utils;
 using namespace std;
 
 static shared_ptr<DevSceneManager> g_sceneManager;
+static shared_ptr<GameEngine::RenderingEngine::RenderingEngine> g_renderingEngine;
 
 static bool setupConsolse(HINSTANCE hInstance) {
     if (!createNewConsole(CONSOLE_BUFFER_SIZE)) {
@@ -49,16 +52,17 @@ static void mainLoop(GLFWwindow* window) {
         auto activeScene = g_sceneManager->activeScene();
         if (activeScene != nullptr) {
             activeScene->update();
+            g_renderingEngine->render(*activeScene);
         }
 
         /* Render here */
-        glClear(GL_COLOR_BUFFER_BIT);
+        /*glClear(GL_COLOR_BUFFER_BIT);
 
         glBegin(GL_TRIANGLES);
         glVertex2f(-0.5f, -0.5f);
         glVertex2f(0.0f, 0.5f);
         glVertex2f(0.5f, -0.5f);
-        glEnd();
+        glEnd();*/
 
         /* Swap front and back buffers */
         glfwSwapBuffers(window);
@@ -135,14 +139,21 @@ static void initGame() {
         openGLErrorDetector
     ));
 
+    g_renderingEngine = make_shared<GameEngine::RenderingEngine::RenderingEngine>(
+        openGLErrorDetector,
+        serviceLocator->unitsConverter(),
+        make_shared<OpenGLShadersRepository>(openGLErrorDetector),
+        make_shared<OpenGLShaderSourcePreprocessor>(make_shared<WindowsOpenGLShaderSourceLoader>(serviceLocator)),
+        openGLGeometryBuffersStorage,
+        reinterpret_cast<OpenGLTexturesRepository*>(serviceLocator->texturesRepository())
+    );
+
     g_sceneManager = make_shared<DevSceneManager>(serviceLocator);
     serviceLocator->provide(g_sceneManager);
 
+
+
     g_sceneManager->requestHelloWorldSceneStart();
-
-
-
-    serviceLocator->bitmapLoader()->loadBitmap("bitmaps/house_diffuse.png");
 }
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
