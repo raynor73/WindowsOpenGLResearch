@@ -94,6 +94,15 @@ void ServiceLocator::provide(shared_ptr<SceneHierarchyLoader> sceneHierarchyLoad
     m_sceneHierarchyLoader = sceneHierarchyLoader;
 }
 
+void ServiceLocator::provide(shared_ptr<BitmapLoader> bitmapLoader)
+{
+    if (m_bitmapLoader != nullptr) {
+        throw domain_error("Bitmap Loader already provided");
+    }
+
+    m_bitmapLoader = bitmapLoader;
+}
+
 SceneManager* ServiceLocator::sceneManager()
 {
     if (m_sceneManager.use_count() == 0) {
@@ -182,4 +191,13 @@ SceneHierarchyLoader* GameEngine::ServiceLocator::sceneHierarchyLoader()
     }
 
     return m_sceneHierarchyLoader.get();
+}
+
+BitmapLoader* ServiceLocator::bitmapLoader()
+{
+    if (m_bitmapLoader == nullptr) {
+        throw domain_error("Bitmap Loader is not provided");
+    }
+
+    return m_bitmapLoader.get();
 }

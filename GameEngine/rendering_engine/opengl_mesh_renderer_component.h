@@ -16,7 +16,7 @@ class OpenGlMeshRendererComponent
     std::vector<std::string> m_layerNames;
     std::shared_ptr<OpenGLErrorDetector> m_openGlErrorDetector;
     std::shared_ptr<OpenGLGeometryBuffersStorage> m_geometryBuffersStorage;
-    std::shared_ptr<OpenGLTexturesRepository> m_texturesRepository;
+    //std::shared_ptr<OpenGLTexturesRepository> m_texturesRepository;
 
     glm::vec3 m_topPoint;
     glm::vec3 m_bottomPoint;

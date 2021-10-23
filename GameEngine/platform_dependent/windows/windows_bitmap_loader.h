@@ -11,9 +11,11 @@ class ServiceLocator;
 class WindowsBitmapLoader : public BitmapLoader, public WithoutGeneratedMethods
 {
     std::shared_ptr<ServiceLocator> m_serviceLocator;
+    ULONG_PTR m_gdiPlusToken;
 
 public:
-    explicit WindowsBitmapLoader(std::shared_ptr<ServiceLocator> serviceLocator) : m_serviceLocator(serviceLocator) {}
+    explicit WindowsBitmapLoader(std::shared_ptr<ServiceLocator> serviceLocator);
+    virtual ~WindowsBitmapLoader() override;
 
     virtual BitmapInfo loadBitmap(const std::string& path) override;
 };

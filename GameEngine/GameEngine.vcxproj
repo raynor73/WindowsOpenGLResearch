@@ -122,7 +122,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>$(ProjectDir)third_party\libs\glfw3_mt.lib;$(ProjectDir)third_party\libs\OpenGL32.Lib;$(ProjectDir)third_party\libs\glew32s.lib;$(ProjectDir)third_party\libs\assimp-vc142-mtd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(ProjectDir)third_party\libs\glfw3_mt.lib;$(ProjectDir)third_party\libs\OpenGL32.Lib;$(ProjectDir)third_party\libs\glew32s.lib;$(ProjectDir)third_party\libs\assimp-vc142-mtd.lib;Gdiplus.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">

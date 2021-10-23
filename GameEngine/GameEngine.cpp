@@ -14,6 +14,7 @@
 #include <platform_dependent/windows/windows_mesh_loader.h>
 #include <platform_dependent/windows/windows_fs_abstraction.h>
 #include <platform_dependent/windows/windows_logger.h>
+#include <platform_dependent/windows/windows_bitmap_loader.h>
 
 #define CONSOLE_BUFFER_SIZE 1024
 
@@ -117,11 +118,16 @@ static void initGame() {
     //serviceLocator->provide(make_shared<MeshRendererFactory>());
     serviceLocator->provide(make_shared<UnitsConverter>(serviceLocator));
     serviceLocator->provide(make_shared<SceneHierarchyLoader>(serviceLocator));
+    serviceLocator->provide(make_shared<WindowsBitmapLoader>(serviceLocator));
 
     g_sceneManager = make_shared<DevSceneManager>(serviceLocator);
     serviceLocator->provide(g_sceneManager);
 
     g_sceneManager->requestHelloWorldSceneStart();
+
+
+
+    serviceLocator->bitmapLoader()->loadBitmap("bitmaps/house_diffuse.png");
 }
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
