@@ -142,6 +142,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="game\fps_calculator.h" />
     <ClInclude Include="game_engine\ambient_light_component.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="GameEngine.h" />
@@ -208,6 +209,7 @@
   <ItemGroup>
     <ClCompile Include="GameEngine.cpp" />
     <ClCompile Include="game\dev_scene_manager.cpp" />
+    <ClCompile Include="game\fps_calculator.cpp" />
     <ClCompile Include="game\hello_world_scene.cpp" />
     <ClCompile Include="game_engine\ambient_light_component.cpp" />
     <ClCompile Include="game_engine\camera_component.cpp" />
