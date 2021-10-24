@@ -57,6 +57,14 @@ void OpenGLErrorDetector::checkShaderLinkingError(GLuint shader, const string& l
         stringstream ss;
         ss << "OpenGL shader linking failure detected at " << locationName;
         L::d(LOG_TAG, ss.str());
+
+        GLint maxLength = 0;
+        glGetProgramiv(shader, GL_INFO_LOG_LENGTH, &maxLength);
+
+        // The maxLength includes the NULL character
+        std::vector<GLchar> infoLog(maxLength);
+        glGetProgramInfoLog(shader, maxLength, &maxLength, &infoLog[0]);
+        L::d("Link Error", infoLog.data());
     }
 }
 

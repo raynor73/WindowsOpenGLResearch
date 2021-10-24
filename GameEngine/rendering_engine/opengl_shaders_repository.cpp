@@ -134,11 +134,11 @@ OpenGLShaderProgramContainer OpenGLShadersRepository::createShaderProgram(
     glAttachShader(shaderProgram, vertexShader);
     glAttachShader(shaderProgram, fragmentShader);
     glLinkProgram(shaderProgram);
+    m_openGLErrorDetector->checkShaderLinkingError(shaderProgram, "createShaderProgram");
 
     auto shaderProgramContainer = OpenGLShaderProgramContainer(m_openGLErrorDetector, shaderProgram);
     m_shaderProgramContainers[name] = shaderProgramContainer;
 
-    m_openGLErrorDetector->checkShaderLinkingError(shaderProgram, "createShaderProgram");
     m_openGLErrorDetector->checkOpenGLErrors("createShaderProgram");
 
     return shaderProgramContainer;

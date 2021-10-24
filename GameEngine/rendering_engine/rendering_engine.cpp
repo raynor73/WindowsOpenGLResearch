@@ -62,10 +62,10 @@ GameEngine::RenderingEngine::RenderingEngine::RenderingEngine(
     shadersRepository->createShaderProgram("ambient", "ambient", "ambient");
 
     auto directionalLightVertexShaderSource = shaderSourcePreprocessor->loadShaderSource(
-        "shaders/light/directional_light_vertexShader.glsl"
+        "shaders/light/directional_light_vertex_shader.glsl"
     );
     auto directionalLightFragmentShaderSource = shaderSourcePreprocessor->loadShaderSource(
-        "shaders/light/directional_light_fragmentShader.glsl"
+        "shaders/light/directional_light_fragment_shader.glsl"
     );
     shadersRepository->createVertexShader("directionalLight", directionalLightVertexShaderSource);
     shadersRepository->createFragmentShader("directionalLight", directionalLightFragmentShaderSource);
