@@ -11,6 +11,7 @@
 #include <glm/gtx/compatibility.hpp>
 #include <glm/gtx/quaternion.hpp>
 #include <glm/mat4x4.hpp>
+#include <game_engine/directional_light_component.h>
 
 using namespace GameEngine;
 using namespace GameEngine::RenderingEngine;
@@ -51,24 +52,24 @@ GameEngine::RenderingEngine::RenderingEngine::RenderingEngine(
     shadersRepository->createShaderProgram("text", "text", "text");*/
 
     auto ambientVertexShaderSource = shaderSourcePreprocessor->loadShaderSource(
-        "shaders/light/ambientVertexShader.glsl"
+        "shaders/light/ambient_vertex_shader.glsl"
     );
     auto ambientFragmentShaderSource = shaderSourcePreprocessor->loadShaderSource(
-        "shaders/light/ambientFragmentShader.glsl"
+        "shaders/light/ambient_fragment_shader.glsl"
     );
     shadersRepository->createVertexShader("ambient", ambientVertexShaderSource);
     shadersRepository->createFragmentShader("ambient", ambientFragmentShaderSource);
     shadersRepository->createShaderProgram("ambient", "ambient", "ambient");
 
-    /*auto directionalLightVertexShaderSource = shaderSourcePreprocessor->loadShaderSource(
-        "shaders/light/directionalLightVertexShader.glsl"
+    auto directionalLightVertexShaderSource = shaderSourcePreprocessor->loadShaderSource(
+        "shaders/light/directional_light_vertexShader.glsl"
     );
     auto directionalLightFragmentShaderSource = shaderSourcePreprocessor->loadShaderSource(
-        "shaders/light/directionalLightFragmentShader.glsl"
+        "shaders/light/directional_light_fragmentShader.glsl"
     );
     shadersRepository->createVertexShader("directionalLight", directionalLightVertexShaderSource);
     shadersRepository->createFragmentShader("directionalLight", directionalLightFragmentShaderSource);
-    shadersRepository->createShaderProgram("directionalLight", "directionalLight", "directionalLight");*/
+    shadersRepository->createShaderProgram("directionalLight", "directionalLight", "directionalLight");
 
     setupOpenGL();
 }
@@ -88,7 +89,7 @@ void GameEngine::RenderingEngine::RenderingEngine::render(Scene& scene) {
 
     vector<shared_ptr<CameraComponent>> activeCameras;
     unordered_map<string, shared_ptr<AmbientLightComponent>> layerNameToAmbientLightMap;
-    //unordered_multimap<string, shared_ptr<DirectionalLightComponent>> layerNameToDirectionalLightsMap;
+    unordered_multimap<string, shared_ptr<DirectionalLightComponent>> layerNameToDirectionalLightsMap;
     unordered_multimap<string, shared_ptr<OpenGLMeshRendererComponent>> layerNameToMeshRenderersMap;
     //unordered_multimap<string, shared_ptr<OpenGLMeshRendererComponent>> layerNameToTranslucentMeshRenderersMap;
     //unordered_multimap<string, shared_ptr<OpenGLFreeTypeTextRendererComponent>> layerNameToTextRenderersMap;
@@ -156,14 +157,14 @@ void GameEngine::RenderingEngine::RenderingEngine::render(Scene& scene) {
             }
         }
 
-        /*if (
+        if (
             auto directionalLight = gameObject.findComponent<DirectionalLightComponent>();
             directionalLight != nullptr && directionalLight->isEnabled()
             ) {
             for (auto& layerName : directionalLight->layerNames()) {
                 layerNameToDirectionalLightsMap.insert({ layerName, directionalLight });
             }
-        }*/
+        }
     });
 
     sort(
@@ -211,7 +212,7 @@ void GameEngine::RenderingEngine::RenderingEngine::render(Scene& scene) {
                     scissor,
                     it->second,
                     layerNameToAmbientLightMap,
-                    //layerNameToDirectionalLightsMap,
+                    layerNameToDirectionalLightsMap,
                     layerName
                 );
             }
@@ -245,7 +246,7 @@ void GameEngine::RenderingEngine::RenderingEngine::renderMeshWithAllRequiredShad
     const Scissor& scissor,
     const shared_ptr<OpenGLMeshRendererComponent>& meshRenderer,
     const unordered_map<string, shared_ptr<AmbientLightComponent>>& layerNameToAmbientLightMap,
-    //const unordered_multimap<string, shared_ptr<DirectionalLightComponent>>& layerNameToDirectionalLightsMap,
+    const unordered_multimap<string, shared_ptr<DirectionalLightComponent>>& layerNameToDirectionalLightsMap,
     const string& layerName
 ) {
     auto material = meshRenderer->gameObject().lock()->findComponent<MaterialComponent>()->material();
@@ -278,7 +279,7 @@ void GameEngine::RenderingEngine::RenderingEngine::renderMeshWithAllRequiredShad
                 GL_EQUAL
             });
 
-        /*shaderProgramContainer = m_shadersRepository->getShaderProgramContainer("directionalLight");
+        shaderProgramContainer = m_shadersRepository->getShaderProgramContainer("directionalLight");
         glUseProgram(shaderProgramContainer.shaderProgram());
 
         auto layerDirectionalLightsRange = layerNameToDirectionalLightsMap.equal_range(layerName);
@@ -293,8 +294,8 @@ void GameEngine::RenderingEngine::RenderingEngine::renderMeshWithAllRequiredShad
                 );
             }
             if (auto directionUniform = shaderProgramContainer.directionalLightDirectionUniform(); directionUniform >= 0) {
-                auto transform = it->second->gameObject()->findComponent<TransformationComponent>();
-                throwErrorIfNull(transform, "Directional light have no transform while rendering");
+                auto transform = it->second->gameObject().lock()->findComponent<TransformationComponent>();
+                Utils::throwErrorIfNull(transform, "Directional light have no transform while rendering");
                 auto direction = transform->rotation() * it->second->direction();
                 glUniform3f(
                     directionUniform,
@@ -304,7 +305,7 @@ void GameEngine::RenderingEngine::RenderingEngine::renderMeshWithAllRequiredShad
                 );
             }
             renderMesh(camera, meshRenderer, shaderProgramContainer);
-        }*/
+        }
 
         popOpenGLState();
     }

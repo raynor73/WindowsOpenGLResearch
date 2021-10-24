@@ -17,6 +17,7 @@
 #include <rendering_engine/opengl_mesh_renderer_component.h>
 #include <rendering_engine/opengl_shader_program_container.h>
 #include <game_engine/ambient_light_component.h>
+#include <game_engine/directional_light_component.h>
 
 namespace GameEngine
 {
@@ -56,7 +57,7 @@ private:
         const Viewport& viewport, const Scissor& scissor,
         const std::shared_ptr<OpenGLMeshRendererComponent>& meshRenderer,
         const std::unordered_map<std::string, std::shared_ptr<AmbientLightComponent>>& layerNameToAmbientLightMap,
-        //const std::unordered_multimap<std::string, std::shared_ptr<DirectionalLightComponent>>& layerNameToDirectionalLightsMap,
+        const std::unordered_multimap<std::string, std::shared_ptr<DirectionalLightComponent>>& layerNameToDirectionalLightsMap,
         const std::string& layerName
     );
     static void renderMesh(

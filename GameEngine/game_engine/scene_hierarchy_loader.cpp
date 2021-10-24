@@ -13,6 +13,7 @@
 #include <game_engine/transformation_component.h>
 #include <game_engine/game_object.h>
 #include <game_engine/ambient_light_component.h>
+#include <game_engine/directional_light_component.h>
 
 using namespace GameEngine;
 using namespace std;
@@ -761,15 +762,14 @@ shared_ptr<GameObjectComponent> SceneHierarchyLoader::parseComponent(
             componentJson["shouldClearDepth"].get<bool>()
         );
         return camera;
-    }
-    /*else if (type == "DirectionalLight") {
+    } else if (type == "DirectionalLight") {
         return make_shared<DirectionalLightComponent>(
             parseColor3f(componentJson["color"]),
-            Engine3D::Constants::DEFAULT_FORWARD_DIRECTION,
+            Constants::DEFAULT_FORWARD_DIRECTION,
             parseLayerNames(componentJson["layerNames"])
-            );
+        );
     }
-    else if (type == "ScrollDetector") {
+    /*else if (type == "ScrollDetector") {
         return make_shared<ScrollDetectorComponent>();
     }
     else if (type == "SphereRigidBody") {

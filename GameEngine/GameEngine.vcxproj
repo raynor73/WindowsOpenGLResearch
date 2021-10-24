@@ -152,6 +152,7 @@
     <ClInclude Include="game_engine\bitmap_info.h" />
     <ClInclude Include="game_engine\camera_component.h" />
     <ClInclude Include="game_engine\constants.h" />
+    <ClInclude Include="game_engine\directional_light_component.h" />
     <ClInclude Include="game_engine\fs_abstraction.h" />
     <ClInclude Include="game_engine\game_object.h" />
     <ClInclude Include="game_engine\textures_repository.h" />
@@ -213,6 +214,7 @@
     <ClCompile Include="game\hello_world_scene.cpp" />
     <ClCompile Include="game_engine\ambient_light_component.cpp" />
     <ClCompile Include="game_engine\camera_component.cpp" />
+    <ClCompile Include="game_engine\directional_light_component.cpp" />
     <ClCompile Include="game_engine\game_object.cpp" />
     <ClCompile Include="game_engine\logger.cpp" />
     <ClCompile Include="game_engine\material_component.cpp" />
@@ -254,8 +256,10 @@
     <Image Include="small.ico" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="shaders\light\ambientFragmentShader.glsl" />
-    <None Include="shaders\light\ambientVertexShader.glsl" />
+    <None Include="shaders\light\ambient_fragment_shader.glsl" />
+    <None Include="shaders\light\ambient_vertex_shader.glsl" />
+    <None Include="shaders\light\directional_light_fragment_shader.glsl" />
+    <None Include="shaders\light\directional_light_vertex_shader.glsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

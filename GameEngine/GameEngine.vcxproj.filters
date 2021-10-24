@@ -204,6 +204,9 @@
     <ClInclude Include="game\fps_calculator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="game_engine\directional_light_component.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameEngine.cpp">
@@ -320,6 +323,9 @@
     <ClCompile Include="game\fps_calculator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="game_engine\directional_light_component.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="GameEngine.rc">
@@ -335,7 +341,9 @@
     </Image>
   </ItemGroup>
   <ItemGroup>
-    <None Include="shaders\light\ambientFragmentShader.glsl" />
-    <None Include="shaders\light\ambientVertexShader.glsl" />
+    <None Include="shaders\light\ambient_fragment_shader.glsl" />
+    <None Include="shaders\light\ambient_vertex_shader.glsl" />
+    <None Include="shaders\light\directional_light_vertex_shader.glsl" />
+    <None Include="shaders\light\directional_light_fragment_shader.glsl" />
   </ItemGroup>
 </Project>
