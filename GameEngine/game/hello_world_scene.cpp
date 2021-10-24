@@ -9,10 +9,20 @@
 using namespace GameEngine;
 using namespace std;
 
+void HelloWorldScene::start()
+{
+    m_freeFlyCameraController = make_shared<FreeFlyCameraController>(
+        m_serviceLocator, 
+        m_gameObjectsMap["sceneCamera"]->findComponent<TransformationComponent>()
+    );
+}
+
 void HelloWorldScene::update()
 {
     Scene::update();
     float dt = m_serviceLocator->timeManager()->deltaTime();
+
+    m_freeFlyCameraController->update(dt);
 
     m_angle += dt * 60;
     auto m_boxTransform = m_gameObjectsMap["box"]->findComponent<TransformationComponent>();

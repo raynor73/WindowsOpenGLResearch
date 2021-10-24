@@ -7,6 +7,9 @@ using namespace std;
 
 void DevSceneManager::requestHelloWorldSceneStart()
 {
+    m_serviceLocator->texturesRepository()->removeAllTextures();
+
     m_activeScene = make_shared<HelloWorldScene>(m_serviceLocator);
     m_serviceLocator->sceneHierarchyLoader()->loadHierarchyIntoScene("scenes/hello_world_scene.json", *m_activeScene);
+    m_activeScene->start();
 }

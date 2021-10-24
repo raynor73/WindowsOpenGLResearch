@@ -18,6 +18,8 @@
 #include <platform_dependent/windows/windows_opengl_shader_source_loader.h>
 #include <rendering_engine/opengl_mesh_renderer_factory.h>
 #include <rendering_engine/rendering_engine.h>
+#include <platform_dependent/windows/windows_keyboard_input.h>
+#include <locale>
 
 #define CONSOLE_BUFFER_SIZE 1024
 
@@ -32,6 +34,7 @@ using namespace std;
 
 static shared_ptr<DevSceneManager> g_sceneManager;
 static shared_ptr<GameEngine::RenderingEngine::RenderingEngine> g_renderingEngine;
+static shared_ptr<WindowsKeyboardInput> g_keyboardInput;
 
 static bool setupConsolse(HINSTANCE hInstance) {
     if (!createNewConsole(CONSOLE_BUFFER_SIZE)) {
@@ -151,9 +154,58 @@ static void initGame() {
     g_sceneManager = make_shared<DevSceneManager>(serviceLocator);
     serviceLocator->provide(g_sceneManager);
 
-
+    serviceLocator->provide(g_keyboardInput);
 
     g_sceneManager->requestHelloWorldSceneStart();
+}
+
+static void characterCallback(GLFWwindow* window, unsigned int codepoint)
+{
+    // not used yet
+}
+
+static void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
+{
+    switch (key) {
+    case GLFW_KEY_W:
+        if (action == GLFW_PRESS) {
+            g_keyboardInput->setKeyPressed(KeyboardInput::KEY_W, true);
+        } else if (action == GLFW_RELEASE) {
+            g_keyboardInput->setKeyPressed(KeyboardInput::KEY_W, false);
+        }
+        break;
+
+    case GLFW_KEY_S:
+        if (action == GLFW_PRESS) {
+            g_keyboardInput->setKeyPressed(KeyboardInput::KEY_S, true);
+        } else if (action == GLFW_RELEASE) {
+            g_keyboardInput->setKeyPressed(KeyboardInput::KEY_S, false);
+        }
+        break;
+
+    case GLFW_KEY_A:
+        if (action == GLFW_PRESS) {
+            g_keyboardInput->setKeyPressed(KeyboardInput::KEY_A, true);
+        } else if (action == GLFW_RELEASE) {
+            g_keyboardInput->setKeyPressed(KeyboardInput::KEY_A, false);
+        }
+        break;
+
+    case GLFW_KEY_D:
+        if (action == GLFW_PRESS) {
+            g_keyboardInput->setKeyPressed(KeyboardInput::KEY_D, true);
+        } else if (action == GLFW_RELEASE) {
+            g_keyboardInput->setKeyPressed(KeyboardInput::KEY_D, false);
+        }
+        break;
+    }
+}
+
+static void initInput(GLFWwindow* window) {
+    g_keyboardInput = make_shared<WindowsKeyboardInput>();
+
+    glfwSetCharCallback(window, characterCallback);
+    glfwSetKeyCallback(window, keyCallback);
 }
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
@@ -169,6 +221,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     if (window == NULL) {
         return EXIT_FAILURE;
     }
+    
+    initInput(window);
 
     initGame();
 

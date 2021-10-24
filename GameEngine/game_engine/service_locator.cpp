@@ -112,6 +112,15 @@ void ServiceLocator::provide(shared_ptr<TexturesRepository> texturesRepository)
     m_texturesRepository = texturesRepository;
 }
 
+void ServiceLocator::provide(shared_ptr<KeyboardInput> keyboardInput)
+{
+    if (m_keyboardInput != nullptr) {
+        throw domain_error("Keyboard Input already provided");
+    }
+
+    m_keyboardInput = keyboardInput;
+}
+
 SceneManager* ServiceLocator::sceneManager()
 {
     if (m_sceneManager.use_count() == 0) {
@@ -218,4 +227,13 @@ TexturesRepository* ServiceLocator::texturesRepository()
     }
 
     return m_texturesRepository.get();
+}
+
+KeyboardInput* ServiceLocator::keyboardInput()
+{
+    if (m_keyboardInput == nullptr) {
+        throw domain_error("Keyboard Input is not provided");
+    }
+
+    return m_keyboardInput.get();
 }

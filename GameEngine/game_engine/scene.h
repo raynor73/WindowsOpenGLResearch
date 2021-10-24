@@ -16,6 +16,7 @@ public:
 
     virtual ~Scene() = default;
 
+    virtual void start() = 0;
     virtual void update();
 
     std::shared_ptr<GameObject> rootGameObject() { return m_rootGameObject; }

@@ -207,6 +207,15 @@
     <ClInclude Include="game_engine\directional_light_component.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="game_engine\input\keyboard_input.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="platform_dependent\windows\windows_keyboard_input.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="game\free_fly_camera_controller.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameEngine.cpp">
@@ -324,6 +333,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="game_engine\directional_light_component.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="platform_dependent\windows\windows_keyboard_input.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="game\free_fly_camera_controller.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

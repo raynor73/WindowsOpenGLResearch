@@ -12,6 +12,7 @@
 #include <game_engine/scene_hierarchy_loader.h>
 #include <game_engine/bitmap_loader.h>
 #include <game_engine/textures_repository.h>
+#include <game_engine/input/keyboard_input.h>
 #include <memory>
 
 namespace GameEngine
@@ -31,6 +32,7 @@ public:
     void provide(std::shared_ptr<SceneHierarchyLoader> sceneHierarchyLoader);
     void provide(std::shared_ptr<BitmapLoader> bitmapLoader);
     void provide(std::shared_ptr<TexturesRepository> texturesRepository);
+    void provide(std::shared_ptr<KeyboardInput> keyboardInput);
 
     SceneManager* sceneManager();
     TimeProvider* timeProvider();
@@ -44,6 +46,7 @@ public:
     SceneHierarchyLoader* sceneHierarchyLoader();
     BitmapLoader* bitmapLoader();
     TexturesRepository* texturesRepository();
+    KeyboardInput* keyboardInput();
 
 private:
     std::shared_ptr<SceneManager> m_sceneManager;
@@ -58,5 +61,6 @@ private:
     std::shared_ptr<SceneHierarchyLoader> m_sceneHierarchyLoader;
     std::shared_ptr<BitmapLoader> m_bitmapLoader;
     std::shared_ptr<TexturesRepository> m_texturesRepository;
+    std::shared_ptr<KeyboardInput> m_keyboardInput;
 };
 }
