@@ -14,15 +14,14 @@ class FreeFlyCameraController
 
     bool m_isEnabled = true;
 
-    float m_cameraMovementMaxSpeed = 1.0f; // units per second
+    float m_cameraMovementMaxSpeed = 4.0f; // units per second
+    float m_cameraRotationSensitivity;
 
 public:
     FreeFlyCameraController(
         std::shared_ptr<GameEngine::ServiceLocator> serviceLocator,
         std::shared_ptr<GameEngine::TransformationComponent> cameraTransform
-    ) : m_serviceLocator(serviceLocator),
-        m_cameraTransform(cameraTransform)
-    {}
+    );
     
     void setEnabled(bool isEnabled) { m_isEnabled = isEnabled; }
 

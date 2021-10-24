@@ -20,6 +20,7 @@
 #include <rendering_engine/rendering_engine.h>
 #include <platform_dependent/windows/windows_keyboard_input.h>
 #include <platform_dependent/windows/windows_app.h>
+#include <platform_dependent/windows/windows_mouse_input.h>
 #include <locale>
 
 #define CONSOLE_BUFFER_SIZE 1024
@@ -36,6 +37,7 @@ using namespace std;
 static shared_ptr<DevSceneManager> g_sceneManager;
 static shared_ptr<GameEngine::RenderingEngine::RenderingEngine> g_renderingEngine;
 static shared_ptr<WindowsKeyboardInput> g_keyboardInput;
+static shared_ptr<WindowsMouseInput> g_mouseInput;
 static shared_ptr<WindowsApp> g_app;
 
 static bool setupConsolse(HINSTANCE hInstance) {
@@ -54,6 +56,7 @@ static void mainLoop(GLFWwindow* window) {
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window)) {
         /* Game logic */
+        g_mouseInput->update();
         auto activeScene = g_sceneManager->activeScene();
         if (activeScene != nullptr) {
             activeScene->update();
@@ -163,6 +166,7 @@ static void initGame() {
     serviceLocator->provide(g_sceneManager);
 
     serviceLocator->provide(g_keyboardInput);
+    serviceLocator->provide(g_mouseInput);
 
     g_sceneManager->requestHelloWorldSceneStart();
 }
@@ -218,21 +222,14 @@ static void keyCallback(GLFWwindow* window, int key, int scancode, int action, i
     }
 }
 
-static void pointerPositionCallback(GLFWwindow* window, double x, double y)
-{
-    stringstream ss;
-    ss << "x: " << x << "; y: " << y;
-    L::d("Pointer position", ss.str());
-}
-
 static void initInput(GLFWwindow* window) {
     g_keyboardInput = make_shared<WindowsKeyboardInput>();
+    g_mouseInput = make_shared<WindowsMouseInput>(window);
 
     glfwSetCharCallback(window, characterCallback);
     glfwSetKeyCallback(window, keyCallback);
 
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-    glfwSetCursorPosCallback(window, pointerPositionCallback);
 }
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,

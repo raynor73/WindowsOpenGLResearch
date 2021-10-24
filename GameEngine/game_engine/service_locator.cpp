@@ -130,6 +130,15 @@ void ServiceLocator::provide(shared_ptr<App> app)
     m_app = app;
 }
 
+void ServiceLocator::provide(shared_ptr<MouseInput> mouseInput)
+{
+    if (m_mouseInput != nullptr) {
+        throw domain_error("Mouse Input already provided");
+    }
+
+    m_mouseInput = mouseInput;
+}
+
 SceneManager* ServiceLocator::sceneManager()
 {
     if (m_sceneManager.use_count() == 0) {
@@ -254,4 +263,13 @@ App* ServiceLocator::app()
     }
 
     return m_app.get();
+}
+
+MouseInput* ServiceLocator::mouseInput()
+{
+    if (m_mouseInput == nullptr) {
+        throw domain_error("Mouse Input is not provided");
+    }
+
+    return m_mouseInput.get();
 }

@@ -14,6 +14,7 @@
 #include <game_engine/textures_repository.h>
 #include <game_engine/input/keyboard_input.h>
 #include <game_engine/app.h>
+#include <game_engine/input/mouse_input.h>
 #include <memory>
 
 namespace GameEngine
@@ -35,6 +36,7 @@ public:
     void provide(std::shared_ptr<TexturesRepository> texturesRepository);
     void provide(std::shared_ptr<KeyboardInput> keyboardInput);
     void provide(std::shared_ptr<App> app);
+    void provide(std::shared_ptr<MouseInput> mouseInput);
 
     SceneManager* sceneManager();
     TimeProvider* timeProvider();
@@ -50,6 +52,7 @@ public:
     TexturesRepository* texturesRepository();
     KeyboardInput* keyboardInput();
     App* app();
+    MouseInput* mouseInput();
 
 private:
     std::shared_ptr<SceneManager> m_sceneManager;
@@ -66,5 +69,6 @@ private:
     std::shared_ptr<TexturesRepository> m_texturesRepository;
     std::shared_ptr<KeyboardInput> m_keyboardInput;
     std::shared_ptr<App> m_app;
+    std::shared_ptr<MouseInput> m_mouseInput;
 };
 }
