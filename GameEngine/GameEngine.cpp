@@ -25,8 +25,8 @@
 
 #define CONSOLE_BUFFER_SIZE 1024
 
-#define WINDOW_WIDTH 640
-#define WINDOW_HEIGHT 480
+#define WINDOW_WIDTH 1440
+#define WINDOW_HEIGHT 900
 #define WINDOW_DENSITY_FACTOR 1
 
 using namespace GameEngine;
@@ -97,7 +97,7 @@ static GLFWwindow* initOpenGL(HINSTANCE hInstance) {
     }
 
     /* Create a windowed mode window and its OpenGL context */
-    window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Hello World", NULL, NULL);
+    window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Game Engine", NULL, NULL);
     if (!window) {
         showDialog(
             getString(hInstance, IDS_GENERIC_ERROR_TITLE).get(),
