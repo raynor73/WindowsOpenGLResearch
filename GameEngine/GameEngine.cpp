@@ -218,11 +218,21 @@ static void keyCallback(GLFWwindow* window, int key, int scancode, int action, i
     }
 }
 
+static void pointerPositionCallback(GLFWwindow* window, double x, double y)
+{
+    stringstream ss;
+    ss << "x: " << x << "; y: " << y;
+    L::d("Pointer position", ss.str());
+}
+
 static void initInput(GLFWwindow* window) {
     g_keyboardInput = make_shared<WindowsKeyboardInput>();
 
     glfwSetCharCallback(window, characterCallback);
     glfwSetKeyCallback(window, keyCallback);
+
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    glfwSetCursorPosCallback(window, pointerPositionCallback);
 }
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,

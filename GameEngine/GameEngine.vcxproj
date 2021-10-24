@@ -158,10 +158,12 @@
     <ClInclude Include="game_engine\fs_abstraction.h" />
     <ClInclude Include="game_engine\game_object.h" />
     <ClInclude Include="game_engine\input\keyboard_input.h" />
+    <ClInclude Include="game_engine\input\mouse_input.h" />
     <ClInclude Include="game_engine\textures_repository.h" />
     <ClInclude Include="platform_dependent\windows\windows_app.h" />
     <ClInclude Include="platform_dependent\windows\windows_bitmap_loader.h" />
     <ClInclude Include="platform_dependent\windows\windows_keyboard_input.h" />
+    <ClInclude Include="platform_dependent\windows\windows_mouse_input.h" />
     <ClInclude Include="rendering_engine\ibo_info.h" />
     <ClInclude Include="game_engine\logger.h" />
     <ClInclude Include="game_engine\material.h" />
@@ -244,6 +246,7 @@
     <ClCompile Include="platform_dependent\windows\windows_keyboard_input.cpp" />
     <ClCompile Include="platform_dependent\windows\windows_logger.cpp" />
     <ClCompile Include="platform_dependent\windows\windows_mesh_loader.cpp" />
+    <ClCompile Include="platform_dependent\windows\windows_mouse_input.cpp" />
     <ClCompile Include="platform_dependent\windows\windows_opengl_shader_source_loader.cpp" />
     <ClCompile Include="platform_dependent\windows\windows_read_only_fs_abstraction.cpp" />
     <ClCompile Include="rendering_engine\opengl_error_detector.cpp" />
