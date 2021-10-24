@@ -12,5 +12,8 @@ public:
     HelloWorldScene(std::shared_ptr<GameEngine::ServiceLocator> serviceLocator) : Scene(serviceLocator) {}
 
     virtual void update() override;
+
+private:
+    float m_angle = 0;
 };
 
