@@ -121,6 +121,15 @@ void ServiceLocator::provide(shared_ptr<KeyboardInput> keyboardInput)
     m_keyboardInput = keyboardInput;
 }
 
+void ServiceLocator::provide(shared_ptr<App> app)
+{
+    if (m_app != nullptr) {
+        throw domain_error("App already provided");
+    }
+
+    m_app = app;
+}
+
 SceneManager* ServiceLocator::sceneManager()
 {
     if (m_sceneManager.use_count() == 0) {
@@ -236,4 +245,13 @@ KeyboardInput* ServiceLocator::keyboardInput()
     }
 
     return m_keyboardInput.get();
+}
+
+App* ServiceLocator::app()
+{
+    if (m_app == nullptr) {
+        throw domain_error("App is not provided");
+    }
+
+    return m_app.get();
 }

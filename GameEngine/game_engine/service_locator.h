@@ -13,6 +13,7 @@
 #include <game_engine/bitmap_loader.h>
 #include <game_engine/textures_repository.h>
 #include <game_engine/input/keyboard_input.h>
+#include <game_engine/app.h>
 #include <memory>
 
 namespace GameEngine
@@ -33,6 +34,7 @@ public:
     void provide(std::shared_ptr<BitmapLoader> bitmapLoader);
     void provide(std::shared_ptr<TexturesRepository> texturesRepository);
     void provide(std::shared_ptr<KeyboardInput> keyboardInput);
+    void provide(std::shared_ptr<App> app);
 
     SceneManager* sceneManager();
     TimeProvider* timeProvider();
@@ -47,6 +49,7 @@ public:
     BitmapLoader* bitmapLoader();
     TexturesRepository* texturesRepository();
     KeyboardInput* keyboardInput();
+    App* app();
 
 private:
     std::shared_ptr<SceneManager> m_sceneManager;
@@ -62,5 +65,6 @@ private:
     std::shared_ptr<BitmapLoader> m_bitmapLoader;
     std::shared_ptr<TexturesRepository> m_texturesRepository;
     std::shared_ptr<KeyboardInput> m_keyboardInput;
+    std::shared_ptr<App> m_app;
 };
 }

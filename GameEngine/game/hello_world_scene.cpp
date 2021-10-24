@@ -39,4 +39,8 @@ void HelloWorldScene::update()
 
         m_prevFpsValue = fpsValue;
     }
+
+    if (m_serviceLocator->keyboardInput()->isKeyPressed(KeyboardInput::KEY_ESC)) {
+        m_serviceLocator->app()->requestExit();
+    }
 }

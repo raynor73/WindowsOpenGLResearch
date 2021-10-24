@@ -19,6 +19,7 @@
 #include <rendering_engine/opengl_mesh_renderer_factory.h>
 #include <rendering_engine/rendering_engine.h>
 #include <platform_dependent/windows/windows_keyboard_input.h>
+#include <platform_dependent/windows/windows_app.h>
 #include <locale>
 
 #define CONSOLE_BUFFER_SIZE 1024
@@ -35,6 +36,7 @@ using namespace std;
 static shared_ptr<DevSceneManager> g_sceneManager;
 static shared_ptr<GameEngine::RenderingEngine::RenderingEngine> g_renderingEngine;
 static shared_ptr<WindowsKeyboardInput> g_keyboardInput;
+static shared_ptr<WindowsApp> g_app;
 
 static bool setupConsolse(HINSTANCE hInstance) {
     if (!createNewConsole(CONSOLE_BUFFER_SIZE)) {
@@ -72,6 +74,10 @@ static void mainLoop(GLFWwindow* window) {
 
         /* Poll for and process events */
         glfwPollEvents();
+
+        if (g_app->isExitRequested()) {
+            glfwDestroyWindow(window);
+        }
     }
 }
 
@@ -118,6 +124,8 @@ static void initGame() {
 
     auto serviceLocator = make_shared<ServiceLocator>();
 
+    g_app = make_shared<WindowsApp>();
+    serviceLocator->provide(g_app);
     serviceLocator->provide(make_shared<TimeProvider>());
     serviceLocator->provide(make_shared<TimeManager>(serviceLocator));
     serviceLocator->provide(make_shared<WindowsRenderingWindowInfoProvider>(float(WINDOW_WIDTH), float(WINDOW_HEIGHT), float(WINDOW_DENSITY_FACTOR)));
@@ -167,6 +175,15 @@ static void characterCallback(GLFWwindow* window, unsigned int codepoint)
 static void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
     switch (key) {
+    case GLFW_KEY_ESCAPE:
+        if (action == GLFW_PRESS) {
+            g_keyboardInput->setKeyPressed(KeyboardInput::KEY_ESC, true);
+        }
+        else if (action == GLFW_RELEASE) {
+            g_keyboardInput->setKeyPressed(KeyboardInput::KEY_ESC, false);
+        }
+        break;
+
     case GLFW_KEY_W:
         if (action == GLFW_PRESS) {
             g_keyboardInput->setKeyPressed(KeyboardInput::KEY_W, true);
