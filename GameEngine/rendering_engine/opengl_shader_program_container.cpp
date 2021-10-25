@@ -2,7 +2,6 @@
 #include "opengl_shader_program_container.h"
 
 using namespace GameEngine;
-using namespace GameEngine::RenderingEngine;
 using namespace std;
 
 OpenGLShaderProgramContainer::OpenGLShaderProgramContainer(

@@ -2,7 +2,6 @@
 #include <game_engine/service_locator.h>
 
 using namespace GameEngine;
-using namespace GameEngine::RenderingEngine;
 using namespace std;
 
 string WindowsOpenGLShaderSourceLoader::loadShaderSource(const string& path)

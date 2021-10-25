@@ -13,8 +13,6 @@
 
 namespace GameEngine
 {
-namespace RenderingEngine
-{
 class OpenGLMeshRendererComponent : public GameObjectComponent
 {
     std::vector<std::string> m_layerNames;
@@ -57,5 +55,4 @@ public:
 private:
     void findTopAndBottomPoints(const Mesh& mesh);
 };
-}
 }

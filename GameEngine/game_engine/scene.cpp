@@ -35,7 +35,7 @@ void Scene::update()
 
     float dt = m_time->deltaTime();
     if (dt > 0) {
-        m_physicsEngine->update(dt);
+        g_physicsEngine->update(dt);
     }*/
 }
 

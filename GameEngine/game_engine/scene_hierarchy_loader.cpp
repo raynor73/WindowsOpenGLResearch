@@ -37,7 +37,7 @@ void SceneHierarchyLoader::buildHierarchyFromJson(const string& jsonString, Scen
 
     /*auto physicsParamsJson = sceneJson["physicsParams"];
     auto gravityJson = physicsParamsJson["gravity"];
-    m_physicsEngine->setGravity(glm::vec3(
+    g_physicsEngine->setGravity(glm::vec3(
         parseFloatNumber(gravityJson[0]),
         parseFloatNumber(gravityJson[1]),
         parseFloatNumber(gravityJson[2])
@@ -799,7 +799,7 @@ shared_ptr<GameObjectComponent> SceneHierarchyLoader::parseComponent(
             maxMotorTorque[2] = parseFloatNumber(componentJson["maxMotorTorque"][2]);
         }
         auto rigidBodyName = gameObject->name();
-        m_physicsEngine->createSphereRigidBody(
+        g_physicsEngine->createSphereRigidBody(
             gameObject,
             rigidBodyName,
             mass,
@@ -811,7 +811,7 @@ shared_ptr<GameObjectComponent> SceneHierarchyLoader::parseComponent(
         );
         return make_shared<RigidBodyComponent>(
             rigidBodyName,
-            m_physicsEngine
+            g_physicsEngine
             );
     }
     else if (type == "TriMeshRigidBody") {
@@ -836,7 +836,7 @@ shared_ptr<GameObjectComponent> SceneHierarchyLoader::parseComponent(
 
         auto mesh = createTransformedMesh(m_meshStorage.getMesh(meshName), meshPosition, meshRotation, meshScale);
 
-        m_physicsEngine->createTriMeshRigidBody(
+        g_physicsEngine->createTriMeshRigidBody(
             gameObject,
             rigidBodyName,
             mesh,
@@ -847,7 +847,7 @@ shared_ptr<GameObjectComponent> SceneHierarchyLoader::parseComponent(
 
         return make_shared<RigidBodyComponent>(
             rigidBodyName,
-            m_physicsEngine
+            g_physicsEngine
             );
     }
     else if (type == "CollisionsInfoContainer") {
@@ -861,7 +861,7 @@ shared_ptr<GameObjectComponent> SceneHierarchyLoader::parseComponent(
             gameObject->findComponent(TransformationComponent::TYPE_NAME)
             );
         auto rigidBodyName = gameObject->name();
-        m_physicsEngine->createCharacterCapsuleRigidBody(
+        g_physicsEngine->createCharacterCapsuleRigidBody(
             gameObject,
             rigidBodyName,
             mass,
@@ -874,7 +874,7 @@ shared_ptr<GameObjectComponent> SceneHierarchyLoader::parseComponent(
         );
         return make_shared<RigidBodyComponent>(
             rigidBodyName,
-            m_physicsEngine
+            g_physicsEngine
             );
     }
     else if (type == "SkeletalAnimation") {

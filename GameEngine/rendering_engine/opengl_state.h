@@ -2,6 +2,8 @@
 
 #include <GL/glew.h>
 
+namespace GameEngine
+{
 struct BlendFunction {
     GLenum sFactor;
     GLenum dFactor;
@@ -29,3 +31,4 @@ struct OpenGLState {
     bool depthMask;
     GLenum depthFunction;
 };
+}

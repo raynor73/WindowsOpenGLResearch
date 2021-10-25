@@ -14,8 +14,6 @@
 
 namespace GameEngine
 {
-namespace RenderingEngine
-{
 class OpenGLTexturesRepository : public TexturesRepository, public WithoutGeneratedMethods
 {
     std::unordered_map<std::string, TextureInfo> m_textures;
@@ -55,5 +53,4 @@ private:
 
     static const std::vector<float> AVAILABLE_BITMAP_DENSITIES;
 };
-}
 }

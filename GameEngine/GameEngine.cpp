@@ -22,6 +22,7 @@
 #include <platform_dependent/windows/windows_app.h>
 #include <platform_dependent/windows/windows_mouse_input.h>
 #include <locale>
+#include <physics_engine/bullet_physics_engine.h>
 
 #define CONSOLE_BUFFER_SIZE 1024
 
@@ -30,12 +31,12 @@
 #define WINDOW_DENSITY_FACTOR 1
 
 using namespace GameEngine;
-using namespace GameEngine::RenderingEngine;
 using namespace Windows::Utils;
 using namespace std;
 
 static shared_ptr<DevSceneManager> g_sceneManager;
-static shared_ptr<GameEngine::RenderingEngine::OpenGLRenderingEngine> g_renderingEngine;
+static shared_ptr<GameEngine::OpenGLRenderingEngine> g_renderingEngine;
+static shared_ptr<BulletPhysicsEngine> g_physicsEngine;
 static shared_ptr<WindowsKeyboardInput> g_keyboardInput;
 static shared_ptr<WindowsMouseInput> g_mouseInput;
 static shared_ptr<WindowsApp> g_app;
@@ -153,7 +154,7 @@ static void initGame() {
         openGLErrorDetector
     ));
 
-    g_renderingEngine = make_shared<GameEngine::RenderingEngine::OpenGLRenderingEngine>(
+    g_renderingEngine = make_shared<GameEngine::OpenGLRenderingEngine>(
         openGLErrorDetector,
         serviceLocator->unitsConverter(),
         make_shared<OpenGLShadersRepository>(openGLErrorDetector),
@@ -167,6 +168,13 @@ static void initGame() {
 
     serviceLocator->provide(g_keyboardInput);
     serviceLocator->provide(g_mouseInput);
+    
+    serviceLocator->provide(g_renderingEngine);
+
+    g_physicsEngine = make_shared<BulletPhysicsEngine>();
+    serviceLocator->provide(g_physicsEngine);
+
+
 
     g_sceneManager->requestHelloWorldSceneStart();
 }

@@ -9,8 +9,6 @@
 
 namespace GameEngine
 {
-namespace RenderingEngine
-{
 class OpenGLMeshRendererFactory : public MeshRendererFactory, public WithoutGeneratedMethods
 {
     std::shared_ptr<OpenGLErrorDetector> m_openGLErrorDetector;
@@ -29,5 +27,4 @@ public:
 
     virtual std::shared_ptr<GameObjectComponent> createMeshRenderer(std::vector<std::string> layerNames) override;
 };
-}
 }

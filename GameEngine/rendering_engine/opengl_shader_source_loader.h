@@ -4,8 +4,6 @@
 
 namespace GameEngine
 {
-namespace RenderingEngine
-{
 class OpenGLShaderSourceLoader
 {
 public:
@@ -13,5 +11,4 @@ public:
 
     virtual std::string loadShaderSource(const std::string& path) = 0;
 };
-}
 }

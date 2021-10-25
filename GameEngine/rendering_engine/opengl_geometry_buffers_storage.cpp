@@ -3,7 +3,7 @@
 #include <exception>
 #include <utility>
 
-using namespace GameEngine::RenderingEngine;
+using namespace GameEngine;
 using namespace std;
 
 optional<GLuint> OpenGLGeometryBuffersStorage::findVbo(const string& name) {

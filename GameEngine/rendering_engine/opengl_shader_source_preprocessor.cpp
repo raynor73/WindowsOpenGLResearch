@@ -1,7 +1,6 @@
 #include "opengl_shader_source_preprocessor.h"
 
 using namespace GameEngine;
-using namespace GameEngine::RenderingEngine;
 using namespace std;
 
 const string OpenGLShaderSourcePreprocessor::INCLUDE_TOKEN_PREFIX = "#include \"";

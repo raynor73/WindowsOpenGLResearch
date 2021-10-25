@@ -6,8 +6,6 @@
 
 namespace GameEngine
 {
-namespace RenderingEngine
-{
 class OpenGLShaderProgramContainer
 {
     std::shared_ptr<OpenGLErrorDetector> m_openGLErrorDetector;
@@ -76,6 +74,3 @@ public:
     GLint jointTransformsUniform() const { return m_jointTransformsUniform; }
 };
 }
-}
-
-

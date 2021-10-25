@@ -11,8 +11,6 @@
 
 namespace GameEngine
 {
-namespace RenderingEngine
-{
 class OpenGLGeometryBuffersStorage : public WithoutGeneratedMethods
 {
     std::shared_ptr<OpenGLErrorDetector> m_openGLErrorDetector;
@@ -38,5 +36,4 @@ public:
 
     void removeAllBuffers();
 };
-}
 }

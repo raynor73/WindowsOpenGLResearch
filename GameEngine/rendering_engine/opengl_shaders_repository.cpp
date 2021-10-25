@@ -2,7 +2,6 @@
 #include <sstream>
 
 using namespace GameEngine;
-using namespace GameEngine::RenderingEngine;
 using namespace std;
 
 GLuint OpenGLShadersRepository::getVertexShader(const string& name) const {

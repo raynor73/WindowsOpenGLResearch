@@ -18,12 +18,11 @@
 #include <rendering_engine/opengl_shader_program_container.h>
 #include <game_engine/ambient_light_component.h>
 #include <game_engine/directional_light_component.h>
+#include <game_engine/rendering_engine.h>
 
 namespace GameEngine
 {
-namespace RenderingEngine
-{
-class OpenGLRenderingEngine : public WithoutGeneratedMethods
+class OpenGLRenderingEngine : public RenderingEngine, public WithoutGeneratedMethods
 {
     std::stack<OpenGLState> m_openGLStateStack;
     std::shared_ptr<OpenGLErrorDetector> m_openGLErrorDetector;
@@ -43,7 +42,11 @@ public:
         OpenGLTexturesRepository* texturesRepository
     );
 
+    virtual ~OpenGLRenderingEngine() override;
+
     void render(Scene& scene);
+
+    virtual void reset() override;
 
 private:
     bool m_isErrorLogged;
@@ -76,5 +79,4 @@ private:
 
     void setupOpenGL();
 };
-}
 }

@@ -14,10 +14,9 @@
 #include <game_engine/directional_light_component.h>
 
 using namespace GameEngine;
-using namespace GameEngine::RenderingEngine;
 using namespace std;
 
-GameEngine::RenderingEngine::OpenGLRenderingEngine::OpenGLRenderingEngine(
+OpenGLRenderingEngine::OpenGLRenderingEngine(
     shared_ptr<OpenGLErrorDetector> openGLErrorDetector,
     UnitsConverter* unitsConverter,
     shared_ptr<OpenGLShadersRepository> shadersRepository,
@@ -74,7 +73,13 @@ GameEngine::RenderingEngine::OpenGLRenderingEngine::OpenGLRenderingEngine(
     setupOpenGL();
 }
 
-void GameEngine::RenderingEngine::OpenGLRenderingEngine::render(Scene& scene) {
+OpenGLRenderingEngine::~OpenGLRenderingEngine()
+{
+    reset();
+    m_shadersRepository->removeAllShadersAndPrograms();
+}
+
+void OpenGLRenderingEngine::render(Scene& scene) {
     if (m_openGLErrorDetector->isOpenGLErrorDetected()) {
         if (!m_isErrorLogged) {
             m_isErrorLogged = true;
@@ -240,7 +245,14 @@ void GameEngine::RenderingEngine::OpenGLRenderingEngine::render(Scene& scene) {
     }
 }
 
-void GameEngine::RenderingEngine::OpenGLRenderingEngine::renderMeshWithAllRequiredShaders(
+void OpenGLRenderingEngine::reset()
+{
+    m_geometryBuffersStorage->removeAllBuffers();
+    m_texturesRepository->removeAllTextures();
+    setupOpenGL();
+}
+
+void OpenGLRenderingEngine::renderMeshWithAllRequiredShaders(
     const shared_ptr<CameraComponent>& camera,
     const Viewport& viewport,
     const Scissor& scissor,
@@ -311,7 +323,7 @@ void GameEngine::RenderingEngine::OpenGLRenderingEngine::renderMeshWithAllRequir
     }
 }
 
-void GameEngine::RenderingEngine::OpenGLRenderingEngine::renderMesh(
+void OpenGLRenderingEngine::renderMesh(
     const shared_ptr<CameraComponent>& camera,
     const shared_ptr<OpenGLMeshRendererComponent>& meshRenderer,
     const OpenGLShaderProgramContainer& shaderProgramContainer
@@ -375,26 +387,26 @@ void GameEngine::RenderingEngine::OpenGLRenderingEngine::renderMesh(
     );
 }*/
 
-void GameEngine::RenderingEngine::OpenGLRenderingEngine::traverseSceneHierarchy(GameObject& gameObject, const function<void(GameObject&)>& callback) {
+void OpenGLRenderingEngine::traverseSceneHierarchy(GameObject& gameObject, const function<void(GameObject&)>& callback) {
     callback(gameObject);
     for (auto& entry : gameObject.children()) {
         traverseSceneHierarchy(*entry.second, callback);
     }
 }
 
-void GameEngine::RenderingEngine::OpenGLRenderingEngine::pushOpenGLState(const OpenGLState& state) {
+void OpenGLRenderingEngine::pushOpenGLState(const OpenGLState& state) {
     applyOpenGLState(state);
     m_openGLStateStack.push(state);
 }
 
-void GameEngine::RenderingEngine::OpenGLRenderingEngine::popOpenGLState() {
+void OpenGLRenderingEngine::popOpenGLState() {
     m_openGLStateStack.pop();
     if (!m_openGLStateStack.empty()) {
         applyOpenGLState(m_openGLStateStack.top());
     }
 }
 
-void GameEngine::RenderingEngine::OpenGLRenderingEngine::applyOpenGLState(const OpenGLState& state) {
+void OpenGLRenderingEngine::applyOpenGLState(const OpenGLState& state) {
     glViewport(state.viewport.x, state.viewport.y, state.viewport.width, state.viewport.height);
     glScissor(state.scissor.x, state.scissor.y, state.scissor.width, state.scissor.height);
     if (state.blend) {
@@ -410,7 +422,7 @@ void GameEngine::RenderingEngine::OpenGLRenderingEngine::applyOpenGLState(const 
     m_openGLErrorDetector->checkOpenGLErrors("OpenGLRenderingEngine::applyOpenGLState");
 }
 
-void GameEngine::RenderingEngine::OpenGLRenderingEngine::putMeshInGeometryBuffersIfNecessary(const string& name, const Mesh& mesh) {
+void OpenGLRenderingEngine::putMeshInGeometryBuffersIfNecessary(const string& name, const Mesh& mesh) {
     if (!m_geometryBuffersStorage->findVbo(name)) {
         vector<float> vertexData(mesh.vertices().size() * Vertex::VERTEX_COMPONENTS);
 
@@ -443,7 +455,7 @@ void GameEngine::RenderingEngine::OpenGLRenderingEngine::putMeshInGeometryBuffer
     }
 }
 
-void GameEngine::RenderingEngine::OpenGLRenderingEngine::setupOpenGL() {
+void OpenGLRenderingEngine::setupOpenGL() {
     glEnable(GL_DEPTH_TEST);
     glFrontFace(GL_CCW);
     glEnable(GL_SCISSOR_TEST);

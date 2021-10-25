@@ -9,8 +9,6 @@
 
 namespace GameEngine
 {
-namespace RenderingEngine
-{
 class OpenGLShadersRepository : public WithoutGeneratedMethods
 {
     std::shared_ptr<OpenGLErrorDetector> m_openGLErrorDetector;
@@ -37,5 +35,4 @@ public:
 
     void removeAllShadersAndPrograms();
 };
-}
 }

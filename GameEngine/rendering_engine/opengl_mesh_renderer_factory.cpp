@@ -2,7 +2,6 @@
 #include <rendering_engine/opengl_mesh_renderer_component.h>
 
 using namespace GameEngine;
-using namespace GameEngine::RenderingEngine;
 using namespace std;
 
 shared_ptr<GameObjectComponent> OpenGLMeshRendererFactory::createMeshRenderer(vector<string> layerNames)

@@ -7,9 +7,6 @@
 namespace GameEngine
 {
 class ServiceLocator;
-
-namespace RenderingEngine
-{
 class WindowsOpenGLShaderSourceLoader : public OpenGLShaderSourceLoader, public WithoutGeneratedMethods
 {
     std::shared_ptr<ServiceLocator> m_serviceLocator;
@@ -18,5 +15,4 @@ public:
 
     virtual std::string loadShaderSource(const std::string& path) override;
 };
-}
 }

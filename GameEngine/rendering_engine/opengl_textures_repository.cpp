@@ -1,7 +1,6 @@
 #include "opengl_textures_repository.h"
 
 using namespace GameEngine;
-using namespace GameEngine::RenderingEngine;
 using namespace std;
 
 const vector<float> OpenGLTexturesRepository::AVAILABLE_BITMAP_DENSITIES = {

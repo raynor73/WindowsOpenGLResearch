@@ -7,8 +7,6 @@
 
 namespace GameEngine
 {
-namespace RenderingEngine 
-{
 class OpenGLShaderSourcePreprocessor : public WithoutGeneratedMethods
 {
     std::shared_ptr<OpenGLShaderSourceLoader> m_shaderSourceLoader;
@@ -23,5 +21,4 @@ private:
     static const std::string INCLUDE_TOKEN_PREFIX;
     static const std::string INCLUDE_TOKEN_POSTFIX;
 };
-}
 }

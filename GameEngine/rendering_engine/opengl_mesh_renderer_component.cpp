@@ -4,7 +4,6 @@
 #include <game_engine/material_component.h>
 
 using namespace GameEngine;
-using namespace GameEngine::RenderingEngine;
 using namespace std;
 
 const string OpenGLMeshRendererComponent::TYPE_NAME = "OpenGLMeshRendererComponent";

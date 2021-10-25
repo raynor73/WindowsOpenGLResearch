@@ -2,7 +2,7 @@
 #include <sstream>
 #include <game_engine/logger.h>
 
-using namespace GameEngine::RenderingEngine;
+using namespace GameEngine;
 using namespace std;
 
 OpenGLErrorDetector::OpenGLErrorDetector() : m_isOpenGLErrorDetected(false) {

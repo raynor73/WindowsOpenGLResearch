@@ -7,8 +7,6 @@
 
 namespace GameEngine
 {
-namespace RenderingEngine
-{
 class OpenGLErrorDetector : public WithoutGeneratedMethods
 {
     bool m_isOpenGLErrorDetected;
@@ -31,5 +29,4 @@ public:
     void checkShaderLinkingError(GLuint shader, const std::string& locationName);
     void checkFramebufferStatus(const std::string& locationName);
 };
-}
 }

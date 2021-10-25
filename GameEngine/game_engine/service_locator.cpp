@@ -139,6 +139,24 @@ void ServiceLocator::provide(shared_ptr<MouseInput> mouseInput)
     m_mouseInput = mouseInput;
 }
 
+void ServiceLocator::provide(shared_ptr<PhysicsEngine> physicsEngine)
+{
+    if (m_physicsEngine != nullptr) {
+        throw domain_error("Physics Engine already provided");
+    }
+
+    m_physicsEngine = physicsEngine;
+}
+
+void ServiceLocator::provide(shared_ptr<RenderingEngine> renderingEngine)
+{
+    if (m_renderingEngine != nullptr) {
+        throw domain_error("Rendering Engine already provided");
+    }
+
+    m_renderingEngine = renderingEngine;
+}
+
 SceneManager* ServiceLocator::sceneManager()
 {
     if (m_sceneManager.use_count() == 0) {
@@ -272,4 +290,22 @@ MouseInput* ServiceLocator::mouseInput()
     }
 
     return m_mouseInput.get();
+}
+
+PhysicsEngine* ServiceLocator::physicsEngine()
+{
+    if (m_physicsEngine == nullptr) {
+        throw domain_error("Physics Engine is not provided");
+    }
+
+    return m_physicsEngine.get();
+}
+
+RenderingEngine* ServiceLocator::renderingEngine()
+{
+    if (m_renderingEngine == nullptr) {
+        throw domain_error("Rendering Engine is not provided");
+    }
+
+    return m_renderingEngine.get();
 }

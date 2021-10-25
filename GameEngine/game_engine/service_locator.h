@@ -16,6 +16,8 @@
 #include <game_engine/app.h>
 #include <game_engine/input/mouse_input.h>
 #include <memory>
+#include <game_engine/physics_engine.h>
+#include <game_engine/rendering_engine.h>
 
 namespace GameEngine
 {
@@ -37,6 +39,8 @@ public:
     void provide(std::shared_ptr<KeyboardInput> keyboardInput);
     void provide(std::shared_ptr<App> app);
     void provide(std::shared_ptr<MouseInput> mouseInput);
+    void provide(std::shared_ptr<PhysicsEngine> physicsEngine);
+    void provide(std::shared_ptr<RenderingEngine> renderingEngine);
 
     SceneManager* sceneManager();
     TimeProvider* timeProvider();
@@ -53,6 +57,8 @@ public:
     KeyboardInput* keyboardInput();
     App* app();
     MouseInput* mouseInput();
+    PhysicsEngine* physicsEngine();
+    RenderingEngine* renderingEngine();
 
 private:
     std::shared_ptr<SceneManager> m_sceneManager;
@@ -70,5 +76,7 @@ private:
     std::shared_ptr<KeyboardInput> m_keyboardInput;
     std::shared_ptr<App> m_app;
     std::shared_ptr<MouseInput> m_mouseInput;
+    std::shared_ptr<PhysicsEngine> m_physicsEngine;
+    std::shared_ptr<RenderingEngine> m_renderingEngine;
 };
 }
