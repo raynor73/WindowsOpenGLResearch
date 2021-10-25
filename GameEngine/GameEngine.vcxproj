@@ -207,7 +207,7 @@
     <ClInclude Include="rendering_engine\opengl_state.h" />
     <ClInclude Include="rendering_engine\opengl_textures_repository.h" />
     <ClInclude Include="rendering_engine\opengl_shader_source_preprocessor.h" />
-    <ClInclude Include="rendering_engine\rendering_engine.h" />
+    <ClInclude Include="rendering_engine\opengl_rendering_engine.h" />
     <ClInclude Include="rendering_engine\texture_info.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="rendering_engine\opengl_shader_source_loader.h" />
@@ -257,7 +257,7 @@
     <ClCompile Include="rendering_engine\opengl_shader_program_container.cpp" />
     <ClCompile Include="rendering_engine\opengl_textures_repository.cpp" />
     <ClCompile Include="rendering_engine\opengl_shader_source_preprocessor.cpp" />
-    <ClCompile Include="rendering_engine\rendering_engine.cpp" />
+    <ClCompile Include="rendering_engine\opengl_rendering_engine.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="GameEngine.rc" />

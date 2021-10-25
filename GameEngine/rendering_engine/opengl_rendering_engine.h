@@ -1,0 +1,80 @@
+#pragma once
+
+#include <game_engine/without_generated_methods.h>
+#include <memory>
+#include <stack>
+#include <rendering_engine/opengl_state.h>
+#include <rendering_engine/opengl_error_detector.h>
+#include <game_engine/units_converter.h>
+#include <rendering_engine/opengl_shaders_repository.h>
+#include <rendering_engine/opengl_shader_source_preprocessor.h>
+#include <rendering_engine/opengl_geometry_buffers_storage.h>
+#include <rendering_engine/opengl_textures_repository.h>
+#include <game_engine/scene.h>
+#include <functional>
+#include <game_engine/game_object.h>
+#include <game_engine/camera_component.h>
+#include <rendering_engine/opengl_mesh_renderer_component.h>
+#include <rendering_engine/opengl_shader_program_container.h>
+#include <game_engine/ambient_light_component.h>
+#include <game_engine/directional_light_component.h>
+
+namespace GameEngine
+{
+namespace RenderingEngine
+{
+class OpenGLRenderingEngine : public WithoutGeneratedMethods
+{
+    std::stack<OpenGLState> m_openGLStateStack;
+    std::shared_ptr<OpenGLErrorDetector> m_openGLErrorDetector;
+    UnitsConverter* m_unitsConverter;
+    std::shared_ptr<OpenGLShadersRepository> m_shadersRepository;
+    std::shared_ptr<OpenGLShaderSourcePreprocessor> m_shaderSourcePreprocessor;
+    std::shared_ptr<OpenGLGeometryBuffersStorage> m_geometryBuffersStorage;
+    OpenGLTexturesRepository* m_texturesRepository;
+
+public:
+    OpenGLRenderingEngine(
+        std::shared_ptr<OpenGLErrorDetector> openGLErrorDetector,
+        UnitsConverter* unitsConverter,
+        std::shared_ptr<OpenGLShadersRepository> shadersRepository,
+        std::shared_ptr<OpenGLShaderSourcePreprocessor> shaderSourcePreprocessor,
+        std::shared_ptr<OpenGLGeometryBuffersStorage> geometryBuffersStorage,
+        OpenGLTexturesRepository* texturesRepository
+    );
+
+    void render(Scene& scene);
+
+private:
+    bool m_isErrorLogged;
+
+    static void traverseSceneHierarchy(GameObject& gameObject, const std::function<void(GameObject&)>& callback);
+
+    void putMeshInGeometryBuffersIfNecessary(const std::string& name, const Mesh& mesh);
+
+    void renderMeshWithAllRequiredShaders(
+        const std::shared_ptr<CameraComponent>& camera,
+        const Viewport& viewport, const Scissor& scissor,
+        const std::shared_ptr<OpenGLMeshRendererComponent>& meshRenderer,
+        const std::unordered_map<std::string, std::shared_ptr<AmbientLightComponent>>& layerNameToAmbientLightMap,
+        const std::unordered_multimap<std::string, std::shared_ptr<DirectionalLightComponent>>& layerNameToDirectionalLightsMap,
+        const std::string& layerName
+    );
+    static void renderMesh(
+        const std::shared_ptr<CameraComponent>& camera,
+        const std::shared_ptr<OpenGLMeshRendererComponent>& meshRenderer,
+        const OpenGLShaderProgramContainer& shaderProgramContainer
+    );
+    /*void renderText(
+        const std::shared_ptr<CameraComponent>& camera,
+        const std::shared_ptr<OpenGLFreeTypeTextRendererComponent>& textRenderer
+    );*/
+
+    void pushOpenGLState(const OpenGLState& state);
+    void popOpenGLState();
+    void applyOpenGLState(const OpenGLState& state);
+
+    void setupOpenGL();
+};
+}
+}

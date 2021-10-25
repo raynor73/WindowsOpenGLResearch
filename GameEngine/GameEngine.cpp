@@ -17,7 +17,7 @@
 #include <platform_dependent/windows/windows_bitmap_loader.h>
 #include <platform_dependent/windows/windows_opengl_shader_source_loader.h>
 #include <rendering_engine/opengl_mesh_renderer_factory.h>
-#include <rendering_engine/rendering_engine.h>
+#include <rendering_engine/opengl_rendering_engine.h>
 #include <platform_dependent/windows/windows_keyboard_input.h>
 #include <platform_dependent/windows/windows_app.h>
 #include <platform_dependent/windows/windows_mouse_input.h>
@@ -35,7 +35,7 @@ using namespace Windows::Utils;
 using namespace std;
 
 static shared_ptr<DevSceneManager> g_sceneManager;
-static shared_ptr<GameEngine::RenderingEngine::RenderingEngine> g_renderingEngine;
+static shared_ptr<GameEngine::RenderingEngine::OpenGLRenderingEngine> g_renderingEngine;
 static shared_ptr<WindowsKeyboardInput> g_keyboardInput;
 static shared_ptr<WindowsMouseInput> g_mouseInput;
 static shared_ptr<WindowsApp> g_app;
@@ -153,7 +153,7 @@ static void initGame() {
         openGLErrorDetector
     ));
 
-    g_renderingEngine = make_shared<GameEngine::RenderingEngine::RenderingEngine>(
+    g_renderingEngine = make_shared<GameEngine::RenderingEngine::OpenGLRenderingEngine>(
         openGLErrorDetector,
         serviceLocator->unitsConverter(),
         make_shared<OpenGLShadersRepository>(openGLErrorDetector),
