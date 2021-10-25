@@ -2,12 +2,30 @@
 
 #include <game_engine/physics_engine.h>
 #include <game_engine/without_generated_methods.h>
+#include <string>
+#include <memory>
+#include <exception>
+#include <unordered_map>
+#include <bullet/btBulletDynamicsCommon.h>
+
 
 namespace GameEngine
 {
 class BulletPhysicsEngine : public PhysicsEngine, public WithoutGeneratedMethods
 {
+    btDefaultCollisionConfiguration* m_collisionConfiguration;
+    btCollisionDispatcher* m_dispatcher;
+    btDbvtBroadphase* m_overlappingPairCache;
+    btSequentialImpulseConstraintSolver* m_solver;
+    btDiscreteDynamicsWorld* m_dynamicsWorld;
+
+    std::unordered_map<std::string, std::shared_ptr<btRigidBody>> m_rigidBodies;
+    std::unordered_map<const btRigidBody*, GameObject*> m_btRigidBodyToGameObjectMap;
+
 public:
+    BulletPhysicsEngine();
+    virtual ~BulletPhysicsEngine() override;
+
     virtual void setGravity(const glm::vec3& gravity) override;
 
     virtual void setPosition(const std::string& rigidBodyName, const glm::vec3& position) override;
@@ -92,5 +110,31 @@ public:
     virtual void setRigidBodyFriction(const std::string& rigidBodyName, float friction) override;
 
     virtual void reset() override;
+
+    friend void tickCallback(btDynamicsWorld* world, btScalar timeStep);
+
+private:
+    void initBulletPhysics();
+    void deinitBulletPhysics();
+
+    void removeAllRigidBodies();
+
+    std::shared_ptr<btRigidBody> getRigidBody(const std::string& name) const;
+
+    static btVector3 glmVec3ToBtVector3(const glm::vec3& vector) {
+        return btVector3(vector.x, vector.y, vector.z);
+    }
+
+    static btQuaternion glmQuatToBtQuaternion(const glm::quat& quaternion) {
+        return btQuaternion(quaternion.x, quaternion.y, quaternion.z, quaternion.w);
+    }
+
+    static glm::vec3 btVector3ToGlmVec3(const btVector3& vector) {
+        return glm::vec3(vector.x(), vector.y(), vector.z());
+    }
+
+    static glm::quat btQuaternionToGlmQuat(const btQuaternion& quaternion) {
+        return glm::quat(quaternion.w(), quaternion.x(), quaternion.y(), quaternion.z());
+    }
 };
 }

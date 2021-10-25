@@ -3,9 +3,93 @@
 using namespace GameEngine;
 using namespace std;
 
+void tickCallback(btDynamicsWorld* world, btScalar) {
+    auto physicsEngine = reinterpret_cast<BulletPhysicsEngine*>(world->getWorldUserInfo());
+    auto dispatcher = world->getDispatcher();
+    auto numberOfManifolds = dispatcher->getNumManifolds();
+    for (int i = 0; i < numberOfManifolds; i++) {
+        auto manifold = dispatcher->getManifoldByIndexInternal(i);
+
+        auto body0 = static_cast<const btRigidBody*>(manifold->getBody0());
+        auto body1 = static_cast<const btRigidBody*>(manifold->getBody1());
+
+        auto gameObject0 = physicsEngine->m_btRigidBodyToGameObjectMap.at(body0);
+        auto gameObject1 = physicsEngine->m_btRigidBodyToGameObjectMap.at(body1);
+
+        auto numberOfContacts = manifold->getNumContacts();
+        for (int j = 0; j < numberOfContacts; j++) {
+            auto contact = manifold->getContactPoint(j);
+
+            {
+                Collision collision;
+                collision.gameObject = gameObject0;
+                collision.position = BulletPhysicsEngine::btVector3ToGlmVec3(contact.m_positionWorldOnB);
+                collision.normal = BulletPhysicsEngine::btVector3ToGlmVec3(contact.m_normalWorldOnB);
+                collision.depth = contact.m_distance1;
+
+                auto collisionsInfo = gameObject1->findComponent<CollisionsInfoComponent>();
+                if (collisionsInfo != nullptr) {
+                    collisionsInfo->collisions.push_back(collision);
+                }
+            }
+
+            {
+                Collision collision;
+                collision.gameObject = gameObject1;
+                collision.position = BulletPhysicsEngine::btVector3ToGlmVec3(contact.m_positionWorldOnB);
+                collision.normal = BulletPhysicsEngine::btVector3ToGlmVec3(contact.m_normalWorldOnB);
+                collision.depth = contact.m_distance1;
+
+                auto collisionsInfo = gameObject0->findComponent<CollisionsInfoComponent>();
+                if (collisionsInfo != nullptr) {
+                    collisionsInfo->collisions.push_back(collision);
+                }
+            }
+        }
+    }
+}
+
+BulletPhysicsEngine::BulletPhysicsEngine()
+{
+    initBulletPhysics();
+}
+
+GameEngine::BulletPhysicsEngine::~BulletPhysicsEngine()
+{
+    deinitBulletPhysics();
+}
+
 void BulletPhysicsEngine::reset()
 {
 
+}
+
+void GameEngine::BulletPhysicsEngine::initBulletPhysics()
+{
+    m_collisionConfiguration = new btDefaultCollisionConfiguration();
+    m_dispatcher = new btCollisionDispatcher(m_collisionConfiguration);
+    m_overlappingPairCache = new btDbvtBroadphase();
+    m_solver = new btSequentialImpulseConstraintSolver();
+    m_dynamicsWorld = new btDiscreteDynamicsWorld(
+        m_dispatcher,
+        m_overlappingPairCache, m_solver,
+        m_collisionConfiguration
+    );
+
+    m_dynamicsWorld->setInternalTickCallback(tickCallback, this);
+}
+
+void GameEngine::BulletPhysicsEngine::deinitBulletPhysics()
+{
+}
+
+void GameEngine::BulletPhysicsEngine::removeAllRigidBodies()
+{
+}
+
+std::shared_ptr<btRigidBody> GameEngine::BulletPhysicsEngine::getRigidBody(const std::string& name) const
+{
+    return std::shared_ptr<btRigidBody>();
 }
 
 void GameEngine::BulletPhysicsEngine::setGravity(const glm::vec3& gravity)
