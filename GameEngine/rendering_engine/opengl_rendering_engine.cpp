@@ -94,7 +94,6 @@ void OpenGLRenderingEngine::render(Scene& scene) {
         return;
     }
 
-    //vector<shared_ptr<CameraComponent>> activeCameras;
     unordered_map<string, shared_ptr<AmbientLightComponent>> layerNameToAmbientLightMap;
     unordered_multimap<string, shared_ptr<DirectionalLightComponent>> layerNameToDirectionalLightsMap;
     unordered_multimap<string, shared_ptr<OpenGLMeshRendererComponent>> layerNameToMeshRenderersMap;
@@ -106,20 +105,6 @@ void OpenGLRenderingEngine::render(Scene& scene) {
         // TODO This is very very bad to update physics related components in Rendering Engine. This added here to not to traverse whole hierarchy multiple times. But this should be moved out from here ASAP.
         /*if (auto collisionsInfo = gameObject.findComponent<CollisionsInfoComponent>(); collisionsInfo != nullptr) {
             collisionsInfo->collisions.clear();
-        }*/
-
-        /*if (
-            auto camera = gameObject.findComponent(OrthoCameraComponent::TYPE_NAME);
-            camera != nullptr && camera->isEnabled()
-        ) {
-            activeCameras.push_back(static_pointer_cast<CameraComponent>(camera));
-        }
-
-        if (
-            auto camera = gameObject.findComponent(PerspectiveCameraComponent::TYPE_NAME);
-            camera != nullptr && camera->isEnabled()
-        ) {
-            activeCameras.push_back(static_pointer_cast<CameraComponent>(camera));
         }*/
 
         if (
@@ -147,13 +132,6 @@ void OpenGLRenderingEngine::render(Scene& scene) {
                 layerNameToTextRenderersMap.insert({ layerName, textRenderer });
             }
         }*/
-
-        if (
-            auto meshComponent = gameObject.findComponent<MeshComponent>();
-            meshComponent != nullptr && meshComponent->isEnabled()
-        ) {
-            putMeshInGeometryBuffersIfNecessary(meshComponent->meshName(), meshComponent->mesh());
-        }
 
         if (
             auto ambientLight = gameObject.findComponent<AmbientLightComponent>();
@@ -422,39 +400,6 @@ void OpenGLRenderingEngine::applyOpenGLState(const OpenGLState& state) {
     glDepthFunc(state.depthFunction);
 
     m_openGLErrorDetector->checkOpenGLErrors("OpenGLRenderingEngine::applyOpenGLState");
-}
-
-void OpenGLRenderingEngine::putMeshInGeometryBuffersIfNecessary(const string& name, const Mesh& mesh) {
-    if (!m_geometryBuffersStorage->findVbo(name)) {
-        vector<float> vertexData(mesh.vertices().size() * Vertex::VERTEX_COMPONENTS);
-
-        for (int i = 0; i < mesh.vertices().size(); i++) {
-            vertexData[i * Vertex::VERTEX_COMPONENTS] = mesh.vertices()[i].position().x;
-            vertexData[1 + i * Vertex::VERTEX_COMPONENTS] = mesh.vertices()[i].position().y;
-            vertexData[2 + i * Vertex::VERTEX_COMPONENTS] = mesh.vertices()[i].position().z;
-
-            vertexData[3 + i * Vertex::VERTEX_COMPONENTS] = mesh.vertices()[i].normal().x;
-            vertexData[4 + i * Vertex::VERTEX_COMPONENTS] = mesh.vertices()[i].normal().y;
-            vertexData[5 + i * Vertex::VERTEX_COMPONENTS] = mesh.vertices()[i].normal().z;
-
-            vertexData[6 + i * Vertex::VERTEX_COMPONENTS] = mesh.vertices()[i].uv().x;
-            vertexData[7 + i * Vertex::VERTEX_COMPONENTS] = mesh.vertices()[i].uv().y;
-
-            vertexData[8 + i * Vertex::VERTEX_COMPONENTS] = float(mesh.vertices()[i].jointIndices().x);
-            vertexData[9 + i * Vertex::VERTEX_COMPONENTS] = float(mesh.vertices()[i].jointIndices().y);
-            vertexData[10 + i * Vertex::VERTEX_COMPONENTS] = float(mesh.vertices()[i].jointIndices().z);
-
-            vertexData[11 + i * Vertex::VERTEX_COMPONENTS] = mesh.vertices()[i].jointWeights().x;
-            vertexData[12 + i * Vertex::VERTEX_COMPONENTS] = mesh.vertices()[i].jointWeights().y;
-            vertexData[13 + i * Vertex::VERTEX_COMPONENTS] = mesh.vertices()[i].jointWeights().z;
-        }
-
-        m_geometryBuffersStorage->createStaticVertexBuffer(name, vertexData);
-    }
-
-    if (!m_geometryBuffersStorage->findIbo(name)) {
-        m_geometryBuffersStorage->createStaticIndexBuffer(name, mesh.indices());
-    }
 }
 
 void OpenGLRenderingEngine::setupOpenGL() {

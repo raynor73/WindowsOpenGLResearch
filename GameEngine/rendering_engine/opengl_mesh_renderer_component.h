@@ -48,11 +48,14 @@ public:
         const glm::mat4x4& projectionMatrix
     );
 
+    virtual void onAttachedToGameObject() override;
+
     virtual const std::string& typeName() const override { return TYPE_NAME; }
 
     virtual std::shared_ptr<GameObjectComponent> clone() override;
 
 private:
     void findTopAndBottomPoints(const Mesh& mesh);
+    void putMeshInGeometryBuffersIfNecessary(const std::string& name, const Mesh& mesh);
 };
 }

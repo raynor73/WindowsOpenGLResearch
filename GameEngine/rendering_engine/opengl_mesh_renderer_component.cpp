@@ -339,6 +339,21 @@ void OpenGLMeshRendererComponent::render(
     m_openGLErrorDetector->checkOpenGLErrors("OpenGLMeshRendererComponent::render");
 }
 
+void GameEngine::OpenGLMeshRendererComponent::onAttachedToGameObject()
+{
+    throwErrorIfNoGameObject();
+
+    auto gameObject = m_gameObject.lock();
+
+    auto meshComponent = static_pointer_cast<MeshComponent>(gameObject->findComponent(MeshComponent::TYPE_NAME));
+    if (meshComponent == nullptr) {
+        stringstream ss;
+        ss << "No mesh to render for game object: " << gameObject->name();
+        throw domain_error(ss.str());
+    }
+    putMeshInGeometryBuffersIfNecessary(meshComponent->meshName(), meshComponent->mesh());
+}
+
 shared_ptr<GameObjectComponent> OpenGLMeshRendererComponent::clone() {
     auto clone = make_shared<OpenGLMeshRendererComponent>(
         m_layerNames,
@@ -367,4 +382,38 @@ void OpenGLMeshRendererComponent::findTopAndBottomPoints(const Mesh& mesh) {
     }
 
     m_isTopAndBottomPointsFound = true;
+}
+
+void OpenGLMeshRendererComponent::putMeshInGeometryBuffersIfNecessary(const string& name, const Mesh& mesh) 
+{
+    if (!m_geometryBuffersStorage->findVbo(name)) {
+        vector<float> vertexData(mesh.vertices().size() * Vertex::VERTEX_COMPONENTS);
+
+        for (uintptr_t i = 0; i < mesh.vertices().size(); i++) {
+            vertexData[i * Vertex::VERTEX_COMPONENTS] = mesh.vertices()[i].position().x;
+            vertexData[1 + i * Vertex::VERTEX_COMPONENTS] = mesh.vertices()[i].position().y;
+            vertexData[2 + i * Vertex::VERTEX_COMPONENTS] = mesh.vertices()[i].position().z;
+
+            vertexData[3 + i * Vertex::VERTEX_COMPONENTS] = mesh.vertices()[i].normal().x;
+            vertexData[4 + i * Vertex::VERTEX_COMPONENTS] = mesh.vertices()[i].normal().y;
+            vertexData[5 + i * Vertex::VERTEX_COMPONENTS] = mesh.vertices()[i].normal().z;
+
+            vertexData[6 + i * Vertex::VERTEX_COMPONENTS] = mesh.vertices()[i].uv().x;
+            vertexData[7 + i * Vertex::VERTEX_COMPONENTS] = mesh.vertices()[i].uv().y;
+
+            vertexData[8 + i * Vertex::VERTEX_COMPONENTS] = float(mesh.vertices()[i].jointIndices().x);
+            vertexData[9 + i * Vertex::VERTEX_COMPONENTS] = float(mesh.vertices()[i].jointIndices().y);
+            vertexData[10 + i * Vertex::VERTEX_COMPONENTS] = float(mesh.vertices()[i].jointIndices().z);
+
+            vertexData[11 + i * Vertex::VERTEX_COMPONENTS] = mesh.vertices()[i].jointWeights().x;
+            vertexData[12 + i * Vertex::VERTEX_COMPONENTS] = mesh.vertices()[i].jointWeights().y;
+            vertexData[13 + i * Vertex::VERTEX_COMPONENTS] = mesh.vertices()[i].jointWeights().z;
+        }
+
+        m_geometryBuffersStorage->createStaticVertexBuffer(name, vertexData);
+    }
+
+    if (!m_geometryBuffersStorage->findIbo(name)) {
+        m_geometryBuffersStorage->createStaticIndexBuffer(name, mesh.indices());
+    }
 }
