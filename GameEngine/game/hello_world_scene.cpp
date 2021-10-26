@@ -34,8 +34,8 @@ void HelloWorldScene::update()
     float fpsValue = m_fpsCalculator.fps();
     if (isnan(m_prevFpsValue) || abs(m_prevFpsValue - fpsValue) > FLT_EPSILON) {
         stringstream ss;
-        ss << "FPS: " << fpsValue;
-        L::d("!@#", ss.str());
+        ss << fpsValue;
+        L::d("FPS", ss.str());
 
         m_prevFpsValue = fpsValue;
     }

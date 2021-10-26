@@ -742,7 +742,7 @@ shared_ptr<GameObjectComponent> SceneHierarchyLoader::parseComponent(
             );
     }*/
     else if (type == "PerspectiveCamera") {
-        auto camera = make_shared<PerspectiveCameraComponent>(
+        auto camera = m_serviceLocator->cameraComponentsManager()->createPerspectiveCamera(
             m_serviceLocator,
             parseColor4f(componentJson["clearColor"]),
             parseLayerNames(componentJson["layerNames"]),

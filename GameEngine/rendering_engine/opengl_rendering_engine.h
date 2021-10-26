@@ -19,6 +19,7 @@
 #include <game_engine/ambient_light_component.h>
 #include <game_engine/directional_light_component.h>
 #include <game_engine/rendering_engine.h>
+#include <game_engine/camera_components_manager.h>
 
 namespace GameEngine
 {
@@ -31,6 +32,7 @@ class OpenGLRenderingEngine : public RenderingEngine, public WithoutGeneratedMet
     std::shared_ptr<OpenGLShaderSourcePreprocessor> m_shaderSourcePreprocessor;
     std::shared_ptr<OpenGLGeometryBuffersStorage> m_geometryBuffersStorage;
     OpenGLTexturesRepository* m_texturesRepository;
+    CameraComponentsManager* m_cameraComponentsManager;
 
 public:
     OpenGLRenderingEngine(
@@ -39,7 +41,8 @@ public:
         std::shared_ptr<OpenGLShadersRepository> shadersRepository,
         std::shared_ptr<OpenGLShaderSourcePreprocessor> shaderSourcePreprocessor,
         std::shared_ptr<OpenGLGeometryBuffersStorage> geometryBuffersStorage,
-        OpenGLTexturesRepository* texturesRepository
+        OpenGLTexturesRepository* texturesRepository,
+        CameraComponentsManager* cameraComponentsManager
     );
 
     virtual ~OpenGLRenderingEngine() override;

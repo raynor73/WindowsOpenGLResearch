@@ -23,6 +23,7 @@
 #include <platform_dependent/windows/windows_mouse_input.h>
 #include <locale>
 #include <physics_engine/bullet_physics_engine.h>
+#include <game_engine/camera_components_manager.h>
 
 #define CONSOLE_BUFFER_SIZE 1024
 
@@ -139,6 +140,7 @@ static void initGame() {
     serviceLocator->provide(make_shared<UnitsConverter>(serviceLocator));
     serviceLocator->provide(make_shared<SceneHierarchyLoader>(serviceLocator));
     serviceLocator->provide(make_shared<WindowsBitmapLoader>(serviceLocator));
+    serviceLocator->provide(make_shared<CameraComponentsManager>());
 
     auto openGLErrorDetector = make_shared<OpenGLErrorDetector>();
     serviceLocator->provide(make_shared<OpenGLTexturesRepository>(
@@ -160,7 +162,8 @@ static void initGame() {
         make_shared<OpenGLShadersRepository>(openGLErrorDetector),
         make_shared<OpenGLShaderSourcePreprocessor>(make_shared<WindowsOpenGLShaderSourceLoader>(serviceLocator)),
         openGLGeometryBuffersStorage,
-        reinterpret_cast<OpenGLTexturesRepository*>(serviceLocator->texturesRepository())
+        reinterpret_cast<OpenGLTexturesRepository*>(serviceLocator->texturesRepository()),
+        serviceLocator->cameraComponentsManager()
     );
 
     g_sceneManager = make_shared<DevSceneManager>(serviceLocator);
@@ -230,12 +233,17 @@ static void keyCallback(GLFWwindow* window, int key, int scancode, int action, i
     }
 }
 
+/*static void pointerPositionCallback(GLFWwindow* window, double x, double y)
+{
+}*/
+
 static void initInput(GLFWwindow* window) {
     g_keyboardInput = make_shared<WindowsKeyboardInput>();
     g_mouseInput = make_shared<WindowsMouseInput>(window);
 
-    glfwSetCharCallback(window, characterCallback);
+    //glfwSetCharCallback(window, characterCallback);
     glfwSetKeyCallback(window, keyCallback);
+    //glfwSetCursorPosCallback(window, pointerPositionCallback);
 
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 }

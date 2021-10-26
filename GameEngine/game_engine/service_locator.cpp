@@ -157,6 +157,15 @@ void ServiceLocator::provide(shared_ptr<RenderingEngine> renderingEngine)
     m_renderingEngine = renderingEngine;
 }
 
+void ServiceLocator::provide(shared_ptr<CameraComponentsManager> cameraComponentsManager)
+{
+    if (m_cameraComponentsManager != nullptr) {
+        throw domain_error("Camera Components Manager already provided");
+    }
+
+    m_cameraComponentsManager = cameraComponentsManager;
+}
+
 SceneManager* ServiceLocator::sceneManager()
 {
     if (m_sceneManager.use_count() == 0) {
@@ -308,4 +317,13 @@ RenderingEngine* ServiceLocator::renderingEngine()
     }
 
     return m_renderingEngine.get();
+}
+
+CameraComponentsManager* ServiceLocator::cameraComponentsManager()
+{
+    if (m_cameraComponentsManager == nullptr) {
+        throw domain_error("Camera Components Manager is not provided");
+    }
+
+    return m_cameraComponentsManager.get();
 }

@@ -8,6 +8,7 @@
 namespace GameEngine
 {
 class ServiceLocator;
+class CameraComponentsManager;
 
 class PerspectiveCameraComponent : public CameraComponent
 {
@@ -21,6 +22,16 @@ class PerspectiveCameraComponent : public CameraComponent
 
 public:
     static const std::string TYPE_NAME;
+
+    virtual glm::mat4 calculateViewMatrix() override;
+    virtual glm::mat4 calculateProjectionMatrix() override;
+
+    virtual const std::string& typeName() const override { return TYPE_NAME; }
+
+    virtual std::shared_ptr<GameObjectComponent> clone() override;
+
+private:
+    friend class CameraComponentsManager;
 
     explicit PerspectiveCameraComponent(
         std::shared_ptr<ServiceLocator> serviceLocator,
@@ -36,16 +47,9 @@ public:
         zNear,
         zFar,
         order
-    ), 
+    ),
         m_serviceLocator(serviceLocator),
         m_fov(fov)
     {}
-
-    virtual glm::mat4 calculateViewMatrix() override;
-    virtual glm::mat4 calculateProjectionMatrix() override;
-
-    virtual const std::string& typeName() const override { return TYPE_NAME; }
-
-    virtual std::shared_ptr<GameObjectComponent> clone() override;
 };
 }

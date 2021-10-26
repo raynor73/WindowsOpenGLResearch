@@ -22,12 +22,14 @@ OpenGLRenderingEngine::OpenGLRenderingEngine(
     shared_ptr<OpenGLShadersRepository> shadersRepository,
     shared_ptr<OpenGLShaderSourcePreprocessor> shaderSourcePreprocessor,
     shared_ptr<OpenGLGeometryBuffersStorage> geometryBuffersStorage,
-    OpenGLTexturesRepository* texturesRepository
+    OpenGLTexturesRepository* texturesRepository,
+    CameraComponentsManager* cameraComponentsManager
 ) : m_openGLErrorDetector(openGLErrorDetector),
     m_unitsConverter(unitsConverter),
     m_shadersRepository(shadersRepository),
     m_geometryBuffersStorage(geometryBuffersStorage),
     m_texturesRepository(texturesRepository),
+    m_cameraComponentsManager(cameraComponentsManager),
     m_isErrorLogged(false)
 {
     /*auto unlitVertexShaderSource = shaderSourcePreprocessor->loadShaderSource(
@@ -92,7 +94,7 @@ void OpenGLRenderingEngine::render(Scene& scene) {
         return;
     }
 
-    vector<shared_ptr<CameraComponent>> activeCameras;
+    //vector<shared_ptr<CameraComponent>> activeCameras;
     unordered_map<string, shared_ptr<AmbientLightComponent>> layerNameToAmbientLightMap;
     unordered_multimap<string, shared_ptr<DirectionalLightComponent>> layerNameToDirectionalLightsMap;
     unordered_multimap<string, shared_ptr<OpenGLMeshRendererComponent>> layerNameToMeshRenderersMap;
@@ -106,7 +108,7 @@ void OpenGLRenderingEngine::render(Scene& scene) {
             collisionsInfo->collisions.clear();
         }*/
 
-        if (
+        /*if (
             auto camera = gameObject.findComponent(OrthoCameraComponent::TYPE_NAME);
             camera != nullptr && camera->isEnabled()
         ) {
@@ -118,7 +120,7 @@ void OpenGLRenderingEngine::render(Scene& scene) {
             camera != nullptr && camera->isEnabled()
         ) {
             activeCameras.push_back(static_pointer_cast<CameraComponent>(camera));
-        }
+        }*/
 
         if (
             auto meshRenderer = gameObject.findComponent<OpenGLMeshRendererComponent>();
@@ -172,15 +174,15 @@ void OpenGLRenderingEngine::render(Scene& scene) {
         }
     });
 
-    sort(
+    /*sort(
         activeCameras.begin(),
         activeCameras.end(),
         [](const shared_ptr<CameraComponent>& lhs, const shared_ptr<CameraComponent>& rhs) {
             return lhs->order() < rhs->order();
         }
-    );
+    );*/
 
-    for (auto& camera : activeCameras) {
+    for (auto& camera : m_cameraComponentsManager->cameras()) {
         GLbitfield clearMask = 0;
         if (camera->shouldClearColor()) {
             clearMask |= GL_COLOR_BUFFER_BIT;

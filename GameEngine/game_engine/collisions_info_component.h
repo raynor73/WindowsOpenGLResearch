@@ -13,9 +13,9 @@ class CollisionsInfoComponent : public GameObjectComponent
 public:
     static const std::string TYPE_NAME;
 
-    void add(const CollisionInfo& collisionInfo);
+    //void add(const CollisionInfo& collisionInfo);
     //void
-    void removeAllCollisionsInfo();
+    //void removeAllCollisionsInfo();
 
     virtual const std::string& typeName() const override { return TYPE_NAME; }
 

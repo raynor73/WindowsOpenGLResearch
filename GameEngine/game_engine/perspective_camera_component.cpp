@@ -52,7 +52,7 @@ glm::mat4 PerspectiveCameraComponent::calculateProjectionMatrix() {
 }
 
 shared_ptr<GameObjectComponent> PerspectiveCameraComponent::clone() {
-    auto clone = make_shared<PerspectiveCameraComponent>(
+    auto clone = new PerspectiveCameraComponent(
         m_serviceLocator,
         m_clearColor,
         m_layerNames,
@@ -68,5 +68,5 @@ shared_ptr<GameObjectComponent> PerspectiveCameraComponent::clone() {
     clone->setViewportHeight(m_viewportHeight);
     clone->setShouldClearDepth(m_shouldClearDepth);
     clone->setShouldClearColor(m_shouldClearColor);
-    return clone;
+    return shared_ptr<PerspectiveCameraComponent>(clone);
 }

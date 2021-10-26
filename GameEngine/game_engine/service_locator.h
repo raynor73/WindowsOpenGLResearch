@@ -18,6 +18,7 @@
 #include <memory>
 #include <game_engine/physics_engine.h>
 #include <game_engine/rendering_engine.h>
+#include <game_engine/camera_components_manager.h>
 
 namespace GameEngine
 {
@@ -41,6 +42,7 @@ public:
     void provide(std::shared_ptr<MouseInput> mouseInput);
     void provide(std::shared_ptr<PhysicsEngine> physicsEngine);
     void provide(std::shared_ptr<RenderingEngine> renderingEngine);
+    void provide(std::shared_ptr<CameraComponentsManager> cameraComponentsManager);
 
     SceneManager* sceneManager();
     TimeProvider* timeProvider();
@@ -59,6 +61,7 @@ public:
     MouseInput* mouseInput();
     PhysicsEngine* physicsEngine();
     RenderingEngine* renderingEngine();
+    CameraComponentsManager* cameraComponentsManager();
 
 private:
     std::shared_ptr<SceneManager> m_sceneManager;
@@ -78,5 +81,6 @@ private:
     std::shared_ptr<MouseInput> m_mouseInput;
     std::shared_ptr<PhysicsEngine> m_physicsEngine;
     std::shared_ptr<RenderingEngine> m_renderingEngine;
+    std::shared_ptr<CameraComponentsManager> m_cameraComponentsManager;
 };
 }

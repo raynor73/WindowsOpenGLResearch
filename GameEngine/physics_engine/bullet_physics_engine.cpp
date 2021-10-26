@@ -4,7 +4,7 @@ using namespace GameEngine;
 using namespace std;
 
 void tickCallback(btDynamicsWorld* world, btScalar) {
-    auto physicsEngine = reinterpret_cast<BulletPhysicsEngine*>(world->getWorldUserInfo());
+    /*auto physicsEngine = reinterpret_cast<BulletPhysicsEngine*>(world->getWorldUserInfo());
     auto dispatcher = world->getDispatcher();
     auto numberOfManifolds = dispatcher->getNumManifolds();
     for (int i = 0; i < numberOfManifolds; i++) {
@@ -46,7 +46,7 @@ void tickCallback(btDynamicsWorld* world, btScalar) {
                 }
             }
         }
-    }
+    }*/
 }
 
 BulletPhysicsEngine::BulletPhysicsEngine()
@@ -61,7 +61,8 @@ GameEngine::BulletPhysicsEngine::~BulletPhysicsEngine()
 
 void BulletPhysicsEngine::reset()
 {
-
+    removeAllRigidBodies();
+    setGravity(glm::vec3(0));
 }
 
 void GameEngine::BulletPhysicsEngine::initBulletPhysics()
@@ -81,6 +82,7 @@ void GameEngine::BulletPhysicsEngine::initBulletPhysics()
 
 void GameEngine::BulletPhysicsEngine::deinitBulletPhysics()
 {
+    
 }
 
 void GameEngine::BulletPhysicsEngine::removeAllRigidBodies()

@@ -1,6 +1,9 @@
 #include "collisions_info_component.h"
 
-std::shared_ptr<GameObjectComponent> GameEngine::CollisionsInfoComponent::clone()
+using namespace GameEngine;
+using namespace std;
+
+shared_ptr<GameObjectComponent> GameEngine::CollisionsInfoComponent::clone()
 {
-    return std::shared_ptr<GameObjectComponent>();
+    return shared_ptr<GameObjectComponent>();
 }

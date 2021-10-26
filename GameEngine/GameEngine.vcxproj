@@ -123,7 +123,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>$(ProjectDir)third_party\libs\glfw3_mt.lib;$(ProjectDir)third_party\libs\OpenGL32.Lib;$(ProjectDir)third_party\libs\glew32s.lib;$(ProjectDir)third_party\libs\assimp-vc142-mtd.lib;Gdiplus.lib;Bullet3Common.lib;BulletCollision.lib;BulletDynamics.lib;BulletInverseDynamics.lib;BulletSoftBody.lib;LinearMath.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(ProjectDir)third_party\libs\glfw3_mt.lib;$(ProjectDir)third_party\libs\OpenGL32.Lib;$(ProjectDir)third_party\libs\glew32s.lib;$(ProjectDir)third_party\libs\assimp-vc142-mtd.lib;Gdiplus.lib;Bullet3Common_Debug.lib;BulletCollision_Debug.lib;BulletDynamics_Debug.lib;BulletInverseDynamics_Debug.lib;BulletSoftBody_Debug.lib;LinearMath_Debug.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -154,6 +154,7 @@
     <ClInclude Include="game_engine\bitmap_loader.h" />
     <ClInclude Include="game_engine\bitmap_info.h" />
     <ClInclude Include="game_engine\camera_component.h" />
+    <ClInclude Include="game_engine\camera_components_manager.h" />
     <ClInclude Include="game_engine\collisions_info_component.h" />
     <ClInclude Include="game_engine\collision_info.h" />
     <ClInclude Include="game_engine\constants.h" />
@@ -228,6 +229,7 @@
     <ClCompile Include="game\hello_world_scene.cpp" />
     <ClCompile Include="game_engine\ambient_light_component.cpp" />
     <ClCompile Include="game_engine\camera_component.cpp" />
+    <ClCompile Include="game_engine\camera_components_manager.cpp" />
     <ClCompile Include="game_engine\collisions_info_component.cpp" />
     <ClCompile Include="game_engine\directional_light_component.cpp" />
     <ClCompile Include="game_engine\game_object.cpp" />
