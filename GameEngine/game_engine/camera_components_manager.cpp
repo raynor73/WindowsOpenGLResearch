@@ -32,6 +32,41 @@ void GameEngine::CameraComponentsManager::releasePerspectiveCamera(shared_ptr<Pe
     m_cameras.erase(camera);
 }
 
+std::shared_ptr<OrthoCameraComponent> GameEngine::CameraComponentsManager::createOrthoCamera(
+    std::shared_ptr<ServiceLocator> serviceLocator,
+    const glm::vec4& clearColor,
+    const std::vector<std::string>& layerNames,
+    ComplexValue left,
+    ComplexValue top,
+    ComplexValue right,
+    ComplexValue bottom,
+    float zNear,
+    float zFar,
+    int order
+) {
+    auto camera = shared_ptr<OrthoCameraComponent>(
+        new OrthoCameraComponent(
+            serviceLocator,
+            clearColor,
+            layerNames,
+            left,
+            top,
+            right,
+            bottom,
+            zNear,
+            zFar,
+            order
+        )
+    );
+    m_cameras.insert(camera);
+    return camera;
+}
+
+void GameEngine::CameraComponentsManager::releaseOrthoCamera(std::shared_ptr<OrthoCameraComponent> camera)
+{
+    m_cameras.erase(camera);
+}
+
 void GameEngine::CameraComponentsManager::reset()
 {
     m_cameras.clear();

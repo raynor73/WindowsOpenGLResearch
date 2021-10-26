@@ -452,7 +452,7 @@ shared_ptr<GameObjectComponent> SceneHierarchyLoader::parseComponent(
         return m_serviceLocator->meshRendererFactory()->createMeshRenderer(parseLayerNames(componentJson["layerNames"]));
     }
     else if (type == "OrthoCamera") {
-        auto camera = make_shared<OrthoCameraComponent>(
+        auto camera = m_serviceLocator->cameraComponentsManager()->createOrthoCamera(
             m_serviceLocator,
             parseColor4f(componentJson["clearColor"]),
             parseLayerNames(componentJson["layerNames"]),
@@ -463,7 +463,7 @@ shared_ptr<GameObjectComponent> SceneHierarchyLoader::parseComponent(
             parseFloatNumber(componentJson["zNear"]),
             parseFloatNumber(componentJson["zFar"]),
             componentJson["order"].get<int>()
-            );
+        );
         camera->setShouldClearColor(
             componentJson.contains("shouldClearColor") &&
             componentJson["shouldClearColor"].is_boolean() &&

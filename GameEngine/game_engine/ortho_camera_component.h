@@ -9,6 +9,7 @@
 namespace GameEngine
 {
 class ServiceLocator;
+class CameraComponentsManager;
 
 class OrthoCameraComponent : public CameraComponent, RenderingWindowInfoUpdateDetector
 {
@@ -21,9 +22,17 @@ class OrthoCameraComponent : public CameraComponent, RenderingWindowInfoUpdateDe
 
     glm::mat4 m_projectionMatrix = glm::identity<glm::mat4>();
 
+    friend class CameraComponentsManager;
+
 public:
     static const std::string TYPE_NAME;
 
+    glm::mat4 calculateViewMatrix() override;
+    glm::mat4 calculateProjectionMatrix() override;
+    virtual const std::string& typeName() const override { return OrthoCameraComponent::TYPE_NAME; }
+    virtual std::shared_ptr<GameObjectComponent> clone() override;
+
+private:
     explicit OrthoCameraComponent(
         std::shared_ptr<ServiceLocator> serviceLocator,
         const glm::vec4& clearColor,
@@ -39,10 +48,5 @@ public:
         RenderingWindowInfoUpdateDetector(serviceLocator),
         m_serviceLocator(serviceLocator)
     {}
-
-    glm::mat4 calculateViewMatrix() override;
-    glm::mat4 calculateProjectionMatrix() override;
-    virtual const std::string& typeName() const override { return OrthoCameraComponent::TYPE_NAME; }
-    virtual std::shared_ptr<GameObjectComponent> clone() override;
 };
 }

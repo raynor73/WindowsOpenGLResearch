@@ -52,17 +52,19 @@ glm::mat4 OrthoCameraComponent::calculateProjectionMatrix() {
 }
 
 shared_ptr<GameObjectComponent> OrthoCameraComponent::clone() {
-    auto clone = make_shared<OrthoCameraComponent>(
-        m_serviceLocator,
-        m_clearColor,
-        m_layerNames,
-        m_left,
-        m_top,
-        m_right,
-        m_bottom,
-        m_zNear,
-        m_zFar,
-        m_order
+    auto clone = shared_ptr<OrthoCameraComponent>(
+        new OrthoCameraComponent(
+            m_serviceLocator,
+            m_clearColor,
+            m_layerNames,
+            m_left,
+            m_top,
+            m_right,
+            m_bottom,
+            m_zNear,
+            m_zFar,
+            m_order
+        )
     );
     clone->setEnabled(m_isEnabled);
     clone->setViewportX(m_viewportX);
