@@ -355,14 +355,14 @@ void GameEngine::OpenGLMeshRendererComponent::onAttachedToGameObject()
 }
 
 shared_ptr<GameObjectComponent> OpenGLMeshRendererComponent::clone() {
-    auto clone = make_shared<OpenGLMeshRendererComponent>(
+    auto clone = new OpenGLMeshRendererComponent(
         m_layerNames,
         m_geometryBuffersStorage,
         m_texturesRepository,
         m_openGLErrorDetector
     );
     clone->setEnabled(m_isEnabled);
-    return clone;
+    return shared_ptr<OpenGLMeshRendererComponent>(clone);
 }
 
 void OpenGLMeshRendererComponent::findTopAndBottomPoints(const Mesh& mesh) {

@@ -13,6 +13,8 @@
 
 namespace GameEngine
 {
+class OpenGLMeshRendererFactory;
+
 class OpenGLMeshRendererComponent : public GameObjectComponent
 {
     std::vector<std::string> m_layerNames;
@@ -20,23 +22,14 @@ class OpenGLMeshRendererComponent : public GameObjectComponent
     std::shared_ptr<OpenGLGeometryBuffersStorage> m_geometryBuffersStorage;
     OpenGLTexturesRepository* m_texturesRepository;
 
-    glm::vec3 m_topPoint;
-    glm::vec3 m_bottomPoint;
+    glm::vec3 m_topPoint = glm::vec3(0);
+    glm::vec3 m_bottomPoint = glm::vec3(0);
     bool m_isTopAndBottomPointsFound = false;
+
+    friend class OpenGLMeshRendererFactory;
 
 public:
     static const std::string TYPE_NAME;
-
-    OpenGLMeshRendererComponent(
-        std::vector<std::string> layerNames,
-        std::shared_ptr<OpenGLGeometryBuffersStorage> geometryBuffersStorage,
-        OpenGLTexturesRepository* texturesRepository,
-        std::shared_ptr<OpenGLErrorDetector> openGLErrorDetector
-    ) : m_layerNames(std::move(layerNames)),
-        m_geometryBuffersStorage(std::move(geometryBuffersStorage)),
-        m_texturesRepository(std::move(texturesRepository)),
-        m_openGLErrorDetector(std::move(openGLErrorDetector))
-    {}
 
     const std::vector<std::string>& layerNames() const { return m_layerNames; }
     void setLayerNames(std::vector<std::string> layerNames) { m_layerNames = std::move(layerNames); }
@@ -55,6 +48,17 @@ public:
     virtual std::shared_ptr<GameObjectComponent> clone() override;
 
 private:
+    OpenGLMeshRendererComponent(
+        std::vector<std::string> layerNames,
+        std::shared_ptr<OpenGLGeometryBuffersStorage> geometryBuffersStorage,
+        OpenGLTexturesRepository* texturesRepository,
+        std::shared_ptr<OpenGLErrorDetector> openGLErrorDetector
+    ) : m_layerNames(std::move(layerNames)),
+        m_geometryBuffersStorage(std::move(geometryBuffersStorage)),
+        m_texturesRepository(std::move(texturesRepository)),
+        m_openGLErrorDetector(std::move(openGLErrorDetector))
+    {}
+
     void findTopAndBottomPoints(const Mesh& mesh);
     void putMeshInGeometryBuffersIfNecessary(const std::string& name, const Mesh& mesh);
 };

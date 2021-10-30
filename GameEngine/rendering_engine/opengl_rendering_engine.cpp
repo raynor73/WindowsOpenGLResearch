@@ -23,13 +23,15 @@ OpenGLRenderingEngine::OpenGLRenderingEngine(
     shared_ptr<OpenGLShaderSourcePreprocessor> shaderSourcePreprocessor,
     shared_ptr<OpenGLGeometryBuffersStorage> geometryBuffersStorage,
     OpenGLTexturesRepository* texturesRepository,
-    CameraComponentsManager* cameraComponentsManager
+    CameraComponentsManager* cameraComponentsManager,
+    OpenGLMeshRendererFactory* meshRendererFactory
 ) : m_openGLErrorDetector(openGLErrorDetector),
     m_unitsConverter(unitsConverter),
     m_shadersRepository(shadersRepository),
     m_geometryBuffersStorage(geometryBuffersStorage),
     m_texturesRepository(texturesRepository),
     m_cameraComponentsManager(cameraComponentsManager),
+    m_meshRendererFactory(meshRendererFactory),
     m_isErrorLogged(false)
 {
     /*auto unlitVertexShaderSource = shaderSourcePreprocessor->loadShaderSource(
@@ -96,33 +98,12 @@ void OpenGLRenderingEngine::render(Scene& scene) {
 
     unordered_map<string, shared_ptr<AmbientLightComponent>> layerNameToAmbientLightMap;
     unordered_multimap<string, shared_ptr<DirectionalLightComponent>> layerNameToDirectionalLightsMap;
-    unordered_multimap<string, shared_ptr<OpenGLMeshRendererComponent>> layerNameToMeshRenderersMap;
-    //unordered_multimap<string, shared_ptr<OpenGLMeshRendererComponent>> layerNameToTranslucentMeshRenderersMap;
-    //unordered_multimap<string, shared_ptr<OpenGLFreeTypeTextRendererComponent>> layerNameToTextRenderersMap;
 
-    // TODO Investigate how to get rid of scene hierarchy traverse on every frame render.
     traverseSceneHierarchy(*scene.rootGameObject(), [&](GameObject& gameObject) {
         // TODO This is very very bad to update physics related components in Rendering Engine. This added here to not to traverse whole hierarchy multiple times. But this should be moved out from here ASAP.
         /*if (auto collisionsInfo = gameObject.findComponent<CollisionsInfoComponent>(); collisionsInfo != nullptr) {
             collisionsInfo->collisions.clear();
         }*/
-
-        if (
-            auto meshRenderer = gameObject.findComponent<OpenGLMeshRendererComponent>();
-            meshRenderer != nullptr && meshRenderer->isEnabled()
-        ) {
-            for (auto& layerName : meshRenderer->layerNames()) {
-                auto materialComponent = static_pointer_cast<MaterialComponent>(
-                    gameObject.findComponent(MaterialComponent::TYPE_NAME)
-                );
-                Utils::throwErrorIfNull(materialComponent, "Can't find material component for mesh renderer while rendering");
-                /*if (materialComponent->material().isTranslucent) {
-                    layerNameToTranslucentMeshRenderersMap.insert({ layerName, meshRenderer });
-                } else {*/
-                    layerNameToMeshRenderersMap.insert({ layerName, meshRenderer });
-                //}
-            }
-        }
 
         /*if (
             auto textRenderer = gameObject.findComponent<OpenGLFreeTypeTextRendererComponent>();
@@ -152,15 +133,11 @@ void OpenGLRenderingEngine::render(Scene& scene) {
         }
     });
 
-    /*sort(
-        activeCameras.begin(),
-        activeCameras.end(),
-        [](const shared_ptr<CameraComponent>& lhs, const shared_ptr<CameraComponent>& rhs) {
-            return lhs->order() < rhs->order();
-        }
-    );*/
-
     for (auto& camera : m_cameraComponentsManager->cameras()) {
+        if (!camera->isEnabled()) {
+            continue;
+        }
+
         GLbitfield clearMask = 0;
         if (camera->shouldClearColor()) {
             clearMask |= GL_COLOR_BUFFER_BIT;
@@ -189,8 +166,12 @@ void OpenGLRenderingEngine::render(Scene& scene) {
         glClear(clearMask);
 
         for (auto& layerName : camera->layerNames()) {
-            auto layerRenderersRange = layerNameToMeshRenderersMap.equal_range(layerName);
+            auto layerRenderersRange = m_meshRendererFactory->layerNameToMeshRenderersMap().equal_range(layerName);
             for (auto it = layerRenderersRange.first; it != layerRenderersRange.second; it++) {
+                if (!it->second->isEnabled()) {
+                    continue;
+                }
+
                 renderMeshWithAllRequiredShaders(
                     camera,
                     viewport,

@@ -163,7 +163,8 @@ static void initGame() {
         make_shared<OpenGLShaderSourcePreprocessor>(make_shared<WindowsOpenGLShaderSourceLoader>(serviceLocator)),
         openGLGeometryBuffersStorage,
         reinterpret_cast<OpenGLTexturesRepository*>(serviceLocator->texturesRepository()),
-        serviceLocator->cameraComponentsManager()
+        serviceLocator->cameraComponentsManager(),
+        reinterpret_cast<OpenGLMeshRendererFactory*>(serviceLocator->meshRendererFactory())
     );
 
     g_sceneManager = make_shared<DevSceneManager>(serviceLocator);
