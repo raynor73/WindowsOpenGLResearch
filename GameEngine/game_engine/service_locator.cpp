@@ -166,6 +166,15 @@ void ServiceLocator::provide(shared_ptr<CameraComponentsManager> cameraComponent
     m_cameraComponentsManager = cameraComponentsManager;
 }
 
+void ServiceLocator::provide(shared_ptr<LightComponentsManager> lightComponentsManager)
+{
+    if (m_lightComponentsManager != nullptr) {
+        throw domain_error("Light Components Manager already provided");
+    }
+
+    m_lightComponentsManager = lightComponentsManager;
+}
+
 SceneManager* ServiceLocator::sceneManager()
 {
     if (m_sceneManager.use_count() == 0) {
@@ -326,4 +335,13 @@ CameraComponentsManager* ServiceLocator::cameraComponentsManager()
     }
 
     return m_cameraComponentsManager.get();
+}
+
+LightComponentsManager* ServiceLocator::lightComponentsManager()
+{
+    if (m_lightComponentsManager == nullptr) {
+        throw domain_error("Light Components Manager is not provided");
+    }
+
+    return m_lightComponentsManager.get();
 }

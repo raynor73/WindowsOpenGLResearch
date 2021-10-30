@@ -24,6 +24,7 @@
 #include <locale>
 #include <physics_engine/bullet_physics_engine.h>
 #include <game_engine/camera_components_manager.h>
+#include <game_engine/light_components_manager.h>
 
 #define CONSOLE_BUFFER_SIZE 1024
 
@@ -141,6 +142,7 @@ static void initGame() {
     serviceLocator->provide(make_shared<SceneHierarchyLoader>(serviceLocator));
     serviceLocator->provide(make_shared<WindowsBitmapLoader>(serviceLocator));
     serviceLocator->provide(make_shared<CameraComponentsManager>());
+    serviceLocator->provide(make_shared<LightComponentsManager>());
 
     auto openGLErrorDetector = make_shared<OpenGLErrorDetector>();
     serviceLocator->provide(make_shared<OpenGLTexturesRepository>(
@@ -164,7 +166,8 @@ static void initGame() {
         openGLGeometryBuffersStorage,
         reinterpret_cast<OpenGLTexturesRepository*>(serviceLocator->texturesRepository()),
         serviceLocator->cameraComponentsManager(),
-        reinterpret_cast<OpenGLMeshRendererFactory*>(serviceLocator->meshRendererFactory())
+        reinterpret_cast<OpenGLMeshRendererFactory*>(serviceLocator->meshRendererFactory()),
+        serviceLocator->lightComponentsManager()
     );
 
     g_sceneManager = make_shared<DevSceneManager>(serviceLocator);

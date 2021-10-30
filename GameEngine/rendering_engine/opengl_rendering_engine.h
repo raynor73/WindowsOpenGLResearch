@@ -21,6 +21,7 @@
 #include <game_engine/rendering_engine.h>
 #include <game_engine/camera_components_manager.h>
 #include <rendering_engine/opengl_mesh_renderer_factory.h>
+#include <game_engine/light_components_manager.h>
 
 namespace GameEngine
 {
@@ -35,6 +36,7 @@ class OpenGLRenderingEngine : public RenderingEngine, public WithoutGeneratedMet
     OpenGLTexturesRepository* m_texturesRepository;
     CameraComponentsManager* m_cameraComponentsManager;
     OpenGLMeshRendererFactory* m_meshRendererFactory;
+    LightComponentsManager* m_lightComponentsManager;
 
 public:
     OpenGLRenderingEngine(
@@ -45,7 +47,8 @@ public:
         std::shared_ptr<OpenGLGeometryBuffersStorage> geometryBuffersStorage,
         OpenGLTexturesRepository* texturesRepository,
         CameraComponentsManager* cameraComponentsManager,
-        OpenGLMeshRendererFactory* OpenGLMeshRendererFactory
+        OpenGLMeshRendererFactory* OpenGLMeshRendererFactory,
+        LightComponentsManager* lightComponentsManager
     );
 
     virtual ~OpenGLRenderingEngine() override;
@@ -56,10 +59,6 @@ public:
 
 private:
     bool m_isErrorLogged;
-
-    static void traverseSceneHierarchy(GameObject& gameObject, const std::function<void(GameObject&)>& callback);
-
-    void putMeshInGeometryBuffersIfNecessary(const std::string& name, const Mesh& mesh);
 
     void renderMeshWithAllRequiredShaders(
         const std::shared_ptr<CameraComponent>& camera,

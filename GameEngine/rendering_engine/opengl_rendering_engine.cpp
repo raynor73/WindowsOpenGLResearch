@@ -24,7 +24,8 @@ OpenGLRenderingEngine::OpenGLRenderingEngine(
     shared_ptr<OpenGLGeometryBuffersStorage> geometryBuffersStorage,
     OpenGLTexturesRepository* texturesRepository,
     CameraComponentsManager* cameraComponentsManager,
-    OpenGLMeshRendererFactory* meshRendererFactory
+    OpenGLMeshRendererFactory* meshRendererFactory,
+    LightComponentsManager* lightComponentsManager
 ) : m_openGLErrorDetector(openGLErrorDetector),
     m_unitsConverter(unitsConverter),
     m_shadersRepository(shadersRepository),
@@ -32,6 +33,7 @@ OpenGLRenderingEngine::OpenGLRenderingEngine(
     m_texturesRepository(texturesRepository),
     m_cameraComponentsManager(cameraComponentsManager),
     m_meshRendererFactory(meshRendererFactory),
+    m_lightComponentsManager(lightComponentsManager),
     m_isErrorLogged(false)
 {
     /*auto unlitVertexShaderSource = shaderSourcePreprocessor->loadShaderSource(
@@ -96,10 +98,7 @@ void OpenGLRenderingEngine::render(Scene& scene) {
         return;
     }
 
-    unordered_map<string, shared_ptr<AmbientLightComponent>> layerNameToAmbientLightMap;
-    unordered_multimap<string, shared_ptr<DirectionalLightComponent>> layerNameToDirectionalLightsMap;
-
-    traverseSceneHierarchy(*scene.rootGameObject(), [&](GameObject& gameObject) {
+    //traverseSceneHierarchy(*scene.rootGameObject(), [&](GameObject& gameObject) {
         // TODO This is very very bad to update physics related components in Rendering Engine. This added here to not to traverse whole hierarchy multiple times. But this should be moved out from here ASAP.
         /*if (auto collisionsInfo = gameObject.findComponent<CollisionsInfoComponent>(); collisionsInfo != nullptr) {
             collisionsInfo->collisions.clear();
@@ -113,25 +112,7 @@ void OpenGLRenderingEngine::render(Scene& scene) {
                 layerNameToTextRenderersMap.insert({ layerName, textRenderer });
             }
         }*/
-
-        if (
-            auto ambientLight = gameObject.findComponent<AmbientLightComponent>();
-            ambientLight != nullptr && ambientLight->isEnabled()
-            ) {
-            for (auto& layerName : ambientLight->layerNames()) {
-                layerNameToAmbientLightMap.insert({ layerName, ambientLight });
-            }
-        }
-
-        if (
-            auto directionalLight = gameObject.findComponent<DirectionalLightComponent>();
-            directionalLight != nullptr && directionalLight->isEnabled()
-            ) {
-            for (auto& layerName : directionalLight->layerNames()) {
-                layerNameToDirectionalLightsMap.insert({ layerName, directionalLight });
-            }
-        }
-    });
+    //});
 
     for (auto& camera : m_cameraComponentsManager->cameras()) {
         if (!camera->isEnabled()) {
@@ -177,8 +158,8 @@ void OpenGLRenderingEngine::render(Scene& scene) {
                     viewport,
                     scissor,
                     it->second,
-                    layerNameToAmbientLightMap,
-                    layerNameToDirectionalLightsMap,
+                    m_lightComponentsManager->layerNameToAmbientLightMap(),
+                    m_lightComponentsManager->layerNameToDirectionalLightsMap(),
                     layerName
                 );
             }
@@ -257,6 +238,10 @@ void OpenGLRenderingEngine::renderMeshWithAllRequiredShaders(
 
         auto layerDirectionalLightsRange = layerNameToDirectionalLightsMap.equal_range(layerName);
         for (auto it = layerDirectionalLightsRange.first; it != layerDirectionalLightsRange.second; it++) {
+            if (!it->second->isEnabled()) {
+                continue;
+            }
+
             if (auto colorUniform = shaderProgramContainer.directionalLightColorUniform(); colorUniform >= 0) {
                 auto color = it->second->color();
                 glUniform3f(
@@ -347,13 +332,6 @@ void OpenGLRenderingEngine::renderMesh(
         camera->calculateProjectionMatrix()
     );
 }*/
-
-void OpenGLRenderingEngine::traverseSceneHierarchy(GameObject& gameObject, const function<void(GameObject&)>& callback) {
-    callback(gameObject);
-    for (auto& entry : gameObject.children()) {
-        traverseSceneHierarchy(*entry.second, callback);
-    }
-}
 
 void OpenGLRenderingEngine::pushOpenGLState(const OpenGLState& state) {
     applyOpenGLState(state);

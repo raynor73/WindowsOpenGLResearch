@@ -8,20 +8,18 @@
 
 namespace GameEngine
 {
+class LightComponentsManager;
+
 class DirectionalLightComponent : public GameObjectComponent
 {
     glm::vec3 m_color;
     glm::vec3 m_direction;
     std::vector<std::string> m_layerNames;
 
+    friend class LightComponentsManager;
+
 public:
     static const std::string TYPE_NAME;
-
-    DirectionalLightComponent(glm::vec3 color, glm::vec3 direction, std::vector<std::string> layerNames) :
-        m_color(std::move(color)),
-        m_direction(std::move(direction)),
-        m_layerNames(std::move(layerNames))
-    {}
 
     const glm::vec3& color() const { return m_color; }
     void setColor(glm::vec3 color) { m_color = std::move(color); }
@@ -30,10 +28,18 @@ public:
     void setDirection(const glm::vec3& direction) { m_direction = direction; }
 
     const std::vector<std::string>& layerNames() const { return m_layerNames; }
-    void setLayerNames(std::vector<std::string> layerNames) { m_layerNames = std::move(layerNames); }
+    //void setLayerNames(std::vector<std::string> layerNames) { m_layerNames = std::move(layerNames); }
 
     virtual const std::string& typeName() const override { return TYPE_NAME; }
 
     virtual std::shared_ptr<GameObjectComponent> clone() override;
+
+private:
+    DirectionalLightComponent(glm::vec3 color, glm::vec3 direction, std::vector<std::string> layerNames) :
+        m_color(std::move(color)),
+        m_direction(std::move(direction)),
+        m_layerNames(std::move(layerNames))
+    {}
+
 };
 }

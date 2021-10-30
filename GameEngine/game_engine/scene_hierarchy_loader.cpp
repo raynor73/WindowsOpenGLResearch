@@ -477,7 +477,7 @@ shared_ptr<GameObjectComponent> SceneHierarchyLoader::parseComponent(
         return camera;
     }
     else if (type == "AmbientLight") {
-        return make_shared<AmbientLightComponent>(
+        return m_serviceLocator->lightComponentsManager()->createAmbientLight(
             parseColor3f(componentJson["color"]),
             parseLayerNames(componentJson["layerNames"])
         );
@@ -763,7 +763,7 @@ shared_ptr<GameObjectComponent> SceneHierarchyLoader::parseComponent(
         );
         return camera;
     } else if (type == "DirectionalLight") {
-        return make_shared<DirectionalLightComponent>(
+        return m_serviceLocator->lightComponentsManager()->createDirectionalLight(
             parseColor3f(componentJson["color"]),
             Constants::DEFAULT_FORWARD_DIRECTION,
             parseLayerNames(componentJson["layerNames"])

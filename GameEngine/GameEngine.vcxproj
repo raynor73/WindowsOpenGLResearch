@@ -163,6 +163,7 @@
     <ClInclude Include="game_engine\game_object.h" />
     <ClInclude Include="game_engine\input\keyboard_input.h" />
     <ClInclude Include="game_engine\input\mouse_input.h" />
+    <ClInclude Include="game_engine\light_components_manager.h" />
     <ClInclude Include="game_engine\physics_engine.h" />
     <ClInclude Include="game_engine\rendering_engine.h" />
     <ClInclude Include="game_engine\textures_repository.h" />
@@ -233,6 +234,7 @@
     <ClCompile Include="game_engine\collisions_info_component.cpp" />
     <ClCompile Include="game_engine\directional_light_component.cpp" />
     <ClCompile Include="game_engine\game_object.cpp" />
+    <ClCompile Include="game_engine\light_components_manager.cpp" />
     <ClCompile Include="game_engine\logger.cpp" />
     <ClCompile Include="game_engine\material_component.cpp" />
     <ClCompile Include="game_engine\mesh_component.cpp" />

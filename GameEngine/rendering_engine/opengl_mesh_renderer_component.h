@@ -32,7 +32,7 @@ public:
     static const std::string TYPE_NAME;
 
     const std::vector<std::string>& layerNames() const { return m_layerNames; }
-    void setLayerNames(std::vector<std::string> layerNames) { m_layerNames = std::move(layerNames); }
+    //void setLayerNames(std::vector<std::string> layerNames) { m_layerNames = std::move(layerNames); }
 
     void render(
         const OpenGLShaderProgramContainer& shaderProgramContainer,
