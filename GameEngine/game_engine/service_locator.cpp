@@ -310,13 +310,13 @@ MouseInput* ServiceLocator::mouseInput()
     return m_mouseInput.get();
 }
 
-PhysicsEngine* ServiceLocator::physicsEngine()
+weak_ptr<PhysicsEngine> ServiceLocator::physicsEngine()
 {
     if (m_physicsEngine == nullptr) {
         throw domain_error("Physics Engine is not provided");
     }
 
-    return m_physicsEngine.get();
+    return m_physicsEngine;
 }
 
 RenderingEngine* ServiceLocator::renderingEngine()

@@ -13,7 +13,7 @@ protected:
     std::weak_ptr<PhysicsEngine> m_physicsEngine;
 
 public:
-    RigidBodyComponent(std::shared_ptr<PhysicsEngine> physicsEngine) : m_physicsEngine(physicsEngine) {}
+    RigidBodyComponent(std::weak_ptr<PhysicsEngine> physicsEngine) : m_physicsEngine(physicsEngine) {}
 
     virtual ~RigidBodyComponent() override;
 

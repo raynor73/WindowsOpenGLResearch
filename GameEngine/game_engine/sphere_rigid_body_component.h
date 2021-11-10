@@ -15,7 +15,7 @@ public:
     static const std::string TYPE_NAME;
 
     SphereRigidBodyComponent(
-        std::shared_ptr<PhysicsEngine> physicsEngine,
+        std::weak_ptr<PhysicsEngine> physicsEngine,
         std::optional<float> massValue,
         float radius
     );

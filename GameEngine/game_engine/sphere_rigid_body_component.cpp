@@ -7,15 +7,16 @@ using namespace std;
 const string SphereRigidBodyComponent::TYPE_NAME = "SphereRigidBodyComponent";
 
 SphereRigidBodyComponent::SphereRigidBodyComponent(
-    std::shared_ptr<PhysicsEngine> physicsEngine,
+    std::weak_ptr<PhysicsEngine> physicsEngine,
     optional<float> massValue,
     float radius
 ) : RigidBodyComponent(physicsEngine), m_massValue(massValue), m_radius(radius) {
-    if (physicsEngine == nullptr) {
+    auto physicsEngineStrongPtr = physicsEngine.lock();
+    if (physicsEngineStrongPtr == nullptr) {
         throw domain_error("No Physics Engine while creating Sphere Rigid Body");
     }
 
-    physicsEngine->createSphereRigidBody(this, m_massValue, m_radius, glm::vec3(0), glm::identity<glm::quat>());
+    physicsEngineStrongPtr->createSphereRigidBody(this, m_massValue, m_radius, glm::vec3(0), glm::identity<glm::quat>());
 }
 
 shared_ptr<GameObjectComponent> SphereRigidBodyComponent::clone() {

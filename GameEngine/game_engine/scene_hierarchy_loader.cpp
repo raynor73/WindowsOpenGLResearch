@@ -38,7 +38,7 @@ void SceneHierarchyLoader::buildHierarchyFromJson(const string& jsonString, Scen
 
     auto physicsParamsJson = sceneJson["physicsParams"];
     auto gravityJson = physicsParamsJson["gravity"];
-    m_serviceLocator->physicsEngine()->setGravity(glm::vec3(
+    m_serviceLocator->physicsEngine().lock()->setGravity(glm::vec3(
         parseFloatNumber(gravityJson[0]),
         parseFloatNumber(gravityJson[1]),
         parseFloatNumber(gravityJson[2])

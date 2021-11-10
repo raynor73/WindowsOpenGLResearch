@@ -61,7 +61,7 @@ public:
     KeyboardInput* keyboardInput();
     App* app();
     MouseInput* mouseInput();
-    PhysicsEngine* physicsEngine();
+    std::weak_ptr<PhysicsEngine> physicsEngine();
     RenderingEngine* renderingEngine();
     CameraComponentsManager* cameraComponentsManager();
     LightComponentsManager* lightComponentsManager();

@@ -35,7 +35,7 @@ void Scene::update()
 
     float dt = m_serviceLocator->timeManager()->deltaTime();
     if (dt > 0) {
-        m_serviceLocator->physicsEngine()->update(dt);
+        m_serviceLocator->physicsEngine().lock()->update(dt);
     }
 }
 

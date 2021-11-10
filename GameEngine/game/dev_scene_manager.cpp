@@ -7,7 +7,7 @@ using namespace std;
 
 void DevSceneManager::requestHelloWorldSceneStart()
 {
-    m_serviceLocator->physicsEngine()->reset();
+    m_serviceLocator->physicsEngine().lock()->reset();
     m_serviceLocator->renderingEngine()->reset();
     m_serviceLocator->cameraComponentsManager()->reset();
     m_serviceLocator->meshRendererFactory()->reset();
