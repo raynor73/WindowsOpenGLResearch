@@ -1,4 +1,6 @@
 #include "bullet_physics_engine.h"
+#include <game_engine/utils.h>
+#include <vector>
 
 using namespace GameEngine;
 using namespace std;
@@ -54,7 +56,7 @@ BulletPhysicsEngine::BulletPhysicsEngine()
     initBulletPhysics();
 }
 
-GameEngine::BulletPhysicsEngine::~BulletPhysicsEngine()
+BulletPhysicsEngine::~BulletPhysicsEngine()
 {
     deinitBulletPhysics();
 }
@@ -65,7 +67,7 @@ void BulletPhysicsEngine::reset()
     setGravity(glm::vec3(0));
 }
 
-void GameEngine::BulletPhysicsEngine::initBulletPhysics()
+void BulletPhysicsEngine::initBulletPhysics()
 {
     m_collisionConfiguration = new btDefaultCollisionConfiguration();
     m_dispatcher = new btCollisionDispatcher(m_collisionConfiguration);
@@ -80,97 +82,201 @@ void GameEngine::BulletPhysicsEngine::initBulletPhysics()
     m_dynamicsWorld->setInternalTickCallback(tickCallback, this);
 }
 
-void GameEngine::BulletPhysicsEngine::deinitBulletPhysics()
+void BulletPhysicsEngine::deinitBulletPhysics()
 {
-    
+    removeAllRigidBodies();
+
+    delete m_dynamicsWorld;
+    delete m_solver;
+    delete m_overlappingPairCache;
+    delete m_dispatcher;
+    delete m_collisionConfiguration;
 }
 
-void GameEngine::BulletPhysicsEngine::removeAllRigidBodies()
+void BulletPhysicsEngine::removeAllRigidBodies()
 {
+    vector<RigidBodyComponent*> rigidBodiesToRemove;
+    for (auto& entry : m_btRigidBodyToRigidBodyComponentMap) {
+        rigidBodiesToRemove.push_back(entry.second);
+    }
+
+    for (auto& rigidBodyToRemove : rigidBodiesToRemove) {
+        removeRigidBody(rigidBodyToRemove);
+    }
 }
 
-std::shared_ptr<btRigidBody> GameEngine::BulletPhysicsEngine::getRigidBody(const std::string& name) const
+btRigidBody* BulletPhysicsEngine::getRigidBody(RigidBodyComponent* rigidBodyComponent) const
 {
-    return std::shared_ptr<btRigidBody>();
+    auto gameObject = rigidBodyComponent->gameObject().lock();
+    Utils::throwErrorIfNull(gameObject, []() {
+        return "Rigid Object Component has no Game Object";
+    });
+
+    if (m_rigidBodyComponentToBtRigidBodyMap.count(rigidBodyComponent) == 0) {
+        stringstream ss;
+        ss << "Bullet Rigid Body for Game Object " << gameObject->name() << " not found";
+        throw domain_error(ss.str());
+    }
+
+    return m_rigidBodyComponentToBtRigidBodyMap.at(rigidBodyComponent);
 }
 
-void GameEngine::BulletPhysicsEngine::setGravity(const glm::vec3& gravity)
+void BulletPhysicsEngine::setGravity(const glm::vec3& gravity)
 {
+    m_dynamicsWorld->setGravity(glmVec3ToBtVector3(gravity));
 }
 
-void GameEngine::BulletPhysicsEngine::setPosition(const std::string& rigidBodyName, const glm::vec3& position)
+void BulletPhysicsEngine::setPosition(RigidBodyComponent* rigidBodyComponent, const glm::vec3& position)
 {
+    auto rigidBody = getRigidBody(rigidBodyComponent);
+
+    auto transform = rigidBody->getCenterOfMassTransform();
+    transform.setOrigin(glmVec3ToBtVector3(position));
+    rigidBody->setCenterOfMassTransform(transform);
 }
 
-void GameEngine::BulletPhysicsEngine::setRotation(const std::string& rigidBodyName, const glm::quat& rotation)
-{
-}
-
-void GameEngine::BulletPhysicsEngine::addForce(const std::string& rigidBodyName, const glm::vec3& force)
-{
-}
-
-void GameEngine::BulletPhysicsEngine::addTorque(const std::string& rigidBodyName, const glm::vec3& torque)
-{
-}
-
-void GameEngine::BulletPhysicsEngine::setVelocityDirectly(const std::string& rigidBodyName, const glm::vec3& velocity)
-{
-}
-
-void GameEngine::BulletPhysicsEngine::setVelocityViaMotor(const std::string& rigidBodyName, const glm::vec3& velocity)
-{
-}
-
-void GameEngine::BulletPhysicsEngine::setAngularVelocityDirectly(const std::string& rigidBodyName, const glm::vec3& angularVelocity)
-{
-}
-
-void GameEngine::BulletPhysicsEngine::setAngularVelocityViaMotor(const std::string& rigidBodyName, const glm::vec3& velocity)
-{
-}
-
-void GameEngine::BulletPhysicsEngine::setRigidBodyEnabled(const std::string& rigidBodyName, bool isEnabled)
-{
-}
-
-void GameEngine::BulletPhysicsEngine::createCylinderRigidBody(std::shared_ptr<GameObject> gameObject, std::string name, std::optional<float> massValue, float radius, float length, const glm::vec3& position, const glm::quat& rotation, const glm::vec3& maxMotorForce, const glm::vec3& maxMotorTorque)
-{
-}
-
-void GameEngine::BulletPhysicsEngine::createSphereRigidBody(std::shared_ptr<GameObject> gameObject, std::string name, std::optional<float> massValue, float radius, const glm::vec3& position, const glm::quat& rotation, const glm::vec3& maxMotorForce, const glm::vec3& maxMotorTorque)
+void BulletPhysicsEngine::setRotation(RigidBodyComponent* rigidBodyComponent, const glm::quat& rotation)
 {
 }
 
-void GameEngine::BulletPhysicsEngine::createBoxRigidBody(std::shared_ptr<GameObject> gameObject, std::string name, std::optional<float> massValue, const glm::vec3& size, const glm::vec3& position, const glm::quat& rotation, const glm::vec3& maxMotorForce, const glm::vec3& maxMotorTorque)
+/*void BulletPhysicsEngine::addForce(const string& rigidBodyName, const glm::vec3& force)
 {
 }
 
-void GameEngine::BulletPhysicsEngine::createCharacterCapsuleRigidBody(std::shared_ptr<GameObject> gameObject, std::string name, std::optional<float> massValue, float radius, float length, const glm::vec3& position, const glm::vec3& maxMotorForce)
+void BulletPhysicsEngine::addTorque(const string& rigidBodyName, const glm::vec3& torque)
+{
+}*/
+
+/*void BulletPhysicsEngine::setVelocityDirectly(const string& rigidBodyName, const glm::vec3& velocity)
 {
 }
 
-void GameEngine::BulletPhysicsEngine::createTriMeshRigidBody(std::shared_ptr<GameObject> gameObject, std::string name, const Mesh& mesh, std::optional<float> massValue, const glm::vec3& position, const glm::quat& rotation)
+void BulletPhysicsEngine::setVelocityViaMotor(const string& rigidBodyName, const glm::vec3& velocity)
 {
 }
 
-void GameEngine::BulletPhysicsEngine::removeRigidBody(const std::string& rigidBodyName)
+void BulletPhysicsEngine::setAngularVelocityDirectly(const string& rigidBodyName, const glm::vec3& angularVelocity)
 {
 }
 
-void GameEngine::BulletPhysicsEngine::update(float dt)
+void BulletPhysicsEngine::setAngularVelocityViaMotor(const string& rigidBodyName, const glm::vec3& velocity)
+{
+}*/
+
+void BulletPhysicsEngine::setRigidBodyEnabled(RigidBodyComponent* rigidBodyComponent, bool isEnabled)
+{
+    auto rigidBody = getRigidBody(rigidBodyComponent);
+    if (isEnabled) {
+        if (!rigidBody->isInWorld()) {
+            m_dynamicsWorld->addRigidBody(rigidBody);
+        }
+    } else {
+        if (rigidBody->isInWorld()) {
+            m_dynamicsWorld->removeRigidBody(rigidBody);
+        }
+    }
+}
+
+/*void BulletPhysicsEngine::createCylinderRigidBody(shared_ptr<GameObject> gameObject, string name, optional<float> massValue, float radius, float length, const glm::vec3& position, const glm::quat& rotation, const glm::vec3& maxMotorForce, const glm::vec3& maxMotorTorque)
+{
+}*/
+
+void BulletPhysicsEngine::createSphereRigidBody(RigidBodyComponent* rigidBodyComponent, optional<float> massValue, float radius, const glm::vec3& position, const glm::quat& rotation)
+{
+    auto shape = new btSphereShape(radius);
+
+    auto btQuaternionRotation = glmQuatToBtQuaternion(rotation);
+    auto btVector3Position = glmVec3ToBtVector3(position);
+
+    auto motionState = new btDefaultMotionState(btTransform(btQuaternionRotation, btVector3Position));
+
+    if (massValue) {
+        btVector3 bodyInertia;
+        shape->calculateLocalInertia(massValue.value(), bodyInertia);
+        btRigidBody::btRigidBodyConstructionInfo bodyCI = btRigidBody::btRigidBodyConstructionInfo(
+            massValue.value(),
+            motionState,
+            shape,
+            bodyInertia
+        );
+        bodyCI.m_restitution = 1.0f;
+        bodyCI.m_friction = 0.5f;
+
+        auto body = new btRigidBody(bodyCI);
+
+        m_btRigidBodyToRigidBodyComponentMap.insert({ body, rigidBodyComponent });
+        m_rigidBodyComponentToBtRigidBodyMap.insert({ rigidBodyComponent, body });
+
+        m_dynamicsWorld->addRigidBody(body);
+    }
+    else {
+        btVector3 bodyInertia;
+        shape->calculateLocalInertia(0, bodyInertia);
+        btRigidBody::btRigidBodyConstructionInfo bodyCI = btRigidBody::btRigidBodyConstructionInfo(
+            0,
+            motionState,
+            shape,
+            bodyInertia
+        );
+        bodyCI.m_restitution = 1.0f;
+        bodyCI.m_friction = 0.5f;
+
+        auto body = new btRigidBody(bodyCI);
+
+        m_btRigidBodyToRigidBodyComponentMap.insert({ body, rigidBodyComponent });
+        m_rigidBodyComponentToBtRigidBodyMap.insert({ rigidBodyComponent, body });
+
+        m_dynamicsWorld->addRigidBody(body);
+    }
+}
+
+/*void BulletPhysicsEngine::createBoxRigidBody(shared_ptr<GameObject> gameObject, string name, optional<float> massValue, const glm::vec3& size, const glm::vec3& position, const glm::quat& rotation, const glm::vec3& maxMotorForce, const glm::vec3& maxMotorTorque)
 {
 }
 
-void GameEngine::BulletPhysicsEngine::getRigidBodyRotationAndPosition(const std::string& rigidBodyName, glm::mat4x4& destRotationMatrix, glm::vec3& destPosition)
+void BulletPhysicsEngine::createCharacterCapsuleRigidBody(shared_ptr<GameObject> gameObject, string name, optional<float> massValue, float radius, float length, const glm::vec3& position, const glm::vec3& maxMotorForce)
 {
 }
 
-glm::vec3 GameEngine::BulletPhysicsEngine::getRigidBodyVelocity(const std::string& rigidBodyName)
+void BulletPhysicsEngine::createTriMeshRigidBody(shared_ptr<GameObject> gameObject, string name, const Mesh& mesh, optional<float> massValue, const glm::vec3& position, const glm::quat& rotation)
+{
+}*/
+
+void BulletPhysicsEngine::removeRigidBody(RigidBodyComponent* rigidBodyComponent)
+{
+    auto rigidBody = getRigidBody(rigidBodyComponent);
+
+    if (rigidBody->isInWorld()) {
+        m_dynamicsWorld->removeRigidBody(rigidBody);
+    }
+
+    m_rigidBodyComponentToBtRigidBodyMap.erase(rigidBodyComponent);
+    m_btRigidBodyToRigidBodyComponentMap.erase(rigidBody);
+
+    delete rigidBody->getMotionState();
+    delete rigidBody->getCollisionShape();
+    delete rigidBody;
+}
+
+void BulletPhysicsEngine::update(float dt)
+{
+    m_dynamicsWorld->stepSimulation(dt);
+}
+
+void BulletPhysicsEngine::getRigidBodyRotationAndPosition(RigidBodyComponent* rigidBodyComponent, glm::mat4x4& destRotationMatrix, glm::vec3& destPosition)
+{
+    auto body = getRigidBody(rigidBodyComponent);
+    auto transform = body->getWorldTransform();
+
+    destPosition = btVector3ToGlmVec3(transform.getOrigin());
+    destRotationMatrix = glm::mat4_cast(btQuaternionToGlmQuat(transform.getRotation()));
+}
+
+/*glm::vec3 BulletPhysicsEngine::getRigidBodyVelocity(const string& rigidBodyName)
 {
     return glm::vec3();
 }
 
-void GameEngine::BulletPhysicsEngine::setRigidBodyFriction(const std::string& rigidBodyName, float friction)
+void BulletPhysicsEngine::setRigidBodyFriction(const string& rigidBodyName, float friction)
 {
-}
+}*/

@@ -25,5 +25,7 @@ public:
 
     void releaseAmbientLight(std::shared_ptr<AmbientLightComponent> ambientLight);
     void releaseDirectionalLight(std::shared_ptr<DirectionalLightComponent> directionalLight);
+
+    void reset();
 };
 }

@@ -44,3 +44,9 @@ void OpenGLMeshRendererFactory::releaseMeshRenderer(shared_ptr<GameObjectCompone
     }
     m_meshRendererToLayerNamesMap.erase(castedMeshRenderer);
 }
+
+void GameEngine::OpenGLMeshRendererFactory::reset()
+{
+    m_layerNameToMeshRenderersMap.clear();
+    m_meshRendererToLayerNamesMap.clear();
+}

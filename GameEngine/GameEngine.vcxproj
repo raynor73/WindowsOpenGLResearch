@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -166,6 +166,8 @@
     <ClInclude Include="game_engine\light_components_manager.h" />
     <ClInclude Include="game_engine\physics_engine.h" />
     <ClInclude Include="game_engine\rendering_engine.h" />
+    <ClInclude Include="game_engine\rigid_body_component.h" />
+    <ClInclude Include="game_engine\sphere_rigid_body_component.h" />
     <ClInclude Include="game_engine\textures_repository.h" />
     <ClInclude Include="physics_engine\bullet_physics_engine.h" />
     <ClInclude Include="platform_dependent\windows\windows_app.h" />
@@ -242,9 +244,11 @@
     <ClCompile Include="game_engine\ortho_camera_component.cpp" />
     <ClCompile Include="game_engine\perspective_camera_component.cpp" />
     <ClCompile Include="game_engine\rendering_window_info_update_detector.cpp" />
+    <ClCompile Include="game_engine\rigid_body_component.cpp" />
     <ClCompile Include="game_engine\scene.cpp" />
     <ClCompile Include="game_engine\scene_hierarchy_loader.cpp" />
     <ClCompile Include="game_engine\service_locator.cpp" />
+    <ClCompile Include="game_engine\sphere_rigid_body_component.cpp" />
     <ClCompile Include="game_engine\text_appearance.cpp" />
     <ClCompile Include="game_engine\time_manager.cpp" />
     <ClCompile Include="game_engine\time_provider.cpp" />

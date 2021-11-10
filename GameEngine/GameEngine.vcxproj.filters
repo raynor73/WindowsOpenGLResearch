@@ -249,6 +249,9 @@
     <ClInclude Include="game_engine\light_components_manager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="game_engine\rigid_body_component.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameEngine.cpp">
@@ -390,6 +393,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="game_engine\light_components_manager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="game_engine\rigid_body_component.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

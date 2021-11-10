@@ -35,5 +35,7 @@ public:
 
     virtual std::shared_ptr<GameObjectComponent> createMeshRenderer(std::vector<std::string> layerNames) override;
     virtual void releaseMeshRenderer(std::shared_ptr<GameObjectComponent> meshRenderer) override;
+
+    virtual void reset() override;
 };
 }

@@ -31,12 +31,12 @@ void Scene::update()
         m_gesturesDispatcher->onTouchEvent(event);
     }
 
-    m_rootGameObject->update();
+    m_rootGameObject->update();*/
 
-    float dt = m_time->deltaTime();
+    float dt = m_serviceLocator->timeManager()->deltaTime();
     if (dt > 0) {
-        g_physicsEngine->update(dt);
-    }*/
+        m_serviceLocator->physicsEngine()->update(dt);
+    }
 }
 
 void Scene::addGameObject(const std::string& parentName, const shared_ptr<GameObject>& gameObject) {

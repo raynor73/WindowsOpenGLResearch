@@ -54,3 +54,12 @@ void LightComponentsManager::releaseDirectionalLight(shared_ptr<DirectionalLight
     }
     m_directionalLightToLayerNamesMap.erase(directionalLight);
 }
+
+void GameEngine::LightComponentsManager::reset()
+{
+    m_layerNameToAmbientLightMap.clear();
+    m_layerNameToDirectionalLightsMap.clear();
+
+    m_ambientLightToLayerNamesMap.clear();
+    m_directionalLightToLayerNamesMap.clear();
+}

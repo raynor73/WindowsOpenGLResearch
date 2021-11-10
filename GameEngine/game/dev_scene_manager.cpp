@@ -10,6 +10,8 @@ void DevSceneManager::requestHelloWorldSceneStart()
     m_serviceLocator->physicsEngine()->reset();
     m_serviceLocator->renderingEngine()->reset();
     m_serviceLocator->cameraComponentsManager()->reset();
+    m_serviceLocator->meshRendererFactory()->reset();
+    m_serviceLocator->lightComponentsManager()->reset();
 
     m_activeScene = make_shared<HelloWorldScene>(m_serviceLocator);
     m_serviceLocator->sceneHierarchyLoader()->loadHierarchyIntoScene("scenes/hello_world_scene.json", *m_activeScene);

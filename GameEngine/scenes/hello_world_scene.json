@@ -1,7 +1,12 @@
 {
   "meshes": [
     { "name": "box", "path": "meshes/box.obj" },
-    { "name": "terrain", "path": "meshes/small_terrain.obj" }
+    { "name": "terrain", "path": "meshes/small_terrain.obj" },
+    {
+        "name": "sphere",
+        "path": "meshes/sphere.obj"
+    },
+    { "name": "plane", "path": "meshes/planeUV.obj" }
   ],
   "materials": [
     { "name": "white", "diffuseColor": [1, 1, 1, 1] },
@@ -31,7 +36,7 @@
         {
             "name": "box",
             "parent": "root",
-            "position": [ 0.0, 0.0, 0.0 ],
+            "position": [ 0.0, 5.0, 0.0 ],
             "rotation": [ 0.0, 0.0, 0.0 ],
             "scale": [ 1, 1, 1 ],
             "components": [
@@ -46,6 +51,32 @@
                 {
                     "type": "MeshRenderer",
                     "layerNames": [ "scene" ]
+                }
+            ]
+        },
+        {
+            "name": "sphere",
+            "parent": "root",
+            "position": [ 0.0, 0.0, 0.0 ],
+            "rotation": [ 0.0, 0.0, 0.0 ],
+            "scale": [ 1, 1, 1 ],
+            "components": [
+                {
+                    "type": "Mesh",
+                    "meshName": "sphere"
+                },
+                {
+                    "type": "Material",
+                    "materialName": "red"
+                },
+                {
+                    "type": "MeshRenderer",
+                    "layerNames": [ "scene" ]
+                },
+                {
+                    "type": "SphereRigidBody",
+                    "radius": 1,
+                    "mass":  1
                 }
             ]
         },

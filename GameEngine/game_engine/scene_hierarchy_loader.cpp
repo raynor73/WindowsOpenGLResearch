@@ -14,6 +14,7 @@
 #include <game_engine/game_object.h>
 #include <game_engine/ambient_light_component.h>
 #include <game_engine/directional_light_component.h>
+#include <game_engine/sphere_rigid_body_component.h>
 
 using namespace GameEngine;
 using namespace std;
@@ -35,13 +36,13 @@ void SceneHierarchyLoader::buildHierarchyFromJson(const string& jsonString, Scen
         L::e(Constants::LOG_TAG, "Error restoring scene", e);
     }
 
-    /*auto physicsParamsJson = sceneJson["physicsParams"];
+    auto physicsParamsJson = sceneJson["physicsParams"];
     auto gravityJson = physicsParamsJson["gravity"];
-    g_physicsEngine->setGravity(glm::vec3(
+    m_serviceLocator->physicsEngine()->setGravity(glm::vec3(
         parseFloatNumber(gravityJson[0]),
         parseFloatNumber(gravityJson[1]),
         parseFloatNumber(gravityJson[2])
-    ));*/
+    ));
 
     auto meshesJsonArray = sceneJson["meshes"];
     if (meshesJsonArray.is_array()) {
@@ -771,14 +772,11 @@ shared_ptr<GameObjectComponent> SceneHierarchyLoader::parseComponent(
     }
     /*else if (type == "ScrollDetector") {
         return make_shared<ScrollDetectorComponent>();
-    }
+    }*/
     else if (type == "SphereRigidBody") {
         auto mass = componentJson.contains("mass") ? parseFloatNumber(componentJson["mass"]) : optional<float>();
         auto radius = parseFloatNumber(componentJson["radius"]);
-        auto transform = static_pointer_cast<TransformationComponent>(
-            gameObject->findComponent(TransformationComponent::TYPE_NAME)
-            );
-        glm::vec3 maxMotorForce{ 0 };
+        /*glm::vec3 maxMotorForce{0};
         glm::vec3 maxMotorTorque{ 0 };
         if (
             componentJson.contains("maxMotorForce") &&
@@ -797,23 +795,14 @@ shared_ptr<GameObjectComponent> SceneHierarchyLoader::parseComponent(
             maxMotorTorque[0] = parseFloatNumber(componentJson["maxMotorTorque"][0]);
             maxMotorTorque[1] = parseFloatNumber(componentJson["maxMotorTorque"][1]);
             maxMotorTorque[2] = parseFloatNumber(componentJson["maxMotorTorque"][2]);
-        }
-        auto rigidBodyName = gameObject->name();
-        g_physicsEngine->createSphereRigidBody(
-            gameObject,
-            rigidBodyName,
+        }*/
+        auto sphereRigidBodyComponent = make_shared<SphereRigidBodyComponent>(
+            m_serviceLocator->physicsEngine(),
             mass,
-            radius,
-            transform->position(),
-            transform->rotation(),
-            maxMotorForce,
-            maxMotorTorque
+            radius
         );
-        return make_shared<RigidBodyComponent>(
-            rigidBodyName,
-            g_physicsEngine
-            );
-    }
+        return sphereRigidBodyComponent;
+    }/*
     else if (type == "TriMeshRigidBody") {
         auto mass = componentJson.contains("mass") ? parseFloatNumber(componentJson["mass"]) : optional<float>();
         auto meshName = componentJson["meshName"].get<string>();
