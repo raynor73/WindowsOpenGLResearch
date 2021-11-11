@@ -169,7 +169,12 @@
     <ClInclude Include="game_engine\rigid_body_component.h" />
     <ClInclude Include="game_engine\sphere_rigid_body_component.h" />
     <ClInclude Include="game_engine\textures_repository.h" />
+    <ClInclude Include="game_engine\tri_mesh_rigid_body_component.h" />
     <ClInclude Include="physics_engine\bullet_physics_engine.h" />
+    <ClInclude Include="physics_engine\dynamic_rigid_body_allocated_objects.h" />
+    <ClInclude Include="physics_engine\sphere_dynamic_rigid_body_allocated_objects.h" />
+    <ClInclude Include="physics_engine\static_rigid_body_allocated_objects.h" />
+    <ClInclude Include="physics_engine\tri_mesh_static_rigid_body_allocated_objects.h" />
     <ClInclude Include="platform_dependent\windows\windows_app.h" />
     <ClInclude Include="platform_dependent\windows\windows_bitmap_loader.h" />
     <ClInclude Include="platform_dependent\windows\windows_keyboard_input.h" />
@@ -253,6 +258,7 @@
     <ClCompile Include="game_engine\time_manager.cpp" />
     <ClCompile Include="game_engine\time_provider.cpp" />
     <ClCompile Include="game_engine\transformation_component.cpp" />
+    <ClCompile Include="game_engine\tri_mesh_rigid_body_component.cpp" />
     <ClCompile Include="game_engine\units_converter.cpp" />
     <ClCompile Include="physics_engine\bullet_physics_engine.cpp" />
     <ClCompile Include="platform_dependent\windows\utils.cpp" />

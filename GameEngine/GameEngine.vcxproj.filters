@@ -252,6 +252,24 @@
     <ClInclude Include="game_engine\rigid_body_component.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="game_engine\sphere_rigid_body_component.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="game_engine\tri_mesh_rigid_body_component.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="physics_engine\tri_mesh_static_rigid_body_allocated_objects.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="physics_engine\dynamic_rigid_body_allocated_objects.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="physics_engine\static_rigid_body_allocated_objects.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="physics_engine\sphere_dynamic_rigid_body_allocated_objects.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameEngine.cpp">
@@ -396,6 +414,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="game_engine\rigid_body_component.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="game_engine\sphere_rigid_body_component.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="game_engine\tri_mesh_rigid_body_component.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

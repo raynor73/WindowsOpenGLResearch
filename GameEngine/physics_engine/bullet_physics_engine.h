@@ -8,9 +8,14 @@
 #include <unordered_map>
 #include <bullet/btBulletDynamicsCommon.h>
 #include <game_engine/rigid_body_component.h>
+#include <physics_engine/sphere_dynamic_rigid_body_allocated_objects.h>
+#include <physics_engine/tri_mesh_static_rigid_body_allocated_objects.h>
+#include <variant>
 
 namespace GameEngine
 {
+typedef std::variant<SphereDynamicRigidBodyAllocatedObjects*, TriMeshStaticRigidBodyAllocatedObjects*> btAllocatedObjectsContainer;
+
 class BulletPhysicsEngine : public PhysicsEngine, public WithoutGeneratedMethods
 {
     btDefaultCollisionConfiguration* m_collisionConfiguration;
@@ -19,8 +24,8 @@ class BulletPhysicsEngine : public PhysicsEngine, public WithoutGeneratedMethods
     btSequentialImpulseConstraintSolver* m_solver;
     btDiscreteDynamicsWorld* m_dynamicsWorld;
 
-    std::unordered_map<btRigidBody*, RigidBodyComponent*> m_btRigidBodyToRigidBodyComponentMap;
-    std::unordered_map<RigidBodyComponent*, btRigidBody*> m_rigidBodyComponentToBtRigidBodyMap;
+    std::unordered_map<btAllocatedObjectsContainer, RigidBodyComponent*> m_btObjectsToRigidBodyComponentMap;
+    std::unordered_map<RigidBodyComponent*, btAllocatedObjectsContainer> m_rigidBodyComponentToBtObjectsMap;
 
 public:
     BulletPhysicsEngine();
@@ -31,7 +36,8 @@ public:
     virtual void setPosition(RigidBodyComponent* rigidBodyComponent, const glm::vec3& position) override;
     virtual void setRotation(RigidBodyComponent* rigidBodyComponent, const glm::quat& rotation) override;
 
-    /*virtual void addForce(const std::string& rigidBodyName, const glm::vec3& force) override;
+    virtual void addForce(RigidBodyComponent* rigidBodyComponent, const glm::vec3& force) override;
+    /*
     virtual void addTorque(const std::string& rigidBodyName, const glm::vec3& torque) override;
 
     virtual void setVelocityDirectly(const std::string& rigidBodyName, const glm::vec3& velocity) override;
@@ -61,18 +67,16 @@ public:
         const glm::vec3& position,
         const glm::quat& rotation
     ) override;
-
-    /*virtual void createBoxRigidBody(
-        std::shared_ptr<GameObject> gameObject,
-        std::string name,
+    
+    virtual void createBoxRigidBody(
+        RigidBodyComponent* rigidBodyComponent,
         std::optional<float> massValue,
         const glm::vec3& size,
         const glm::vec3& position,
-        const glm::quat& rotation,
-        const glm::vec3& maxMotorForce,
-        const glm::vec3& maxMotorTorque
+        const glm::quat& rotation
     ) override;
 
+    /*
     virtual void createCharacterCapsuleRigidBody(
         std::shared_ptr<GameObject> gameObject,
         std::string name,
@@ -81,16 +85,15 @@ public:
         float length,
         const glm::vec3& position,
         const glm::vec3& maxMotorForce
-    ) override;
+    ) override;*/
 
     virtual void createTriMeshRigidBody(
-        std::shared_ptr<GameObject> gameObject,
-        std::string name,
+        RigidBodyComponent* rigidBodyComponent,
         const Mesh& mesh,
         std::optional<float> massValue,
         const glm::vec3& position,
         const glm::quat& rotation
-    ) override;*/
+    ) override;
 
     virtual void removeRigidBody(RigidBodyComponent* rigidBodyComponent) override;
 
@@ -102,9 +105,9 @@ public:
         glm::vec3& destPosition
     ) override;
 
-    //virtual glm::vec3 getRigidBodyVelocity(const std::string& rigidBodyName) override;
+    virtual glm::vec3 getRigidBodyVelocity(RigidBodyComponent* rigidBodyComponent) override;
 
-    //virtual void setRigidBodyFriction(const std::string& rigidBodyName, float friction) override;
+    virtual void setRigidBodyFriction(RigidBodyComponent* rigidBodyComponent, float friction) override;
 
     virtual void reset() override;
 
@@ -116,7 +119,7 @@ private:
 
     void removeAllRigidBodies();
 
-    btRigidBody* getRigidBody(RigidBodyComponent* rigidBodyComponent) const;
+    btAllocatedObjectsContainer getBtObjects(RigidBodyComponent* rigidBodyComponent) const;
 
     static btVector3 glmVec3ToBtVector3(const glm::vec3& vector) {
         return btVector3(vector.x, vector.y, vector.z);

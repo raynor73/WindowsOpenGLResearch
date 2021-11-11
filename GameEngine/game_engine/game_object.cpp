@@ -50,6 +50,9 @@ void GameObject::addComponent(const std::shared_ptr<GameObjectComponent>& compon
     m_components[componentName] = component;
     component->setGameObject(shared_from_this());
     component->onAttachedToGameObject();
+    if (m_parent.lock() != nullptr) {
+        component->onGameObjectAttachedToParent();
+    }
 }
 
 void GameObject::removeComponent(const std::shared_ptr<GameObjectComponent>& component) {

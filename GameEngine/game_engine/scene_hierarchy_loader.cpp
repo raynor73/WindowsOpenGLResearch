@@ -15,6 +15,7 @@
 #include <game_engine/ambient_light_component.h>
 #include <game_engine/directional_light_component.h>
 #include <game_engine/sphere_rigid_body_component.h>
+#include <game_engine/tri_mesh_rigid_body_component.h>
 
 using namespace GameEngine;
 using namespace std;
@@ -776,40 +777,19 @@ shared_ptr<GameObjectComponent> SceneHierarchyLoader::parseComponent(
     else if (type == "SphereRigidBody") {
         auto mass = componentJson.contains("mass") ? parseFloatNumber(componentJson["mass"]) : optional<float>();
         auto radius = parseFloatNumber(componentJson["radius"]);
-        /*glm::vec3 maxMotorForce{0};
-        glm::vec3 maxMotorTorque{ 0 };
-        if (
-            componentJson.contains("maxMotorForce") &&
-            componentJson["maxMotorForce"].is_array() &&
-            componentJson["maxMotorForce"].size() == 3
-            ) {
-            maxMotorForce[0] = parseFloatNumber(componentJson["maxMotorForce"][0]);
-            maxMotorForce[1] = parseFloatNumber(componentJson["maxMotorForce"][1]);
-            maxMotorForce[2] = parseFloatNumber(componentJson["maxMotorForce"][2]);
-        }
-        if (
-            componentJson.contains("maxMotorTorque") &&
-            componentJson["maxMotorTorque"].is_array() &&
-            componentJson["maxMotorTorque"].size() == 3
-            ) {
-            maxMotorTorque[0] = parseFloatNumber(componentJson["maxMotorTorque"][0]);
-            maxMotorTorque[1] = parseFloatNumber(componentJson["maxMotorTorque"][1]);
-            maxMotorTorque[2] = parseFloatNumber(componentJson["maxMotorTorque"][2]);
-        }*/
         auto sphereRigidBodyComponent = make_shared<SphereRigidBodyComponent>(
             m_serviceLocator->physicsEngine(),
             mass,
             radius
         );
         return sphereRigidBodyComponent;
-    }/*
-    else if (type == "TriMeshRigidBody") {
+    } else if (type == "TriMeshRigidBody") {
         auto mass = componentJson.contains("mass") ? parseFloatNumber(componentJson["mass"]) : optional<float>();
         auto meshName = componentJson["meshName"].get<string>();
 
         auto transform = static_pointer_cast<TransformationComponent>(
             gameObject->findComponent(TransformationComponent::TYPE_NAME)
-            );
+        );
 
         auto meshPosition = parseColor3f(componentJson["meshPosition"]);
         auto meshRotationAngles = parseColor3f(componentJson["meshRotation"]);
@@ -823,22 +803,12 @@ shared_ptr<GameObjectComponent> SceneHierarchyLoader::parseComponent(
         rotationMatrix = glm::rotate(rotationMatrix, glm::radians(meshRotationAngles.y), glm::vec3(0, 1, 0));
         auto meshRotation = glm::quat_cast(rotationMatrix);
 
-        auto mesh = createTransformedMesh(m_meshStorage.getMesh(meshName), meshPosition, meshRotation, meshScale);
+        auto mesh = createTransformedMesh(meshStorage.getMesh(meshName), meshPosition, meshRotation, meshScale);
 
-        g_physicsEngine->createTriMeshRigidBody(
-            gameObject,
-            rigidBodyName,
-            mesh,
-            mass,
-            transform->position(),
-            transform->rotation()
-        );
+        auto triMeshRigidBody = make_shared<TriMeshRigidBodyComponent>(m_serviceLocator->physicsEngine(), mass, mesh);
 
-        return make_shared<RigidBodyComponent>(
-            rigidBodyName,
-            g_physicsEngine
-            );
-    }
+        return triMeshRigidBody;
+    }/*
     else if (type == "CollisionsInfoContainer") {
         return make_shared<CollisionsInfoComponent>();
     }

@@ -20,8 +20,8 @@ public:
     virtual void setPosition(RigidBodyComponent* rigidBodyComponent, const glm::vec3& position) = 0;
     virtual void setRotation(RigidBodyComponent* rigidBodyComponent, const glm::quat& rotation) = 0;
 
-    /*virtual void addForce(const RigidBodyComponent* rigidBodyComponent, const glm::vec3& force) = 0;
-    virtual void addTorque(const RigidBodyComponent* rigidBodyComponent, const glm::vec3& torque) = 0;
+    virtual void addForce(RigidBodyComponent* rigidBodyComponent, const glm::vec3& force) = 0;
+    /*virtual void addTorque(const RigidBodyComponent* rigidBodyComponent, const glm::vec3& torque) = 0;
 
     virtual void setVelocityDirectly(const RigidBodyComponent* rigidBodyComponent, const glm::vec3& velocity) = 0;
     virtual void setVelocityViaMotor(const RigidBodyComponent* rigidBodyComponent, const glm::vec3& velocity) = 0;
@@ -50,32 +50,30 @@ public:
         const glm::quat& rotation
     ) = 0;
 
-    /*virtual void createBoxRigidBody(
-        const RigidBodyComponent* rigidBodyComponent,
+    virtual void createBoxRigidBody(
+        RigidBodyComponent* rigidBodyComponent,
         std::optional<float> massValue,
         const glm::vec3& size,
         const glm::vec3& position,
-        const glm::quat& rotation,
-        const glm::vec3& maxMotorForce,
-        const glm::vec3& maxMotorTorque
+        const glm::quat& rotation
     ) = 0;
 
-    virtual void createCharacterCapsuleRigidBody(
+    /*virtual void createCharacterCapsuleRigidBody(
         const RigidBodyComponent* rigidBodyComponent,
         std::optional<float> massValue,
         float radius,
         float length,
         const glm::vec3& position,
         const glm::vec3& maxMotorForce
-    ) = 0;
+    ) = 0;*/
 
     virtual void createTriMeshRigidBody(
-        const RigidBodyComponent* rigidBodyComponent,
+        RigidBodyComponent* rigidBodyComponent,
         const Mesh& mesh,
         std::optional<float> massValue,
         const glm::vec3& position,
         const glm::quat& rotation
-    ) = 0;*/
+    ) = 0;
 
     virtual void removeRigidBody(RigidBodyComponent* rigidBodyComponent) = 0;
 
@@ -87,9 +85,9 @@ public:
         glm::vec3& destPosition
     ) = 0;
 
-    //virtual glm::vec3 getRigidBodyVelocity(const RigidBodyComponent* rigidBodyComponent) = 0;
+    virtual glm::vec3 getRigidBodyVelocity(RigidBodyComponent* rigidBodyComponent) = 0;
 
-    //virtual void setRigidBodyFriction(const RigidBodyComponent* rigidBodyComponent, float friction) = 0;
+    virtual void setRigidBodyFriction(RigidBodyComponent* rigidBodyComponent, float friction) = 0;
 
     virtual void reset() = 0;
 };
