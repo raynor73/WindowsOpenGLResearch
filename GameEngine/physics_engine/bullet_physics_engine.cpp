@@ -7,23 +7,37 @@ using namespace GameEngine;
 using namespace std;
 
 void tickCallback(btDynamicsWorld* world, btScalar) {
-    /*auto physicsEngine = reinterpret_cast<BulletPhysicsEngine*>(world->getWorldUserInfo());
+    auto physicsEngine = reinterpret_cast<BulletPhysicsEngine*>(world->getWorldUserInfo());
     auto dispatcher = world->getDispatcher();
     auto numberOfManifolds = dispatcher->getNumManifolds();
     for (int i = 0; i < numberOfManifolds; i++) {
         auto manifold = dispatcher->getManifoldByIndexInternal(i);
 
-        auto body0 = static_cast<const btRigidBody*>(manifold->getBody0());
+        /*auto body0 = static_cast<const btRigidBody*>(manifold->getBody0());
         auto body1 = static_cast<const btRigidBody*>(manifold->getBody1());
 
         auto gameObject0 = physicsEngine->m_btRigidBodyToGameObjectMap.at(body0);
-        auto gameObject1 = physicsEngine->m_btRigidBodyToGameObjectMap.at(body1);
+        auto gameObject1 = physicsEngine->m_btRigidBodyToGameObjectMap.at(body1);*/
+
+        auto body0 = manifold->getBody0();
+        auto body1 = manifold->getBody1();
+
+        /*body0->getCollisionShape()->getShapeType()
+        if (!body0->isStaticObject() && !body1->isStaticObject()) {
+            if (!body0->isActive()) {
+                body0->activate();
+            }
+
+            if (!body1->isActive()) {
+                body1->activate();
+            }
+        }*/
 
         auto numberOfContacts = manifold->getNumContacts();
         for (int j = 0; j < numberOfContacts; j++) {
-            auto contact = manifold->getContactPoint(j);
+            const auto& contact = manifold->getContactPoint(j);
 
-            {
+            /* {
                 Collision collision;
                 collision.gameObject = gameObject0;
                 collision.position = BulletPhysicsEngine::btVector3ToGlmVec3(contact.m_positionWorldOnB);
@@ -47,9 +61,9 @@ void tickCallback(btDynamicsWorld* world, btScalar) {
                 if (collisionsInfo != nullptr) {
                     collisionsInfo->collisions.push_back(collision);
                 }
-            }
+            }*/
         }
-    }*/
+    }
 }
 
 BulletPhysicsEngine::BulletPhysicsEngine()
