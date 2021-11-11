@@ -251,7 +251,30 @@ void BulletPhysicsEngine::createSphereRigidBody(RigidBodyComponent* rigidBodyCom
 
         m_dynamicsWorld->addRigidBody(body);
     } else {
-        throw domain_error("Static Sphere Rigid Bodies are not supported");
+        btVector3 bodyInertia;
+        shape->calculateLocalInertia(0, bodyInertia);
+        btRigidBody::btRigidBodyConstructionInfo bodyCI = btRigidBody::btRigidBodyConstructionInfo(
+            0,
+            motionState,
+            shape,
+            bodyInertia
+        );
+        bodyCI.m_restitution = 1.0f;
+        bodyCI.m_friction = 0.5f;
+
+        auto body = new btRigidBody(bodyCI);
+        /*body->setCollisionFlags(body->getCollisionFlags() | btCollisionObject::CF_KINEMATIC_OBJECT);
+        body->setActivationState(DISABLE_DEACTIVATION);*/
+
+        auto allocatedObjects = new SphereDynamicRigidBodyAllocatedObjects();
+        allocatedObjects->btMotionState = motionState;
+        allocatedObjects->btSphereShape = shape;
+        allocatedObjects->btRigidBody = body;
+
+        m_btObjectsToRigidBodyComponentMap.insert({ allocatedObjects, rigidBodyComponent });
+        m_rigidBodyComponentToBtObjectsMap.insert({ rigidBodyComponent, allocatedObjects });
+
+        m_dynamicsWorld->addRigidBody(body);
         /*btVector3 bodyInertia;
         shape->calculateLocalInertia(0, bodyInertia);
         btRigidBody::btRigidBodyConstructionInfo bodyCI = btRigidBody::btRigidBodyConstructionInfo(
