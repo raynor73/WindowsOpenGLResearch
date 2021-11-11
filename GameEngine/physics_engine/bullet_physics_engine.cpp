@@ -68,6 +68,23 @@ void BulletPhysicsEngine::reset()
     setGravity(glm::vec3(0));
 }
 
+bool GameEngine::BulletPhysicsEngine::isKinematic(RigidBodyComponent* rigidBodyComponent)
+{
+    auto allocatedObjectsContainer = getBtObjects(rigidBodyComponent);
+
+    if (holds_alternative<SphereDynamicRigidBodyAllocatedObjects*>(allocatedObjectsContainer)) {
+        auto allocatedObjects = get<SphereDynamicRigidBodyAllocatedObjects*>(allocatedObjectsContainer);
+        return allocatedObjects->btRigidBody->getMass() == 0;
+    } else if (holds_alternative<TriMeshStaticRigidBodyAllocatedObjects*>(allocatedObjectsContainer)) {
+        return true;
+    } else if (holds_alternative<CylinderRigidBodyAllocatedObjects*>(allocatedObjectsContainer)) {
+        auto allocatedObjects = get<CylinderRigidBodyAllocatedObjects*>(allocatedObjectsContainer);
+        return allocatedObjects->btRigidBody->getMass() == 0;
+    } else {
+        throw domain_error("Got unsupported Allocated Objects Variant while checking if Rigid Body is Kinematic");
+    }
+}
+
 void BulletPhysicsEngine::initBulletPhysics()
 {
     m_collisionConfiguration = new btDefaultCollisionConfiguration();
@@ -160,6 +177,33 @@ void BulletPhysicsEngine::setPosition(RigidBodyComponent* rigidBodyComponent, co
 
 void BulletPhysicsEngine::setRotation(RigidBodyComponent* rigidBodyComponent, const glm::quat& rotation)
 {
+    auto allocatedObjectsContainer = getBtObjects(rigidBodyComponent);
+
+    if (holds_alternative<SphereDynamicRigidBodyAllocatedObjects*>(allocatedObjectsContainer)) {
+        auto allocatedObjects = get<SphereDynamicRigidBodyAllocatedObjects*>(allocatedObjectsContainer);
+
+        auto rigidBody = allocatedObjects->btRigidBody;
+
+        auto transform = rigidBody->getCenterOfMassTransform();
+        transform.setRotation(glmQuatToBtQuaternion(rotation));
+        rigidBody->setCenterOfMassTransform(transform);
+    } else if (holds_alternative<TriMeshStaticRigidBodyAllocatedObjects*>(allocatedObjectsContainer)) {
+        auto allocatedObjects = get<TriMeshStaticRigidBodyAllocatedObjects*>(allocatedObjectsContainer);
+
+        auto collisionObject = allocatedObjects->btCollisionObject;
+
+        auto transform = collisionObject->getWorldTransform();
+        transform.setRotation(glmQuatToBtQuaternion(rotation));
+        collisionObject->setWorldTransform(transform);
+    } else if (holds_alternative<CylinderRigidBodyAllocatedObjects*>(allocatedObjectsContainer)) {
+        auto allocatedObjects = get<CylinderRigidBodyAllocatedObjects*>(allocatedObjectsContainer);
+
+        auto rigidBody = allocatedObjects->btRigidBody;
+
+        auto transform = rigidBody->getCenterOfMassTransform();
+        transform.setRotation(glmQuatToBtQuaternion(rotation));
+        rigidBody->setCenterOfMassTransform(transform);
+    }
 }
 
 void BulletPhysicsEngine::addForce(RigidBodyComponent* rigidBodyComponent, const glm::vec3& force)
@@ -275,8 +319,7 @@ void BulletPhysicsEngine::createCylinderRigidBody(RigidBodyComponent* rigidBodyC
         m_rigidBodyComponentToBtObjectsMap.insert({ rigidBodyComponent, allocatedObjects });
 
         m_dynamicsWorld->addRigidBody(body);
-    }
-    else {
+    } else {
         btVector3 bodyInertia;
         shape->calculateLocalInertia(0, bodyInertia);
         btRigidBody::btRigidBodyConstructionInfo bodyCI = btRigidBody::btRigidBodyConstructionInfo(
@@ -289,6 +332,7 @@ void BulletPhysicsEngine::createCylinderRigidBody(RigidBodyComponent* rigidBodyC
         bodyCI.m_friction = 0.5f;
 
         auto body = new btRigidBody(bodyCI);
+        body->setActivationState(DISABLE_DEACTIVATION);
 
         auto allocatedObjects = new CylinderRigidBodyAllocatedObjects();
         allocatedObjects->btMotionState = motionState;
@@ -347,8 +391,8 @@ void BulletPhysicsEngine::createSphereRigidBody(RigidBodyComponent* rigidBodyCom
         bodyCI.m_friction = 0.5f;
 
         auto body = new btRigidBody(bodyCI);
-        /*body->setCollisionFlags(body->getCollisionFlags() | btCollisionObject::CF_KINEMATIC_OBJECT);
-        body->setActivationState(DISABLE_DEACTIVATION);*/
+        //body->setCollisionFlags(body->getCollisionFlags() | btCollisionObject::CF_KINEMATIC_OBJECT);
+        body->setActivationState(DISABLE_DEACTIVATION);
 
         auto allocatedObjects = new SphereDynamicRigidBodyAllocatedObjects();
         allocatedObjects->btMotionState = motionState;

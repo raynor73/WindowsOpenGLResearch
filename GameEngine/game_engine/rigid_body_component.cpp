@@ -37,15 +37,19 @@ void RigidBodyComponent::update() {
         return ss.str();
     });
 
+    if (isKinematic()) {
+        physicsEngine->setPosition(this, transform->position());
+        physicsEngine->setRotation(this, transform->rotation());
+    } else {
+        glm::mat4x4 rotationMatrix;
+        glm::vec3 position;
+        physicsEngine->getRigidBodyRotationAndPosition(this, rotationMatrix, position);
 
-    glm::mat4x4 rotationMatrix;
-    glm::vec3 position;
-    physicsEngine->getRigidBodyRotationAndPosition(this, rotationMatrix, position);
+        glm::quat rotationQuaternion = glm::quat_cast(rotationMatrix);
 
-    glm::quat rotationQuaternion = glm::quat_cast(rotationMatrix);
-
-    transform->setPosition(position);
-    transform->setRotation(rotationQuaternion);
+        transform->setPosition(position);
+        transform->setRotation(rotationQuaternion);
+    }
 }
 
 void RigidBodyComponent::setEnabled(bool isEnabled)
@@ -68,6 +72,15 @@ void RigidBodyComponent::setEnabled(bool isEnabled)
     });
 
     physicsEngine->setRigidBodyEnabled(this, isEnabled && gameObject->parent().lock() != nullptr);
+}
+
+bool GameEngine::RigidBodyComponent::isKinematic()
+{
+    auto physicsEngine = m_physicsEngine.lock();
+    Utils::throwErrorIfNull(physicsEngine, [&]() {
+        return "No Physics Engine found while checking if Rigid Body is Kinematic";
+    });
+    return physicsEngine->isKinematic(this);
 }
 
 void RigidBodyComponent::onGameObjectAttachedToParent() {

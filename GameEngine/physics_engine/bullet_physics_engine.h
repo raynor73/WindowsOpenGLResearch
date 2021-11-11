@@ -113,6 +113,8 @@ public:
 
     virtual void reset() override;
 
+    virtual bool isKinematic(RigidBodyComponent* rigidBodyComponent) override;
+
     friend void tickCallback(btDynamicsWorld* world, btScalar timeStep);
 
 private:

@@ -169,8 +169,8 @@
         {
             "name": "probe",
             "parent": "sceneCamera",
-            "position": [ 0.0, 0.0, -2.0 ],
-            "rotation": [ 20.0, 0.0, 0.0 ],
+            "position": [ 0.5, 0.0, -2.0 ],
+            "rotation": [ 90.0, 0.0, 0.0 ],
             "scale": [ 0.1, 2.0, 0.1 ],
             "components": [
                 {
@@ -184,6 +184,11 @@
                 {
                     "type": "MeshRenderer",
                     "layerNames": [ "scene" ]
+                },
+                {
+                    "type": "CylinderRigidBody",
+                    "radius": 0.1,
+                    "length": 2
                 }
             ]
         },

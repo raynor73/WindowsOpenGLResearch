@@ -23,5 +23,7 @@ public:
     virtual void update() override;
 
     virtual void setEnabled(bool isEnabled) override;
+
+    bool isKinematic();
 };
 }

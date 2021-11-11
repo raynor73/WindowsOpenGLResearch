@@ -88,5 +88,7 @@ public:
     virtual void setRigidBodyFriction(RigidBodyComponent* rigidBodyComponent, float friction) = 0;
 
     virtual void reset() = 0;
+
+    virtual bool isKinematic(RigidBodyComponent* rigidBodyComponent) = 0;
 };
 }

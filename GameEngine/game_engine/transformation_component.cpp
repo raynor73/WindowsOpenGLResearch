@@ -74,7 +74,7 @@ void TransformationComponent::calculateFinalTransformation() {
                 throw domain_error(msgBuilder.str());
             }
 
-            m_finalRotation = m_rotation * parentTransform->rotation();
+            m_finalRotation = parentTransform->rotation() * m_rotation;
 
             m_finalScale = m_scale * parentTransform->scale();
 
