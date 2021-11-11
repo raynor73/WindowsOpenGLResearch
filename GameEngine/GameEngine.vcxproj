@@ -158,6 +158,7 @@
     <ClInclude Include="game_engine\collisions_info_component.h" />
     <ClInclude Include="game_engine\collision_info.h" />
     <ClInclude Include="game_engine\constants.h" />
+    <ClInclude Include="game_engine\cylinder_rigid_body_component.h" />
     <ClInclude Include="game_engine\directional_light_component.h" />
     <ClInclude Include="game_engine\fs_abstraction.h" />
     <ClInclude Include="game_engine\game_object.h" />
@@ -171,6 +172,7 @@
     <ClInclude Include="game_engine\textures_repository.h" />
     <ClInclude Include="game_engine\tri_mesh_rigid_body_component.h" />
     <ClInclude Include="physics_engine\bullet_physics_engine.h" />
+    <ClInclude Include="physics_engine\cylinder_rigid_body_allocated_objects.h" />
     <ClInclude Include="physics_engine\dynamic_rigid_body_allocated_objects.h" />
     <ClInclude Include="physics_engine\sphere_dynamic_rigid_body_allocated_objects.h" />
     <ClInclude Include="physics_engine\static_rigid_body_allocated_objects.h" />
@@ -239,6 +241,7 @@
     <ClCompile Include="game_engine\camera_component.cpp" />
     <ClCompile Include="game_engine\camera_components_manager.cpp" />
     <ClCompile Include="game_engine\collisions_info_component.cpp" />
+    <ClCompile Include="game_engine\cylinder_rigid_body_component.cpp" />
     <ClCompile Include="game_engine\directional_light_component.cpp" />
     <ClCompile Include="game_engine\game_object.cpp" />
     <ClCompile Include="game_engine\light_components_manager.cpp" />

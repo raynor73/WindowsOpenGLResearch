@@ -16,6 +16,7 @@
 #include <game_engine/directional_light_component.h>
 #include <game_engine/sphere_rigid_body_component.h>
 #include <game_engine/tri_mesh_rigid_body_component.h>
+#include <game_engine/cylinder_rigid_body_component.h>
 
 using namespace GameEngine;
 using namespace std;
@@ -783,6 +784,17 @@ shared_ptr<GameObjectComponent> SceneHierarchyLoader::parseComponent(
             radius
         );
         return sphereRigidBodyComponent;
+    } else if (type == "CylinderRigidBody") {
+        auto mass = componentJson.contains("mass") ? parseFloatNumber(componentJson["mass"]) : optional<float>();
+        auto radius = parseFloatNumber(componentJson["radius"]);
+        auto length = parseFloatNumber(componentJson["length"]);
+        auto cylinderRigidBodyComponent = make_shared<CylinderRigidBodyComponent>(
+            m_serviceLocator->physicsEngine(),
+            mass,
+            radius,
+            length
+        );
+        return cylinderRigidBodyComponent;
     } else if (type == "TriMeshRigidBody") {
         auto mass = componentJson.contains("mass") ? parseFloatNumber(componentJson["mass"]) : optional<float>();
         auto meshName = componentJson["meshName"].get<string>();

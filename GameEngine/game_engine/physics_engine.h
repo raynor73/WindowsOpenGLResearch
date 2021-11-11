@@ -31,16 +31,14 @@ public:
 
     virtual void setRigidBodyEnabled(RigidBodyComponent* rigidBodyComponent, bool isEnabled) = 0;
 
-    /*virtual void createCylinderRigidBody(
-        const RigidBodyComponent* rigidBodyComponent,
+    virtual void createCylinderRigidBody(
+        RigidBodyComponent* rigidBodyComponent,
         std::optional<float> massValue,
         float radius,
         float length,
         const glm::vec3& position,
-        const glm::quat& rotation,
-        const glm::vec3& maxMotorForce,
-        const glm::vec3& maxMotorTorque
-    ) = 0;*/
+        const glm::quat& rotation
+    ) = 0;
 
     virtual void createSphereRigidBody(
         RigidBodyComponent* rigidBodyComponent,

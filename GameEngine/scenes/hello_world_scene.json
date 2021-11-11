@@ -6,12 +6,20 @@
         "name": "sphere",
         "path": "meshes/sphere.obj"
     },
-    { "name": "plane", "path": "meshes/planeUV.obj" }
+    {
+        "name": "plane",
+        "path": "meshes/planeUV.obj"
+    },
+    {
+        "name": "cylinder",
+        "path": "meshes/cylinder.obj"
+    }
   ],
   "materials": [
     { "name": "white", "diffuseColor": [1, 1, 1, 1] },
     { "name": "green", "diffuseColor": [0, 0.5, 0, 1] },
-    { "name": "red", "diffuseColor": [0.5, 0, 0, 1] }
+    { "name": "red", "diffuseColor": [0.5, 0, 0, 1] },
+    { "name": "blue", "diffuseColor": [0.0, 0, 0.5, 1] }
   ],
   "textAppearances": [
   ],
@@ -154,6 +162,27 @@
                 {
                     "type": "AmbientLight",
                     "color": [ 0.1, 0.1, 0.1 ],
+                    "layerNames": [ "scene" ]
+                }
+            ]
+        },
+        {
+            "name": "probe",
+            "parent": "sceneCamera",
+            "position": [ 0.0, 0.0, -2.0 ],
+            "rotation": [ 20.0, 0.0, 0.0 ],
+            "scale": [ 0.1, 2.0, 0.1 ],
+            "components": [
+                {
+                    "type": "Mesh",
+                    "meshName": "cylinder"
+                },
+                {
+                    "type": "Material",
+                    "materialName": "blue"
+                },
+                {
+                    "type": "MeshRenderer",
                     "layerNames": [ "scene" ]
                 }
             ]

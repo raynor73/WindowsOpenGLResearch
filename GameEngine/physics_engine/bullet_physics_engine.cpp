@@ -1,6 +1,7 @@
 #include "bullet_physics_engine.h"
 #include <game_engine/utils.h>
 #include <vector>
+#include <physics_engine/cylinder_rigid_body_allocated_objects.h>
 
 using namespace GameEngine;
 using namespace std;
@@ -146,6 +147,14 @@ void BulletPhysicsEngine::setPosition(RigidBodyComponent* rigidBodyComponent, co
         auto transform = collisionObject->getWorldTransform();
         transform.setOrigin(glmVec3ToBtVector3(position));
         collisionObject->setWorldTransform(transform);
+    } else if (holds_alternative<CylinderRigidBodyAllocatedObjects*>(allocatedObjectsContainer)) {
+        auto allocatedObjects = get<CylinderRigidBodyAllocatedObjects*>(allocatedObjectsContainer);
+
+        auto rigidBody = allocatedObjects->btRigidBody;
+
+        auto transform = rigidBody->getCenterOfMassTransform();
+        transform.setOrigin(glmVec3ToBtVector3(position));
+        rigidBody->setCenterOfMassTransform(transform);
     }
 }
 
@@ -153,7 +162,7 @@ void BulletPhysicsEngine::setRotation(RigidBodyComponent* rigidBodyComponent, co
 {
 }
 
-void GameEngine::BulletPhysicsEngine::addForce(RigidBodyComponent* rigidBodyComponent, const glm::vec3& force)
+void BulletPhysicsEngine::addForce(RigidBodyComponent* rigidBodyComponent, const glm::vec3& force)
 {
     auto allocatedObjectsContainer = getBtObjects(rigidBodyComponent);
 
@@ -165,6 +174,12 @@ void GameEngine::BulletPhysicsEngine::addForce(RigidBodyComponent* rigidBodyComp
         rigidBody->applyCentralForce(glmVec3ToBtVector3(force));
     } else if (holds_alternative<TriMeshStaticRigidBodyAllocatedObjects*>(allocatedObjectsContainer)) {
         throw domain_error("Can't add Force to Static TriMesh Rigid Body");
+    } else if (holds_alternative<CylinderRigidBodyAllocatedObjects*>(allocatedObjectsContainer)) {
+        auto allocatedObjects = get<CylinderRigidBodyAllocatedObjects*>(allocatedObjectsContainer);
+
+        auto rigidBody = allocatedObjects->btRigidBody;
+        rigidBody->activate();
+        rigidBody->applyCentralForce(glmVec3ToBtVector3(force));
     }
 }
 
@@ -211,12 +226,81 @@ void BulletPhysicsEngine::setRigidBodyEnabled(RigidBodyComponent* rigidBodyCompo
         if (!isEnabled) {
             throw domain_error("Can't disable Static TriMesh Rigid Body");
         }
+    } else if (holds_alternative<CylinderRigidBodyAllocatedObjects*>(allocatedObjectsContainer)) {
+        auto allocatedObjects = get<CylinderRigidBodyAllocatedObjects*>(allocatedObjectsContainer);
+
+        auto rigidBody = allocatedObjects->btRigidBody;
+        if (isEnabled) {
+            if (!rigidBody->isInWorld()) {
+                m_dynamicsWorld->addRigidBody(rigidBody);
+            }
+        }
+        else {
+            if (rigidBody->isInWorld()) {
+                m_dynamicsWorld->removeRigidBody(rigidBody);
+            }
+        }
     }
 }
 
-/*void BulletPhysicsEngine::createCylinderRigidBody(shared_ptr<GameObject> gameObject, string name, optional<float> massValue, float radius, float length, const glm::vec3& position, const glm::quat& rotation, const glm::vec3& maxMotorForce, const glm::vec3& maxMotorTorque)
+void BulletPhysicsEngine::createCylinderRigidBody(RigidBodyComponent* rigidBodyComponent, std::optional<float> massValue, float radius, float length, const glm::vec3& position, const glm::quat& rotation)
 {
-}*/
+    auto shape = new btCylinderShape(glmVec3ToBtVector3(glm::vec3(radius, length / 2, radius)));
+
+    auto btQuaternionRotation = glmQuatToBtQuaternion(rotation);
+    auto btVector3Position = glmVec3ToBtVector3(position);
+
+    auto motionState = new btDefaultMotionState(btTransform(btQuaternionRotation, btVector3Position));
+
+    if (massValue) {
+        btVector3 bodyInertia;
+        shape->calculateLocalInertia(massValue.value(), bodyInertia);
+        btRigidBody::btRigidBodyConstructionInfo bodyCI = btRigidBody::btRigidBodyConstructionInfo(
+            massValue.value(),
+            motionState,
+            shape,
+            bodyInertia
+        );
+        bodyCI.m_restitution = 1.0f;
+        bodyCI.m_friction = 0.5f;
+
+        auto body = new btRigidBody(bodyCI);
+
+        auto allocatedObjects = new CylinderRigidBodyAllocatedObjects();
+        allocatedObjects->btMotionState = motionState;
+        allocatedObjects->btCylinderShape = shape;
+        allocatedObjects->btRigidBody = body;
+
+        m_btObjectsToRigidBodyComponentMap.insert({ allocatedObjects, rigidBodyComponent });
+        m_rigidBodyComponentToBtObjectsMap.insert({ rigidBodyComponent, allocatedObjects });
+
+        m_dynamicsWorld->addRigidBody(body);
+    }
+    else {
+        btVector3 bodyInertia;
+        shape->calculateLocalInertia(0, bodyInertia);
+        btRigidBody::btRigidBodyConstructionInfo bodyCI = btRigidBody::btRigidBodyConstructionInfo(
+            0,
+            motionState,
+            shape,
+            bodyInertia
+        );
+        bodyCI.m_restitution = 1.0f;
+        bodyCI.m_friction = 0.5f;
+
+        auto body = new btRigidBody(bodyCI);
+
+        auto allocatedObjects = new CylinderRigidBodyAllocatedObjects();
+        allocatedObjects->btMotionState = motionState;
+        allocatedObjects->btCylinderShape = shape;
+        allocatedObjects->btRigidBody = body;
+
+        m_btObjectsToRigidBodyComponentMap.insert({ allocatedObjects, rigidBodyComponent });
+        m_rigidBodyComponentToBtObjectsMap.insert({ rigidBodyComponent, allocatedObjects });
+
+        m_dynamicsWorld->addRigidBody(body);
+    }
+}
 
 void BulletPhysicsEngine::createSphereRigidBody(RigidBodyComponent* rigidBodyComponent, optional<float> massValue, float radius, const glm::vec3& position, const glm::quat& rotation)
 {
@@ -295,8 +379,9 @@ void BulletPhysicsEngine::createSphereRigidBody(RigidBodyComponent* rigidBodyCom
     }
 }
 
-void GameEngine::BulletPhysicsEngine::createBoxRigidBody(RigidBodyComponent* rigidBodyComponent, std::optional<float> massValue, const glm::vec3& size, const glm::vec3& position, const glm::quat& rotation)
+void BulletPhysicsEngine::createBoxRigidBody(RigidBodyComponent* rigidBodyComponent, std::optional<float> massValue, const glm::vec3& size, const glm::vec3& position, const glm::quat& rotation)
 {
+    throw domain_error("Box Rigid Bodies are not supported yet");
 }
 
 /*void BulletPhysicsEngine::createBoxRigidBody(shared_ptr<GameObject> gameObject, string name, optional<float> massValue, const glm::vec3& size, const glm::vec3& position, const glm::quat& rotation, const glm::vec3& maxMotorForce, const glm::vec3& maxMotorTorque)
@@ -308,7 +393,7 @@ void BulletPhysicsEngine::createCharacterCapsuleRigidBody(shared_ptr<GameObject>
 }
 */
 
-void GameEngine::BulletPhysicsEngine::createTriMeshRigidBody(RigidBodyComponent* rigidBodyComponent, const Mesh& mesh, std::optional<float> massValue, const glm::vec3& position, const glm::quat& rotation)
+void BulletPhysicsEngine::createTriMeshRigidBody(RigidBodyComponent* rigidBodyComponent, const Mesh& mesh, std::optional<float> massValue, const glm::vec3& position, const glm::quat& rotation)
 {
     auto btMesh = new btTriangleMesh(true, false);
     auto vertices = mesh.vertices();
@@ -393,6 +478,19 @@ void BulletPhysicsEngine::removeRigidBody(RigidBodyComponent* rigidBodyComponent
         delete allocatedObjects->btCollisionShape;
         delete allocatedObjects->btMesh;
         delete allocatedObjects;
+    } else if (holds_alternative<CylinderRigidBodyAllocatedObjects*>(allocatedObjectsContainer)) {
+        auto allocatedObjects = get<CylinderRigidBodyAllocatedObjects*>(allocatedObjectsContainer);
+        if (allocatedObjects->btRigidBody->isInWorld()) {
+            m_dynamicsWorld->removeRigidBody(allocatedObjects->btRigidBody);
+        }
+
+        m_rigidBodyComponentToBtObjectsMap.erase(rigidBodyComponent);
+        m_btObjectsToRigidBodyComponentMap.erase(allocatedObjectsContainer);
+
+        delete allocatedObjects->btMotionState;
+        delete allocatedObjects->btCylinderShape;
+        delete allocatedObjects->btRigidBody;
+        delete allocatedObjects;
     }
 }
 
@@ -419,10 +517,19 @@ void BulletPhysicsEngine::getRigidBodyRotationAndPosition(RigidBodyComponent* ri
 
         destPosition = btVector3ToGlmVec3(transform.getOrigin());
         destRotationMatrix = glm::mat4_cast(btQuaternionToGlmQuat(transform.getRotation()));
+    } else if (holds_alternative<CylinderRigidBodyAllocatedObjects*>(allocatedObjectsContainer)) {
+        auto allocatedObjects = get<CylinderRigidBodyAllocatedObjects*>(allocatedObjectsContainer);
+
+        auto transform = allocatedObjects->btRigidBody->getWorldTransform();
+
+        destPosition = btVector3ToGlmVec3(transform.getOrigin());
+        destRotationMatrix = glm::mat4_cast(btQuaternionToGlmQuat(transform.getRotation()));
+    } else {
+        throw domain_error("Got unsupported Allocated Objects Variant while getting Rigid Body rotation and position");
     }
 }
 
-glm::vec3 GameEngine::BulletPhysicsEngine::getRigidBodyVelocity(RigidBodyComponent* rigidBodyComponent)
+glm::vec3 BulletPhysicsEngine::getRigidBodyVelocity(RigidBodyComponent* rigidBodyComponent)
 {
     auto allocatedObjectsContainer = getBtObjects(rigidBodyComponent);
 
@@ -432,12 +539,16 @@ glm::vec3 GameEngine::BulletPhysicsEngine::getRigidBodyVelocity(RigidBodyCompone
         return btVector3ToGlmVec3(allocatedObjects->btRigidBody->getLinearVelocity());
     } else if (holds_alternative<TriMeshStaticRigidBodyAllocatedObjects*>(allocatedObjectsContainer)) {
         throw domain_error("Can't to get velocity of Static TriMesh Rigid Body");
+    } else if (holds_alternative<CylinderRigidBodyAllocatedObjects*>(allocatedObjectsContainer)) {
+        auto allocatedObjects = get<CylinderRigidBodyAllocatedObjects*>(allocatedObjectsContainer);
+
+        return btVector3ToGlmVec3(allocatedObjects->btRigidBody->getLinearVelocity());
     } else {
-        throw domain_error("Unsupported Allocated Objects Variant");
+        throw domain_error("Got unsupported Allocated Objects Variant while getting Rigid Body velocity");
     }
 }
 
-void GameEngine::BulletPhysicsEngine::setRigidBodyFriction(RigidBodyComponent* rigidBodyComponent, float friction)
+void BulletPhysicsEngine::setRigidBodyFriction(RigidBodyComponent* rigidBodyComponent, float friction)
 {
     auto allocatedObjectsContainer = getBtObjects(rigidBodyComponent);
 
@@ -445,10 +556,13 @@ void GameEngine::BulletPhysicsEngine::setRigidBodyFriction(RigidBodyComponent* r
         auto allocatedObjects = get<SphereDynamicRigidBodyAllocatedObjects*>(allocatedObjectsContainer);
 
         allocatedObjects->btRigidBody->setFriction(friction);
-    }
-    else if (holds_alternative<TriMeshStaticRigidBodyAllocatedObjects*>(allocatedObjectsContainer)) {
+    } else if (holds_alternative<TriMeshStaticRigidBodyAllocatedObjects*>(allocatedObjectsContainer)) {
         auto allocatedObjects = get<TriMeshStaticRigidBodyAllocatedObjects*>(allocatedObjectsContainer);
 
         allocatedObjects->btCollisionObject->setFriction(friction);
+    } else if (holds_alternative<CylinderRigidBodyAllocatedObjects*>(allocatedObjectsContainer)) {
+        auto allocatedObjects = get<CylinderRigidBodyAllocatedObjects*>(allocatedObjectsContainer);
+
+        allocatedObjects->btRigidBody->setFriction(friction);
     }
 }

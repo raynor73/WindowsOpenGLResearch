@@ -10,11 +10,16 @@
 #include <game_engine/rigid_body_component.h>
 #include <physics_engine/sphere_dynamic_rigid_body_allocated_objects.h>
 #include <physics_engine/tri_mesh_static_rigid_body_allocated_objects.h>
+#include <physics_engine/cylinder_rigid_body_allocated_objects.h>
 #include <variant>
 
 namespace GameEngine
 {
-typedef std::variant<SphereDynamicRigidBodyAllocatedObjects*, TriMeshStaticRigidBodyAllocatedObjects*> btAllocatedObjectsContainer;
+typedef std::variant<
+    SphereDynamicRigidBodyAllocatedObjects*,
+    TriMeshStaticRigidBodyAllocatedObjects*,
+    CylinderRigidBodyAllocatedObjects*
+> btAllocatedObjectsContainer;
 
 class BulletPhysicsEngine : public PhysicsEngine, public WithoutGeneratedMethods
 {
@@ -48,17 +53,14 @@ public:
 
     virtual void setRigidBodyEnabled(RigidBodyComponent* rigidBodyComponent, bool isEnabled) override;
 
-    /*virtual void createCylinderRigidBody(
-        std::shared_ptr<GameObject> gameObject,
-        std::string name,
+    virtual void createCylinderRigidBody(
+        RigidBodyComponent* rigidBodyComponent,
         std::optional<float> massValue,
         float radius,
         float length,
         const glm::vec3& position,
-        const glm::quat& rotation,
-        const glm::vec3& maxMotorForce,
-        const glm::vec3& maxMotorTorque
-    ) override;*/
+        const glm::quat& rotation
+    ) override;
 
     virtual void createSphereRigidBody(
         RigidBodyComponent* rigidBodyComponent,
