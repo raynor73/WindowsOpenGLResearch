@@ -175,6 +175,15 @@ void ServiceLocator::provide(shared_ptr<LightComponentsManager> lightComponentsM
     m_lightComponentsManager = lightComponentsManager;
 }
 
+void ServiceLocator::provide(shared_ptr<CollisionsInfoComponentsManager> collisionsInfoComponentsManager)
+{
+    if (m_collisionsInfoComponentsManager != nullptr) {
+        throw domain_error("Collisions Info Components Manager already provided");
+    }
+
+    m_collisionsInfoComponentsManager = collisionsInfoComponentsManager;
+}
+
 SceneManager* ServiceLocator::sceneManager()
 {
     if (m_sceneManager.use_count() == 0) {
@@ -344,4 +353,13 @@ LightComponentsManager* ServiceLocator::lightComponentsManager()
     }
 
     return m_lightComponentsManager.get();
+}
+
+CollisionsInfoComponentsManager* ServiceLocator::collisionsInfoComponentsManager()
+{
+    if (m_collisionsInfoComponentsManager == nullptr) {
+        throw domain_error("Collisions Info Components Manager is not provided");
+    }
+
+    return m_collisionsInfoComponentsManager.get();
 }

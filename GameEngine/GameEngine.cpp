@@ -179,7 +179,10 @@ static void initGame() {
     serviceLocator->provide(g_renderingEngine);
 
     g_physicsEngine = make_shared<BulletPhysicsEngine>();
-    serviceLocator->provide(g_physicsEngine);
+    shared_ptr<PhysicsEngine> physicsEngine = g_physicsEngine;
+    shared_ptr<CollisionsInfoComponentsManager> collisionsInfoComponentsManager = g_physicsEngine;
+    serviceLocator->provide(physicsEngine);
+    serviceLocator->provide(collisionsInfoComponentsManager);
 
 
 

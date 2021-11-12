@@ -156,6 +156,7 @@
     <ClInclude Include="game_engine\camera_component.h" />
     <ClInclude Include="game_engine\camera_components_manager.h" />
     <ClInclude Include="game_engine\collisions_info_component.h" />
+    <ClInclude Include="game_engine\collisions_info_components_manager.h" />
     <ClInclude Include="game_engine\collision_info.h" />
     <ClInclude Include="game_engine\constants.h" />
     <ClInclude Include="game_engine\cylinder_rigid_body_component.h" />
@@ -241,6 +242,7 @@
     <ClCompile Include="game_engine\camera_component.cpp" />
     <ClCompile Include="game_engine\camera_components_manager.cpp" />
     <ClCompile Include="game_engine\collisions_info_component.cpp" />
+    <ClCompile Include="game_engine\collisions_info_components_manager.cpp" />
     <ClCompile Include="game_engine\cylinder_rigid_body_component.cpp" />
     <ClCompile Include="game_engine\directional_light_component.cpp" />
     <ClCompile Include="game_engine\game_object.cpp" />

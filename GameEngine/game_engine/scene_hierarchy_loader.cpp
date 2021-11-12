@@ -827,11 +827,10 @@ shared_ptr<GameObjectComponent> SceneHierarchyLoader::parseComponent(
         triMeshRigidBody->setActivator(isActivator);
 
         return triMeshRigidBody;
-    }/*
-    else if (type == "CollisionsInfoContainer") {
-        return make_shared<CollisionsInfoComponent>();
+    } else if (type == "CollisionsInfoContainer") {
+        return m_serviceLocator->collisionsInfoComponentsManager()->createCollisionsInfoComponent();
     }
-    else if (type == "CharacterCapsuleRigidBody") {
+    /*else if (type == "CharacterCapsuleRigidBody") {
         auto mass = componentJson.contains("mass") ? parseFloatNumber(componentJson["mass"]) : optional<float>();
         auto radius = parseFloatNumber(componentJson["radius"]);
         auto height = parseFloatNumber(componentJson["height"]);

@@ -189,7 +189,10 @@
                     "type": "CylinderRigidBody",
                     "radius": 0.1,
                     "length": 2,
-                    "isActivator":  true
+                    "isActivator": true
+                },
+                {
+                    "type": "CollisionsInfoContainer"
                 }
             ]
         },

@@ -20,6 +20,7 @@
 #include <game_engine/rendering_engine.h>
 #include <game_engine/camera_components_manager.h>
 #include <game_engine/light_components_manager.h>
+#include <game_engine/collisions_info_components_manager.h>
 
 namespace GameEngine
 {
@@ -45,6 +46,7 @@ public:
     void provide(std::shared_ptr<RenderingEngine> renderingEngine);
     void provide(std::shared_ptr<CameraComponentsManager> cameraComponentsManager);
     void provide(std::shared_ptr<LightComponentsManager> lightComponentsManager);
+    void provide(std::shared_ptr<CollisionsInfoComponentsManager> collisionsInfoComponentsManager);
 
     SceneManager* sceneManager();
     TimeProvider* timeProvider();
@@ -65,6 +67,7 @@ public:
     RenderingEngine* renderingEngine();
     CameraComponentsManager* cameraComponentsManager();
     LightComponentsManager* lightComponentsManager();
+    CollisionsInfoComponentsManager* collisionsInfoComponentsManager();
 
 private:
     std::shared_ptr<SceneManager> m_sceneManager;
@@ -86,5 +89,6 @@ private:
     std::shared_ptr<RenderingEngine> m_renderingEngine;
     std::shared_ptr<CameraComponentsManager> m_cameraComponentsManager;
     std::shared_ptr<LightComponentsManager> m_lightComponentsManager;
+    std::shared_ptr<CollisionsInfoComponentsManager> m_collisionsInfoComponentsManager;
 };
 }

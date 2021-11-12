@@ -13,12 +13,6 @@ void GameEngine::tickCallback(btDynamicsWorld* world, btScalar) {
     for (int i = 0; i < numberOfManifolds; i++) {
         auto manifold = dispatcher->getManifoldByIndexInternal(i);
 
-        /*auto body0 = static_cast<const btRigidBody*>(manifold->getBody0());
-        auto body1 = static_cast<const btRigidBody*>(manifold->getBody1());
-
-        auto gameObject0 = physicsEngine->m_btRigidBodyToGameObjectMap.at(body0);
-        auto gameObject1 = physicsEngine->m_btRigidBodyToGameObjectMap.at(body1);*/
-
         auto body0 = manifold->getBody0();
         auto body1 = manifold->getBody1();
 
@@ -37,31 +31,35 @@ void GameEngine::tickCallback(btDynamicsWorld* world, btScalar) {
         for (int j = 0; j < numberOfContacts; j++) {
             const auto& contact = manifold->getContactPoint(j);
 
-            /* {
-                Collision collision;
-                collision.gameObject = gameObject0;
+            {
+                CollisionInfo collision;
+                collision.gameObject = rigidBodyComponent0->gameObject();
                 collision.position = BulletPhysicsEngine::btVector3ToGlmVec3(contact.m_positionWorldOnB);
                 collision.normal = BulletPhysicsEngine::btVector3ToGlmVec3(contact.m_normalWorldOnB);
                 collision.depth = contact.m_distance1;
 
-                auto collisionsInfo = gameObject1->findComponent<CollisionsInfoComponent>();
-                if (collisionsInfo != nullptr) {
-                    collisionsInfo->collisions.push_back(collision);
+                auto gameObject1 = rigidBodyComponent1->gameObject().lock();
+                Utils::throwErrorIfNull(gameObject1, "Game Object 1 not found while gathering collision info");
+                auto collisionsInfoComponent = gameObject1->findComponent<CollisionsInfoComponent>();
+                if (collisionsInfoComponent != nullptr) {
+                    collisionsInfoComponent->addCollisionInfo(collision);
                 }
             }
 
             {
-                Collision collision;
-                collision.gameObject = gameObject1;
+                CollisionInfo collision;
+                collision.gameObject = rigidBodyComponent1->gameObject();
                 collision.position = BulletPhysicsEngine::btVector3ToGlmVec3(contact.m_positionWorldOnB);
                 collision.normal = BulletPhysicsEngine::btVector3ToGlmVec3(contact.m_normalWorldOnB);
                 collision.depth = contact.m_distance1;
 
-                auto collisionsInfo = gameObject0->findComponent<CollisionsInfoComponent>();
-                if (collisionsInfo != nullptr) {
-                    collisionsInfo->collisions.push_back(collision);
+                auto gameObject0 = rigidBodyComponent0->gameObject().lock();
+                Utils::throwErrorIfNull(gameObject0, "Game Object 0 not found while gathering collision info");
+                auto collisionsInfoComponent = gameObject0->findComponent<CollisionsInfoComponent>();
+                if (collisionsInfoComponent != nullptr) {
+                    collisionsInfoComponent->addCollisionInfo(collision);
                 }
-            }*/
+            }
         }
     }
 }
@@ -69,6 +67,8 @@ void GameEngine::tickCallback(btDynamicsWorld* world, btScalar) {
 BulletPhysicsEngine::BulletPhysicsEngine()
 {
     initBulletPhysics();
+
+    m_collisionsInfoComponentsManager = make_shared<CollisionsInfoComponentsManager>();
 }
 
 BulletPhysicsEngine::~BulletPhysicsEngine()
@@ -78,6 +78,7 @@ BulletPhysicsEngine::~BulletPhysicsEngine()
 
 void BulletPhysicsEngine::reset()
 {
+    m_collisionsInfoComponentsManager->reset();
     removeAllRigidBodies();
     setGravity(glm::vec3(0));
 }
@@ -97,6 +98,21 @@ bool GameEngine::BulletPhysicsEngine::isKinematic(RigidBodyComponent* rigidBodyC
     } else {
         throw domain_error("Got unsupported Allocated Objects Variant while checking if Rigid Body is Kinematic");
     }
+}
+
+std::shared_ptr<CollisionsInfoComponent> BulletPhysicsEngine::createCollisionsInfoComponent()
+{
+    return m_collisionsInfoComponentsManager->createCollisionsInfoComponent();
+}
+
+void BulletPhysicsEngine::releaseCollisionsInfoComponent(std::shared_ptr<CollisionsInfoComponent> collisionsInfoComponent)
+{
+    m_collisionsInfoComponentsManager->releaseCollisionsInfoComponent(collisionsInfoComponent);
+}
+
+const std::unordered_set<std::shared_ptr<CollisionsInfoComponent>>& GameEngine::BulletPhysicsEngine::collisionsInfoComponents()
+{
+    return m_collisionsInfoComponentsManager->collisionsInfoComponents();
 }
 
 void BulletPhysicsEngine::initBulletPhysics()
@@ -554,6 +570,9 @@ void BulletPhysicsEngine::removeRigidBody(RigidBodyComponent* rigidBodyComponent
 
 void BulletPhysicsEngine::update(float dt)
 {
+    for (auto& collisionsIngoComponent : m_collisionsInfoComponentsManager->collisionsInfoComponents()) {
+        collisionsIngoComponent->removeAllCollisionsInfo();
+    }
     m_dynamicsWorld->stepSimulation(dt);
 }
 

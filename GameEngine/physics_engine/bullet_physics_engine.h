@@ -12,6 +12,8 @@
 #include <physics_engine/tri_mesh_static_rigid_body_allocated_objects.h>
 #include <physics_engine/cylinder_rigid_body_allocated_objects.h>
 #include <variant>
+#include <game_engine/collisions_info_components_manager.h>
+#include <unordered_set>
 
 namespace GameEngine
 {
@@ -21,7 +23,7 @@ typedef std::variant<
     CylinderRigidBodyAllocatedObjects*
 > btAllocatedObjectsContainer;
 
-class BulletPhysicsEngine : public PhysicsEngine, public WithoutGeneratedMethods
+class BulletPhysicsEngine : public PhysicsEngine, public CollisionsInfoComponentsManager
 {
     btDefaultCollisionConfiguration* m_collisionConfiguration;
     btCollisionDispatcher* m_dispatcher;
@@ -31,6 +33,8 @@ class BulletPhysicsEngine : public PhysicsEngine, public WithoutGeneratedMethods
 
     std::unordered_map<btCollisionObject*, RigidBodyComponent*> m_btObjectsToRigidBodyComponentMap;
     std::unordered_map<RigidBodyComponent*, btAllocatedObjectsContainer> m_rigidBodyComponentToBtObjectsMap;
+
+    std::shared_ptr<CollisionsInfoComponentsManager> m_collisionsInfoComponentsManager;
 
 public:
     BulletPhysicsEngine();
@@ -116,6 +120,12 @@ public:
     virtual bool isKinematic(RigidBodyComponent* rigidBodyComponent) override;
 
     friend void tickCallback(btDynamicsWorld* world, btScalar timeStep);
+
+    virtual std::shared_ptr<CollisionsInfoComponent> createCollisionsInfoComponent() override;
+
+    virtual void releaseCollisionsInfoComponent(std::shared_ptr<CollisionsInfoComponent> collisionsInfoComponent) override;
+
+    virtual const std::unordered_set<std::shared_ptr<CollisionsInfoComponent>>& collisionsInfoComponents() override;
 
 private:
     void initBulletPhysics();
