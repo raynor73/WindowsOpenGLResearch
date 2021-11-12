@@ -6,7 +6,7 @@
 using namespace GameEngine;
 using namespace std;
 
-void tickCallback(btDynamicsWorld* world, btScalar) {
+void GameEngine::tickCallback(btDynamicsWorld* world, btScalar) {
     auto physicsEngine = reinterpret_cast<BulletPhysicsEngine*>(world->getWorldUserInfo());
     auto dispatcher = world->getDispatcher();
     auto numberOfManifolds = dispatcher->getNumManifolds();
@@ -22,16 +22,16 @@ void tickCallback(btDynamicsWorld* world, btScalar) {
         auto body0 = manifold->getBody0();
         auto body1 = manifold->getBody1();
 
-        /*body0->getCollisionShape()->getShapeType()
-        if (!body0->isStaticObject() && !body1->isStaticObject()) {
-            if (!body0->isActive()) {
-                body0->activate();
-            }
+        auto rigidBodyComponent0 = physicsEngine->m_btObjectsToRigidBodyComponentMap.at(const_cast<btCollisionObject*>(body0));
+        auto rigidBodyComponent1 = physicsEngine->m_btObjectsToRigidBodyComponentMap.at(const_cast<btCollisionObject*>(body1));
 
-            if (!body1->isActive()) {
-                body1->activate();
-            }
-        }*/
+        if (rigidBodyComponent0->isActivator() && !body1->isActive()) {
+            body1->activate();
+        }
+
+        if (rigidBodyComponent1->isActivator() && !body0->isActive()) {
+            body0->activate();
+        }
 
         auto numberOfContacts = manifold->getNumContacts();
         for (int j = 0; j < numberOfContacts; j++) {
@@ -329,7 +329,7 @@ void BulletPhysicsEngine::createCylinderRigidBody(RigidBodyComponent* rigidBodyC
         allocatedObjects->btCylinderShape = shape;
         allocatedObjects->btRigidBody = body;
 
-        m_btObjectsToRigidBodyComponentMap.insert({ allocatedObjects, rigidBodyComponent });
+        m_btObjectsToRigidBodyComponentMap.insert({ body, rigidBodyComponent });
         m_rigidBodyComponentToBtObjectsMap.insert({ rigidBodyComponent, allocatedObjects });
 
         m_dynamicsWorld->addRigidBody(body);
@@ -353,7 +353,7 @@ void BulletPhysicsEngine::createCylinderRigidBody(RigidBodyComponent* rigidBodyC
         allocatedObjects->btCylinderShape = shape;
         allocatedObjects->btRigidBody = body;
 
-        m_btObjectsToRigidBodyComponentMap.insert({ allocatedObjects, rigidBodyComponent });
+        m_btObjectsToRigidBodyComponentMap.insert({ body, rigidBodyComponent });
         m_rigidBodyComponentToBtObjectsMap.insert({ rigidBodyComponent, allocatedObjects });
 
         m_dynamicsWorld->addRigidBody(body);
@@ -388,7 +388,7 @@ void BulletPhysicsEngine::createSphereRigidBody(RigidBodyComponent* rigidBodyCom
         allocatedObjects->btSphereShape = shape;
         allocatedObjects->btRigidBody = body;
 
-        m_btObjectsToRigidBodyComponentMap.insert({ allocatedObjects, rigidBodyComponent });
+        m_btObjectsToRigidBodyComponentMap.insert({ body, rigidBodyComponent });
         m_rigidBodyComponentToBtObjectsMap.insert({ rigidBodyComponent, allocatedObjects });
 
         m_dynamicsWorld->addRigidBody(body);
@@ -413,7 +413,7 @@ void BulletPhysicsEngine::createSphereRigidBody(RigidBodyComponent* rigidBodyCom
         allocatedObjects->btSphereShape = shape;
         allocatedObjects->btRigidBody = body;
 
-        m_btObjectsToRigidBodyComponentMap.insert({ allocatedObjects, rigidBodyComponent });
+        m_btObjectsToRigidBodyComponentMap.insert({ body, rigidBodyComponent });
         m_rigidBodyComponentToBtObjectsMap.insert({ rigidBodyComponent, allocatedObjects });
 
         m_dynamicsWorld->addRigidBody(body);
@@ -500,7 +500,7 @@ void BulletPhysicsEngine::createTriMeshRigidBody(RigidBodyComponent* rigidBodyCo
         allocatedObjects->btCollisionShape = shape;
         allocatedObjects->btCollisionObject = collisionObject;
 
-        m_btObjectsToRigidBodyComponentMap.insert({ allocatedObjects, rigidBodyComponent });
+        m_btObjectsToRigidBodyComponentMap.insert({ collisionObject, rigidBodyComponent });
         m_rigidBodyComponentToBtObjectsMap.insert({ rigidBodyComponent, allocatedObjects });
 
         m_dynamicsWorld->addCollisionObject(collisionObject);
@@ -518,7 +518,7 @@ void BulletPhysicsEngine::removeRigidBody(RigidBodyComponent* rigidBodyComponent
         }
 
         m_rigidBodyComponentToBtObjectsMap.erase(rigidBodyComponent);
-        m_btObjectsToRigidBodyComponentMap.erase(allocatedObjectsContainer);
+        m_btObjectsToRigidBodyComponentMap.erase(allocatedObjects->btRigidBody);
 
         delete allocatedObjects->btMotionState;
         delete allocatedObjects->btSphereShape;
@@ -530,7 +530,7 @@ void BulletPhysicsEngine::removeRigidBody(RigidBodyComponent* rigidBodyComponent
         m_dynamicsWorld->removeCollisionObject(allocatedObjects->btCollisionObject);
 
         m_rigidBodyComponentToBtObjectsMap.erase(rigidBodyComponent);
-        m_btObjectsToRigidBodyComponentMap.erase(allocatedObjectsContainer);
+        m_btObjectsToRigidBodyComponentMap.erase(allocatedObjects->btCollisionObject);
 
         delete allocatedObjects->btCollisionObject;
         delete allocatedObjects->btCollisionShape;
@@ -543,7 +543,7 @@ void BulletPhysicsEngine::removeRigidBody(RigidBodyComponent* rigidBodyComponent
         }
 
         m_rigidBodyComponentToBtObjectsMap.erase(rigidBodyComponent);
-        m_btObjectsToRigidBodyComponentMap.erase(allocatedObjectsContainer);
+        m_btObjectsToRigidBodyComponentMap.erase(allocatedObjects->btRigidBody);
 
         delete allocatedObjects->btMotionState;
         delete allocatedObjects->btCylinderShape;

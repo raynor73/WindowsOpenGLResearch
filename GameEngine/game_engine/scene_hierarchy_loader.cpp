@@ -776,6 +776,7 @@ shared_ptr<GameObjectComponent> SceneHierarchyLoader::parseComponent(
         return make_shared<ScrollDetectorComponent>();
     }*/
     else if (type == "SphereRigidBody") {
+        auto isActivator = componentJson.contains("isActivator") ? componentJson["isActivator"].get<bool>() : false;
         auto mass = componentJson.contains("mass") ? parseFloatNumber(componentJson["mass"]) : optional<float>();
         auto radius = parseFloatNumber(componentJson["radius"]);
         auto sphereRigidBodyComponent = make_shared<SphereRigidBodyComponent>(
@@ -783,8 +784,10 @@ shared_ptr<GameObjectComponent> SceneHierarchyLoader::parseComponent(
             mass,
             radius
         );
+        sphereRigidBodyComponent->setActivator(isActivator);
         return sphereRigidBodyComponent;
     } else if (type == "CylinderRigidBody") {
+        auto isActivator = componentJson.contains("isActivator") ? componentJson["isActivator"].get<bool>() : false;
         auto mass = componentJson.contains("mass") ? parseFloatNumber(componentJson["mass"]) : optional<float>();
         auto radius = parseFloatNumber(componentJson["radius"]);
         auto length = parseFloatNumber(componentJson["length"]);
@@ -794,8 +797,10 @@ shared_ptr<GameObjectComponent> SceneHierarchyLoader::parseComponent(
             radius,
             length
         );
+        cylinderRigidBodyComponent->setActivator(isActivator);
         return cylinderRigidBodyComponent;
     } else if (type == "TriMeshRigidBody") {
+        auto isActivator = componentJson.contains("isActivator") ? componentJson["isActivator"].get<bool>() : false;
         auto mass = componentJson.contains("mass") ? parseFloatNumber(componentJson["mass"]) : optional<float>();
         auto meshName = componentJson["meshName"].get<string>();
 
@@ -818,6 +823,8 @@ shared_ptr<GameObjectComponent> SceneHierarchyLoader::parseComponent(
         auto mesh = createTransformedMesh(meshStorage.getMesh(meshName), meshPosition, meshRotation, meshScale);
 
         auto triMeshRigidBody = make_shared<TriMeshRigidBodyComponent>(m_serviceLocator->physicsEngine(), mass, mesh);
+
+        triMeshRigidBody->setActivator(isActivator);
 
         return triMeshRigidBody;
     }/*

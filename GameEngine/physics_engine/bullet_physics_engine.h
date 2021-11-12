@@ -29,7 +29,7 @@ class BulletPhysicsEngine : public PhysicsEngine, public WithoutGeneratedMethods
     btSequentialImpulseConstraintSolver* m_solver;
     btDiscreteDynamicsWorld* m_dynamicsWorld;
 
-    std::unordered_map<btAllocatedObjectsContainer, RigidBodyComponent*> m_btObjectsToRigidBodyComponentMap;
+    std::unordered_map<btCollisionObject*, RigidBodyComponent*> m_btObjectsToRigidBodyComponentMap;
     std::unordered_map<RigidBodyComponent*, btAllocatedObjectsContainer> m_rigidBodyComponentToBtObjectsMap;
 
 public:

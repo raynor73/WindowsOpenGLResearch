@@ -74,7 +74,7 @@ void RigidBodyComponent::setEnabled(bool isEnabled)
     physicsEngine->setRigidBodyEnabled(this, isEnabled && gameObject->parent().lock() != nullptr);
 }
 
-bool GameEngine::RigidBodyComponent::isKinematic()
+bool RigidBodyComponent::isKinematic()
 {
     auto physicsEngine = m_physicsEngine.lock();
     Utils::throwErrorIfNull(physicsEngine, [&]() {

@@ -11,6 +11,7 @@ class RigidBodyComponent : public GameObjectComponent
 {
 protected:
     std::weak_ptr<PhysicsEngine> m_physicsEngine;
+    bool m_isActivator = false;
 
 public:
     RigidBodyComponent(std::weak_ptr<PhysicsEngine> physicsEngine) : m_physicsEngine(physicsEngine) {}
@@ -25,5 +26,8 @@ public:
     virtual void setEnabled(bool isEnabled) override;
 
     bool isKinematic();
+
+    bool isActivator() const { return m_isActivator; }
+    void setActivator(bool isActivator) { m_isActivator = isActivator; }
 };
 }
