@@ -279,6 +279,12 @@
     <ClInclude Include="game_engine\collisions_info_components_manager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="rendering_engine\opengl_billboard_renderer_component.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="game_engine\billboard_component.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameEngine.cpp">
@@ -435,6 +441,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="game_engine\collisions_info_components_manager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="rendering_engine\opengl_billboard_renderer_component.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="game_engine\billboard_component.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

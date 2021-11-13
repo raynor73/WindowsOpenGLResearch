@@ -151,6 +151,7 @@
     <ClInclude Include="game\dev_scene_manager.h" />
     <ClInclude Include="game\hello_world_scene.h" />
     <ClInclude Include="game_engine\app.h" />
+    <ClInclude Include="game_engine\billboard_component.h" />
     <ClInclude Include="game_engine\bitmap_loader.h" />
     <ClInclude Include="game_engine\bitmap_info.h" />
     <ClInclude Include="game_engine\camera_component.h" />
@@ -216,6 +217,7 @@
     <ClInclude Include="platform_dependent\windows\windows_mesh_loader.h" />
     <ClInclude Include="platform_dependent\windows\windows_read_only_fs_abstraction.h" />
     <ClInclude Include="platform_dependent\windows\windows_rendering_window_info_provider.h" />
+    <ClInclude Include="rendering_engine\opengl_billboard_renderer_component.h" />
     <ClInclude Include="rendering_engine\opengl_error_detector.h" />
     <ClInclude Include="rendering_engine\opengl_geometry_buffers_storage.h" />
     <ClInclude Include="rendering_engine\opengl_mesh_renderer_component.h" />
@@ -239,6 +241,7 @@
     <ClCompile Include="game\free_fly_camera_controller.cpp" />
     <ClCompile Include="game\hello_world_scene.cpp" />
     <ClCompile Include="game_engine\ambient_light_component.cpp" />
+    <ClCompile Include="game_engine\billboard_component.cpp" />
     <ClCompile Include="game_engine\camera_component.cpp" />
     <ClCompile Include="game_engine\camera_components_manager.cpp" />
     <ClCompile Include="game_engine\collisions_info_component.cpp" />
@@ -276,6 +279,7 @@
     <ClCompile Include="platform_dependent\windows\windows_mouse_input.cpp" />
     <ClCompile Include="platform_dependent\windows\windows_opengl_shader_source_loader.cpp" />
     <ClCompile Include="platform_dependent\windows\windows_read_only_fs_abstraction.cpp" />
+    <ClCompile Include="rendering_engine\opengl_billboard_renderer_component.cpp" />
     <ClCompile Include="rendering_engine\opengl_error_detector.cpp" />
     <ClCompile Include="rendering_engine\opengl_geometry_buffers_storage.cpp" />
     <ClCompile Include="rendering_engine\opengl_mesh_renderer_component.cpp" />
